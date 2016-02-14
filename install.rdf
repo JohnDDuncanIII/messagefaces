@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>{FACE5779-9D08-48F9-922F-17AA9C065C9B}</em:id>
+    <em:name>MessageFaces</em:name>
+    <em:version>1.1.2</em:version>
+    <em:description>Displays 'face' images in the message header.</em:description>
+    <em:creator>Jens Bannmann (jens.b@web.de)</em:creator>
+
+    <em:contributor>Arvid Axelsson</em:contributor>
+    <em:contributor>Marco de Freitas</em:contributor>
+    <em:contributor>Jonas Eckerman</em:contributor>
+    <em:contributor>Máté Farkas</em:contributor>
+    <em:contributor>Toni Hermoso</em:contributor>
+    <em:contributor>Pawel Kata</em:contributor>
+    <em:contributor>Hans Christian Saustrup</em:contributor>
+    <em:contributor>Andrew Taylor</em:contributor>
+
+    <em:homepageURL>http://tecwizards.de/mozilla/messagefaces/</em:homepageURL>
+    <em:optionsURL>chrome://messagefaces/content/preferences.xul</em:optionsURL>
+    <em:iconURL>chrome://messagefaces/content/mf-icon.png</em:iconURL>
+
+    <em:targetApplication> <!-- Thunderbird -->
+      <Description>
+        <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
+        <em:minVersion>1.5</em:minVersion>
+        <em:maxVersion>2.0.0.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+    <em:file>
+      <Description about="urn:mozilla:extension:file:messagefaces.jar">
+        <em:package>content/</em:package>
+        <em:locale>locale/en-US/messagefaces/</em:locale>
+        <em:locale>locale/ca-AD/messagefaces/</em:locale>
+        <em:locale>locale/de-DE/messagefaces/</em:locale>
+        <em:locale>locale/hu-HU/messagefaces/</em:locale>
+        <em:locale>locale/pl-PL/messagefaces/</em:locale>
+      </Description>
+    </em:file>
+
+  </Description>
+</RDF>
