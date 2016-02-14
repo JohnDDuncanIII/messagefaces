@@ -1,0 +1,40 @@
+<!--
+  Translated by/Fordította
+  
+  FARKAS Máté
+  fmate14@freemail.hu
+  http://fmate14.try.hu
+  
+  Ha bármilyen hibát találsz benne, kérlek
+  írj, most még nem vagyok jó angolból. ;)
+-->
+
+<!-- The name "MessageFaces" should not be translated. -->
+<!ENTITY mf.pref.title "MessageFaces beállítások">
+
+<!ENTITY mf.pref.accountsTab "Fiókok">
+<!ENTITY mf.pref.faceTypesTab "Arckép típusok">
+<!ENTITY mf.pref.onlineServicesTab "Online szolgáltatások">
+
+<!ENTITY mf.pref.accountCol "Fiók">
+<!ENTITY mf.pref.emailCol "Email">
+<!ENTITY mf.pref.faceCol "Arckép">
+
+<!ENTITY mf.pref.setFaceBtn "Arckép beállítása">
+<!ENTITY mf.pref.removeFaceBtn "Arckép eltávolítása">
+
+<!ENTITY mf.pref.xface "X-Face">
+<!ENTITY mf.pref.xface.enabled "A feteke-fehér X-Face képek megjelenítése">
+
+<!ENTITY mf.pref.local "Helyi képek">
+<!ENTITY mf.pref.local.enabled "Arcképek betöltése helyi mappából">
+<!ENTITY mf.pref.local.chooseFolder "Mappa választása...">
+<!ENTITY mf.pref.local.hint "Használd küldő email címét mint nevet, és a kiterjesztés legyen .png, .jpg vagy .gif!">
+
+<!ENTITY mf.pref.gravatar "Gravatar">
+<!ENTITY mf.pref.gravatar.enabled "Arcképek letöltése a gravatar.com-ról">
+<!ENTITY mf.pref.gravatar.description "Kép letöltése a központi gravatar.com szolgáltatásról a küldő email címe alapján egyirányú titkosítással. A saját email cím nem lesz elküldve, így a (spam)küldő nem tudja kitalálni, hogy a levél mikor lett elolvasva.">
+
+<!ENTITY mf.pref.faceURL "Arckép hivatkozások">
+<!ENTITY mf.pref.faceURL.enabled "Arcképek betöltése a levélbe ágyazott internet címről.">
+<!ENTITY mf.pref.faceURL.description "Ez egy potenciális biztonsági hiba - a küldő képes az internetcímbe egyedi azonosítót tenni. A Spammerek használhatják ezt az email cím érvényességének ellenőrzésére, amikor elolvasod a levelet. Ezenkívül az arcképek lehetnek hatalmas méretűek, melyek letöltése nagyon hosszú időt vehet igénybe, vagy tönkreteheti a Tunderbird-öt.">

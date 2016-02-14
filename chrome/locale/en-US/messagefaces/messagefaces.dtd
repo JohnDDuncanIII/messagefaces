@@ -1,0 +1,36 @@
+<!-- 
+  WELCOME, TRANSLATOR!
+  If you translate this extension to your language, please send me your
+  locale files so I can put them in the next release. Thanks!
+
+                                          Jens Bannmann (jens.b@web.de)
+-->
+<!-- The name "MessageFaces" should not be translated. -->
+<!ENTITY mf.pref.title "MessageFaces Settings">
+
+<!ENTITY mf.pref.accountsTab "Accounts">
+<!ENTITY mf.pref.faceTypesTab "Face types">
+<!ENTITY mf.pref.onlineServicesTab "Online services">
+
+<!ENTITY mf.pref.accountCol "Account">
+<!ENTITY mf.pref.emailCol "Email">
+<!ENTITY mf.pref.faceCol "Face">
+
+<!ENTITY mf.pref.setFaceBtn "Set Face">
+<!ENTITY mf.pref.removeFaceBtn "Remove Face">
+
+<!ENTITY mf.pref.xface "X-Face">
+<!ENTITY mf.pref.xface.enabled "Display black-and-white X-Face images">
+
+<!ENTITY mf.pref.local "Local images">
+<!ENTITY mf.pref.local.enabled "Load face images from local folder">
+<!ENTITY mf.pref.local.chooseFolder "Choose folder...">
+<!ENTITY mf.pref.local.hint "Use the e-mail address as the name and one of the extensions .png, .jpg or .gif for each image.">
+
+<!ENTITY mf.pref.gravatar "Gravatar">
+<!ENTITY mf.pref.gravatar.enabled "Load face images from gravatar.com">
+<!ENTITY mf.pref.gravatar.description "The e-mail address of the sender is transmitted to the central gravatar.com service using one-way encryption. Your e-mail address is not transmitted. The sender can not find out if or when you read the message.">
+
+<!ENTITY mf.pref.faceURL "Face addresses">
+<!ENTITY mf.pref.faceURL.enabled "Load face images from web addresses included in messages">
+<!ENTITY mf.pref.faceURL.description "This is a potential security problem - the sender may put information that identifies you into the face address. Spammers may use this to validate e-mail addresses, others may see when you read your messsages. Furthermore, Face images with huge sizes could slow down or crash Thunderbird.">

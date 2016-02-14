@@ -1,0 +1,29 @@
+<!-- The name "MessageFaces" should not be translated. -->
+<!ENTITY mf.pref.title "Paràmetres del MessageFaces">
+
+<!ENTITY mf.pref.accountsTab "Comptes">
+<!ENTITY mf.pref.faceTypesTab "Tipus de cares">
+<!ENTITY mf.pref.onlineServicesTab "Serveis en línia">
+
+<!ENTITY mf.pref.accountCol "Compte">
+<!ENTITY mf.pref.emailCol "Correu electrònic">
+<!ENTITY mf.pref.faceCol "Cara">
+
+<!ENTITY mf.pref.setFaceBtn "Especifica una cara">
+<!ENTITY mf.pref.removeFaceBtn "Suprimeix una cara">
+
+<!ENTITY mf.pref.xface "X-Face">
+<!ENTITY mf.pref.xface.enabled "Mostra les imatges X-Face en blanc i negre">
+
+<!ENTITY mf.pref.local "Imatges locals">
+<!ENTITY mf.pref.local.enabled "Carrega les imatges de cares des d'una carpeta local">
+<!ENTITY mf.pref.local.chooseFolder "Tria una carpeta...">
+<!ENTITY mf.pref.local.hint "Utilitza l'adreça de correu electrònic com a nom i una de les extensions .png, .jpg o .gif per a cada imatge.">
+
+<!ENTITY mf.pref.gravatar "Gravatar">
+<!ENTITY mf.pref.gravatar.enabled "Carrega les imatges de cares des de gravatar.com">
+<!ENTITY mf.pref.gravatar.description "L'adreça de correu electrònic del remitent es transmet al servei gravatar.com utilitzant xifratge en un sentit. No s'envia la vostra adreça de correu electrònic; així doncs, el remitent no pot esbrinar si heu llegit el missatge.">
+
+<!ENTITY mf.pref.faceURL "Adreces de cares">
+<!ENTITY mf.pref.faceURL.enabled "Carrega les imatges de cares de les adreces web incloses als missatges">
+<!ENTITY mf.pref.faceURL.description "Aquest és un potencial problema de seguretat - el remitent pot posar informació que us identifiqui a l'adreça de cara. Els 'spammers' poden fer-ho servir per a validar adreces de correu electrònic, i altres poden veure quan llegiu els vostres missatges. Endemés, les imatges de cares de gran mida poden alentir o aturar el Thunderbird.">

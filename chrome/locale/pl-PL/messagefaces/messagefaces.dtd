@@ -1,0 +1,29 @@
+<!-- The name "MessageFaces" should not be translated. -->
+<!ENTITY mf.pref.title "Ustawienia MessageFaces">
+
+<!ENTITY mf.pref.accountsTab "Konta">
+<!ENTITY mf.pref.faceTypesTab "Typy obrazków">
+<!ENTITY mf.pref.onlineServicesTab "Usługi online">
+
+<!ENTITY mf.pref.accountCol "Konto">
+<!ENTITY mf.pref.emailCol "Email">
+<!ENTITY mf.pref.faceCol "Obrazek">
+
+<!ENTITY mf.pref.setFaceBtn "Ustaw obrazek">
+<!ENTITY mf.pref.removeFaceBtn "Usuń obrazek">
+
+<!ENTITY mf.pref.xface "X-Face">
+<!ENTITY mf.pref.xface.enabled "Wyświetlanie czarno-białych obrazków X-Face">
+
+<!ENTITY mf.pref.local "Lokalne obrazki">
+<!ENTITY mf.pref.local.enabled "Wczytaj obrazki z bieżącego folderu">
+<!ENTITY mf.pref.local.chooseFolder "Wybierz folder...">
+<!ENTITY mf.pref.local.hint "Użyj adresu e-mail jako nazwy i jednego z rozszerzeń .png, .jpg lub .gif dla każdego obrazka.">
+
+<!ENTITY mf.pref.gravatar "Gravatar">
+<!ENTITY mf.pref.gravatar.enabled "Wczytaj obrazek z gravatar.com">
+<!ENTITY mf.pref.gravatar.description "Adres e-mail jest przesyłany do centrali gravatar.com przy użyciu szyfrowania jednostronnego. Adres lokalnego użytkownika rozszerzenia nie zostaje przesłany. Nadawca w żaden sposób nie może dowiedzieć się czy i kiedy przeczytałeś wiadomość.">
+
+<!ENTITY mf.pref.faceURL "Adres obrazka">
+<!ENTITY mf.pref.faceURL.enabled "Wczytuj obrazki z adresów internetowych zawartch w wiadomości">
+<!ENTITY mf.pref.faceURL.description "Potencjalny problem związany z bezpieczeństwem - nadawca może w miejsce obrazka wstawić informacje identyfikujące użytkownika rozszerzenia. Spamerzy mogą wykorzystać to do sprawdzenia adresu. Inni mogą zorientować się, że w danej chwili czytasz przesłaną przez nich wiadomość. Dodatkowo, obrazki o dużych rozmiarach mogą spowolnić pracę lub nawet zawiesić Thunderbirda.">

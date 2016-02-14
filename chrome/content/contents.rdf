@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+            xmlns:chrome="http://www.mozilla.org/rdf/chrome#">
+
+  <RDF:Seq about="urn:mozilla:package:root">
+    <RDF:li resource="urn:mozilla:package:messagefaces"/>
+  </RDF:Seq>
+
+  <RDF:Description about="urn:mozilla:package:messagefaces"
+        chrome:displayName="MessageFaces 1.0"
+        chrome:author="Jens Bannmann (jens.b@web.de)"
+        chrome:authorURL="http://tecwizards.de/mozilla/messagefaces/"
+        chrome:name="messagefaces"
+        chrome:extension="true"
+        chrome:description="Adds support for 'face' images embedded in messages.">
+  </RDF:Description>
+
+  <RDF:Seq about="urn:mozilla:overlays">
+    <RDF:li resource="chrome://messenger/content/msgHdrViewOverlay.xul"/>
+  </RDF:Seq>
+
+  <RDF:Seq about="chrome://messenger/content/msgHdrViewOverlay.xul">
+    <RDF:li>chrome://messagefaces/content/headerViewOverlay.xul</RDF:li>
+  </RDF:Seq>
+
+</RDF:RDF>

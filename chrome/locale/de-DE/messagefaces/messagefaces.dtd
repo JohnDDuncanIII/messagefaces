@@ -1,0 +1,30 @@
+<!-- The name "MessageFaces" should not be translated. -->
+<!ENTITY mf.pref.title "MessageFaces Einstellungen">
+
+<!ENTITY mf.pref.accountsTab "Konten">
+<!ENTITY mf.pref.faceTypesTab "Face-Typen">
+<!ENTITY mf.pref.onlineServicesTab "Web-Dienste">
+
+<!ENTITY mf.pref.accountCol "Konto">
+<!ENTITY mf.pref.emailCol "E-Mail">
+<!ENTITY mf.pref.faceCol "Face">
+
+<!ENTITY mf.pref.setFaceBtn "Face auswählen">
+<!ENTITY mf.pref.removeFaceBtn "Face entfernen">
+
+<!ENTITY mf.pref.xface "X-Face">
+<!ENTITY mf.pref.xface.enabled "Schwarz-weiße X-Face-Grafiken anzeigen">
+
+<!ENTITY mf.pref.local "Local images">
+<!ENTITY mf.pref.local.enabled "Grafiken aus lokalem Ordner laden">
+<!ENTITY mf.pref.local.chooseFolder "Ordner wählen...">
+<!ENTITY mf.pref.local.hint "Verwenden Sie die E-Mail-Adresse als Dateiname und eine der Erweiterungen .png, .jpg oder .gif für jede Grafik.">
+
+
+<!ENTITY mf.pref.gravatar "Gravatar">
+<!ENTITY mf.pref.gravatar.enabled "Grafiken von gravatar.com laden">
+<!ENTITY mf.pref.gravatar.description "Die E-Mail-Adresse des Absenders wird zu gravatar.com übertragen und zuvor nicht umkehrbar verschlüsselt. Ihre E-Mail-Adresse wird nicht übertragen. Der Absender kann nicht ermitteln, ob und wann Sie die Nachricht lesen.">
+
+<!ENTITY mf.pref.faceURL "Face-Adressen">
+<!ENTITY mf.pref.faceURL.enabled "Face-Grafiken von in der Nachricht angegebenen Web-Adressen laden">
+<!ENTITY mf.pref.faceURL.description "Dies ist ein potentielles Sicherheitsproblem. Absender könnten Informationen, die Sie identifizierbar machen, in die Face-Adresse einfügen, Spam-Versender könnten dies dazu nutzen, die Existenz von E-Mail-Adressen zu verifizieren, oder man könnte ermitteln, ob und wann Sie Ihre E-Mails lesen. Weiterhin könnten extrem große Face-Grafiken Thunderbird verlangsamen oder zum Absturz bringen.">

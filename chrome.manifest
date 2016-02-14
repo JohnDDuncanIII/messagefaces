@@ -1,0 +1,10 @@
+content messagefaces chrome/content/
+locale messagefaces chrome/locale/
+locale messagefaces en-US chrome/locale/en-US/messagefaces/
+locale messagefaces ca-AD chrome/locale/en-US/messagefaces/
+locale messagefaces de-DE chrome/locale/en-US/messagefaces/
+locale messagefaces hu-HU chrome/locale/en-US/messagefaces/
+locale messagefaces pl-PL chrome/locale/en-US/messagefaces/
+
+#locale messagefaces    jar:chrome/messagefaces.jar!/locale/en-US/
+
