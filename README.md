@@ -125,6 +125,10 @@ A: Translations are always welcome - please contact me via the address given on 
 
 
 # Changelog
+1.2 (2016-03-08)
+- Added picon support
+
+
 1.1.3 (2016-03-07)
 
 Version 1.1.2 of this add-on was completely broken on SeaMonkey 2.39.
