@@ -12,6 +12,7 @@ This extension lets Mozilla Thunderbird display 'face' images in the message hea
 | x-image-url | An image loaded from a web address specified in the mail (possible privacy and security risk!) | Display only; optional |
 | x-face-url | Same as above ^ | Display only; optional |
 | face-url | Same as above ^ | Display only; optional |
+| picon | Personal Icons | Display only; optional |
 
 picon support coming in the near future. multiple-display of face/xface/gravatar coming soon too.
 
