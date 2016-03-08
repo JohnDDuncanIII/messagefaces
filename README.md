@@ -17,18 +17,23 @@ picon support coming in the near future. multiple-display of face/xface/gravatar
 
 # Screenshots
 face (from original site)
+
 ![original](screenshots/header-example.png)
 ***
 normal face
+
 ![face](screenshots/face.png)
 ***
 smaller face
+
 ![face-small](screenshots/face-small.png)
 ***
 xface
+
 ![xface](screenshots/xface.png)
 ***
 gravatar
+
 ![gravatar](screenshots/gravatar.png)
 ***
 
