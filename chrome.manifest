@@ -5,6 +5,5 @@ locale messagefaces ca-AD chrome/locale/en-US/messagefaces/
 locale messagefaces de-DE chrome/locale/en-US/messagefaces/
 locale messagefaces hu-HU chrome/locale/en-US/messagefaces/
 locale messagefaces pl-PL chrome/locale/en-US/messagefaces/
-
-#locale messagefaces    jar:chrome/messagefaces.jar!/locale/en-US/
+overlay chrome://messenger/content/msgHdrViewOverlay.xul chrome://messagefaces/content/headerViewOverlay.xul
 

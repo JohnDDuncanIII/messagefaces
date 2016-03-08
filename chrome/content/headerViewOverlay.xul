@@ -1,5 +1,8 @@
-<?xml version="1.0"?>
-<overlay id="messagefaces" 
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE overlay>
+
+<overlay id="messagefaces"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript" src="chrome://messagefaces/content/main.js"/>
+  <script type="application/x-javascript;version=1.8" src="chrome://messagefaces/content/main.js"/>
 </overlay>
