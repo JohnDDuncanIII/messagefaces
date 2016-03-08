@@ -1,5 +1,5 @@
 # MessageFaces
-This is a mirror of http://web.archive.org/web/20100108015331/http://tecwizards.de/mozilla/messagefaces/. This program is currently ~BROKEN~ FIXED. Most of this readme has been copied and pasted from its original (aforementioned) location.
+This is a mirror of http://web.archive.org/web/20100108015331/http://tecwizards.de/mozilla/messagefaces/. This program is currently ~~BROKEN~~ FIXED. Most of this readme has been copied and pasted from its original (aforementioned) location.
 
 This extension lets Mozilla Thunderbird display 'face' images in the message header section of e-mails and newsgroup messages. These face images are intended to represent the sender, in the form of photos, cartoons, logos and so on. MessageFaces supports the following Face types:
 
@@ -16,14 +16,19 @@ This extension lets Mozilla Thunderbird display 'face' images in the message hea
 picon support coming in the near future. multiple-display of face/xface/gravatar coming soon too.
 
 # Screenshots
+face (from original site)
 ![original](screenshots/header-example.png)
 ***
+normal face
 ![face](screenshots/face.png)
 ***
+smaller face
 ![face-small](screenshots/face-small.png)
 ***
+xface
 ![xface](screenshots/xface.png)
 ***
+gravatar
 ![gravatar](screenshots/gravatar.png)
 ***
 
