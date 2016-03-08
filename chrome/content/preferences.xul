@@ -56,7 +56,7 @@
   <script type="application/x-javascript">
     <![CDATA[
       var _elementIDs = ["xfaceUseJS", "enableLocalImages", "gravatarEnabled",
-                         "faceURLEnabled", "localFolder"];
+                         "faceURLEnabled", "localFolder", "piconEnabled"];
     ]]>
   </script>
 
@@ -144,6 +144,16 @@
                       preftype="bool"/>
             <description>&mf.pref.faceURL.description;</description>
           </groupbox>
+          
+          <groupbox>
+            <caption label="&mf.pref.picon;"/>
+            <checkbox id="piconEnabled"
+                      label="&mf.pref.picon.enabled;"
+                      prefstring="extensions.messagefaces.picon.enabled"
+                      preftype="bool"/>
+            <description>&mf.pref.picon.description;</description>
+          </groupbox>
+
         </tabpanel>
 
       </tabpanels>

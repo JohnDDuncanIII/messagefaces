@@ -60,6 +60,7 @@ var mfGravatarURL;
 var mfXFaceUseJS;
 var mfFaceURLEnabled;
 var mfMaxSize;
+var mfPiconEnabled;
 
 // subscript namespaces
 var mfMD5 = {};
@@ -72,6 +73,11 @@ var mfX_Cache = new Array();
 
 // globabl preference service for reading in values across functions
 var prefService;
+
+// Picons - lifted from https://bugzilla.mozilla.org/show_bug.cgi?id=60881
+var piconsSearchURL = "http://kinzler.com/cgi/piconsearch.cgi/";
+var piconsSearchSuffix = "/users+usenix+misc+domains+unknown/up/single/gif/order";
+
 
 function mfWrapUpdateMessageHeaders() {
     mfO_UpdateMessageHeaders();
@@ -230,6 +236,23 @@ function mfDisplayFace() {
             face = face.replace("%SIZE%", mfMaxSize);
         }
 
+        if (mfPiconEnabled == true) {
+            var foundPicon = false;
+
+            // Compute the URL for the sender's picon
+            if (!foundPicon) {
+                var atSign = sender.indexOf('@');
+
+                if (atSign != -1) {
+                    var host = sender.substring(atSign + 1)
+                    var user = sender.substring(0, atSign);
+                    face = (piconsSearchURL + host + "/" + user + piconsSearchSuffix);
+                    //msgPaneData.PiconBox.removeAttribute('collapsed');
+                    foundMailFace = true;
+                }
+            }
+        }
+
         if (face != null) {
             mfSetImage(face);
         }
@@ -275,6 +298,7 @@ function mfLoadPrefs() {
     mfXFaceUseJS = mfGetPref("xface.useJS", "Bool");
     mfFaceURLEnabled = mfGetPref("faceURL.enabled", "Bool");
     mfLocalImagesEnabled = mfGetPref("local.enabled", "Bool");
+    mfPiconEnabled = mfGetPref("picon.enabled", "Bool");
 
     mfLog.init("MessageFaces", mfGetPref("loglevel", "Int"));
 

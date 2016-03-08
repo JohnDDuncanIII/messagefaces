@@ -34,3 +34,7 @@
 <!ENTITY mf.pref.faceURL "Face addresses">
 <!ENTITY mf.pref.faceURL.enabled "Load face images from web addresses included in messages">
 <!ENTITY mf.pref.faceURL.description "This is a potential security problem - the sender may put information that identifies you into the face address. Spammers may use this to validate e-mail addresses, others may see when you read your messsages. Furthermore, Face images with huge sizes could slow down or crash Thunderbird.">
+
+<!ENTITY mf.pref.picon "Personal Icons">
+<!ENTITY mf.pref.picon.enabled "Load picons from http://www.cs.indiana.edu/ftp/faces/picons/">
+<!ENTITY mf.pref.picon.description "This is a potential security problem - you are accessing files that are stored on either http://www.cs.indiana.edu/ftp/faces/picons/ or http://kinzler.com/picons/ftp/">
