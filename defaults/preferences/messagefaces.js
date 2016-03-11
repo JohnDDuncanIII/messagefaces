@@ -1,6 +1,6 @@
 pref("extensions.messagefaces.faceURL.enabled", false);
 pref("extensions.messagefaces.gravatar.enabled", false);
-pref("extensions.messagefaces.gravatar.url", "http://www.gravatar.com/avatar.php?gravatar_id=%ID%&size=%SIZE%");
+pref("extensions.messagefaces.gravatar.url", "http://www.gravatar.com/avatar.php?gravatar_id=%ID%&size=%SIZE%&d=404");
 pref("extensions.messagefaces.local.enabled", true);
 pref("extensions.messagefaces.loglevel", 1);
 pref("extensions.messagefaces.maxsize", 48);

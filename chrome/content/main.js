@@ -68,6 +68,8 @@ var mfXFaceJS = {};
 var mfLog = {};
 
 var mfImage = null;
+var mfExtraGravImage = null;
+var mfExtraPiconImage = null;
 var mfO_UpdateMessageHeaders = null;
 var mfX_Cache = new Array();
 
@@ -162,6 +164,51 @@ function mfDisplayFace() {
     if (faceURL == null) faceURL = headers.extractHeader("x-face-url", false);
     if (faceURL == null) faceURL = headers.extractHeader("face-url", false);
 
+    var extraGravFace = null;
+
+    var sender = "";
+    if (currentHeaderData["from"] != null) {
+        sender = currentHeaderData["from"].headerValue;
+    }
+    if ((sender == null || sender == "") && currentHeaderData["return-path"] != null) {
+        sender = currentHeaderData["return-path"].headerValue;
+    }
+    sender = sender.replace(/^.*\</, "");
+    sender = sender.replace(/\>.*$/, "");
+    sender = sender.toLowerCase();
+    if (!sender.match(/.+\@.+/)) {
+        mfLog.warn("Invalid sender address: '" + sender + "'.");
+        return;
+    }
+
+    // Gravatar centralized email address images
+    if (mfGravatarEnabled) {
+        mfLog.info("Falling back to Gravatar.");
+        var mfCalcMD5 = mfMD5.calcMD5(sender);
+
+        extraGravFace = mfGravatarURL;
+        extraGravFace = extraGravFace.replace("%ID%", mfCalcMD5);
+        extraGravFace = extraGravFace.replace("%SIZE%", mfMaxSize);
+        mfSetExtraGravImage(extraGravFace);
+    }
+
+    var extraPiconFace = null;
+
+    if (mfPiconEnabled) {
+        mfLog.info("Falling back to Picon.");
+
+        // Compute the URL for the sender's picon
+        var atSign = sender.indexOf('@');
+
+        if (atSign != -1) {
+            var host = sender.substring(atSign + 1)
+            var user = sender.substring(0, atSign);
+            extraPiconFace = (piconsSearchURL + host + "/" + user + piconsSearchSuffix);
+            mfSetExtraPiconImage(extraPiconFace);
+            //msgPaneData.PiconBox.removeAttribute('collapsed');
+        }
+    }
+
     // Simple Face PNG image
     if (face != null) {
         mfLog.info("Face found.");
@@ -196,21 +243,6 @@ function mfDisplayFace() {
         }
     }
     else {
-        var sender = "";
-        if (currentHeaderData["from"] != null) {
-            sender = currentHeaderData["from"].headerValue;
-        }
-        if ((sender == null || sender == "") && currentHeaderData["return-path"] != null) {
-            sender = currentHeaderData["return-path"].headerValue;
-        }
-        sender = sender.replace(/^.*\</, "");
-        sender = sender.replace(/\>.*$/, "");
-        sender = sender.toLowerCase();
-        if (!sender.match(/.+\@.+/)) {
-            mfLog.warn("Invalid sender address: '" + sender + "'.");
-            return;
-        }
-
         var face = null;
 
         // Local icon directory enabled?
@@ -226,33 +258,6 @@ function mfDisplayFace() {
             }
         }
 
-        // Gravatar centralized email address images
-        if (face == null && mfGravatarEnabled) {
-            mfLog.info("Falling back to Gravatar.");
-            face = mfGravatarURL;
-            //alert("sender: " + sender);
-            //alert("md5: " + mfMD5.calcMD5(sender));
-            face = face.replace("%ID%", mfMD5.calcMD5(sender));
-            face = face.replace("%SIZE%", mfMaxSize);
-        }
-
-        if (mfPiconEnabled == true) {
-            var foundPicon = false;
-
-            // Compute the URL for the sender's picon
-            if (!foundPicon) {
-                var atSign = sender.indexOf('@');
-
-                if (atSign != -1) {
-                    var host = sender.substring(atSign + 1)
-                    var user = sender.substring(0, atSign);
-                    face = (piconsSearchURL + host + "/" + user + piconsSearchSuffix);
-                    //msgPaneData.PiconBox.removeAttribute('collapsed');
-                    foundMailFace = true;
-                }
-            }
-        }
-
         if (face != null) {
             mfSetImage(face);
         }
@@ -263,10 +268,19 @@ function mfDisplayFace() {
     mfLog.fine("exiting mfDisplayFace().");
 }
 
-
 function mfSetImage(url) {
     mfLog.fine("Setting face: '" + url + "'.");
     mfImage.setAttribute("src", url);
+}
+
+function mfSetExtraGravImage(url) {
+    mfLog.fine("Setting grav: '" + url + "'.");
+    mfExtraGravImage.setAttribute("src", url);
+}
+
+function mfSetExtraPiconImage(url) {
+    mfLog.fine("Setting picon: '" + url + "'.");
+    mfExtraPiconImage.setAttribute("src", url);
 }
 
 function mfStartup() {
@@ -319,6 +333,70 @@ function mfLoadPrefs() {
 
     mfMaxSize = mfGetPref("maxsize", "Int");
 
+/*
+    if(mfGravatarEnabled == true && mfPiconEnabled == true) {
+        // Thunderbird 2 no longer ships a "fromBuddyIcon" image, so we create our own
+        var gravBox = document.createElement("vbox");
+        var spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        gravBox.appendChild(spacer);
+        mfExtraGravImage = document.createElement("image");
+        mfExtraGravImage.setAttribute("style", "padding: 5px");
+        mfExtraGravImage.setAttribute("id", "fromBuddyIconGrav");
+        gravBox.appendChild(mfExtraGravImage);
+        console.log(mfExtraGravImage);
+        spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        gravBox.appendChild(spacer);
+        document.getElementById("expandedHeaderView").appendChild(gravBox);
+
+        var piconBox = document.createElement("vbox");
+        spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        piconBox.appendChild(spacer);
+        mfExtraPiconImage = document.createElement("image");
+        mfExtraPiconImage.setAttribute("style", "padding: 5px");
+        mfExtraPiconImage.setAttribute("id", "fromBuddyIconPicon");
+        piconBox.appendChild(mfExtraPiconImage);
+        console.log(mfExtraPiconImage);
+        spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        piconBox.appendChild(spacer);
+        document.getElementById("expandedHeaderView").appendChild(piconBox);
+    }
+    */
+    if(mfGravatarEnabled) {
+        var gravBox = document.createElement("vbox");
+        var spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        gravBox.appendChild(spacer);
+        mfExtraGravImage = document.createElement("image");
+        mfExtraGravImage.setAttribute("style", "padding: 5px");
+        mfExtraGravImage.setAttribute("id", "fromBuddyIconGrav");
+        gravBox.appendChild(mfExtraGravImage);
+        console.log(mfExtraGravImage);
+        spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        gravBox.appendChild(spacer);
+        document.getElementById("expandedHeaderView").appendChild(gravBox);
+    }
+    if(mfPiconEnabled) {
+        var piconBox = document.createElement("vbox");
+        var spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        piconBox.appendChild(spacer);
+        mfExtraPiconImage = document.createElement("image");
+        mfExtraPiconImage.setAttribute("style", "padding: 5px");
+        mfExtraPiconImage.setAttribute("id", "fromBuddyIconPicon");
+        piconBox.appendChild(mfExtraPiconImage);
+        console.log(mfExtraPiconImage);
+        spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        piconBox.appendChild(spacer);
+
+        document.getElementById("expandedHeaderView").appendChild(piconBox);
+    }
+
     // Get face image element
     mfImage = document.getElementById("fromBuddyIcon");
     console.log(mfImage);
@@ -330,7 +408,7 @@ function mfLoadPrefs() {
         vbox.appendChild(spacer);
         mfImage = document.createElement("image");
         mfImage.setAttribute("style", "padding: 5px");
-        mfImage.setAttribute("id", "fromBuddyIcon");
+        mfImage.setAttribute("id", "fromBuddyIconFace");
         vbox.appendChild(mfImage);
         console.log(mfImage);
         spacer = document.createElement("spacer");
@@ -338,6 +416,10 @@ function mfLoadPrefs() {
         vbox.appendChild(spacer);
         document.getElementById("expandedHeaderView").appendChild(vbox);
     }
+
+    
+
+    
     //mfImage.setAttribute("src", ksFaceURL);
 
     // Set maximum width/height, add 5px padding on each side
