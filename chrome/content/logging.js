@@ -40,8 +40,7 @@ const types = new Array("", "WARNING", "INFO", "FINE");
 var level = 0;
 var name = "";
 
-function init(aName, aLevel)
-{
+function init(aName, aLevel) {
   name = aName;
   level = aLevel;
 }
@@ -50,16 +49,13 @@ function warn(msg) { _dump(1, msg); }
 function info(msg) { _dump(2, msg); }
 function fine(msg) { _dump(3, msg); }
 
-function _dump(aType, aMsg)
-{
-  if (aType <= level)
-  {
+function _dump(aType, aMsg) {
+  if (aType <= level) {
     var line = name + "[" + types[aType] + "]: " + aMsg;
     consoleService.logStringMessage(line);
     dump(line + "\n");
 
-    if (level >= 10)
-    {
+    if (level >= 10) {
       var a = new Date(); while(((new Date()) - a) < 2000){}
     }
   }

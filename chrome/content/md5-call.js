@@ -1,5 +1,4 @@
-function calcMD5(str)
-{
+function calcMD5(str) {
   // thanks to shaver, biesi and timeless for helping with this
   var cryptoHash = Components.classes["@mozilla.org/security/hash;1"].createInstance(Components.interfaces.nsICryptoHash);
   cryptoHash.init(cryptoHash.MD5);

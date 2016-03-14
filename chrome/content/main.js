@@ -21,6 +21,7 @@
  *  Andrew Taylor <ataylor@its.to>
  *  Hans Christian Saustrup <hc@saustrup.net>
  *  Jens Bannmann <jens.b@web.de>
+ *  John Duncan <duncjo01@gettysburg.edu>
  *  Jonas Eckerman <jonas@truls.org>
  *
  * Alternatively, the contents of this file may be used under the terms of
@@ -43,7 +44,9 @@ const mfIOService = Components.classes["@mozilla.org/network/io-service;1"]
       .getService(Components.interfaces.nsIIOService);
 const mfFileHandler = mfIOService.getProtocolHandler("file")
       .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
-const mfFileExtensions = new Array("jpg", "png", "gif");
+const mfFileExtensions = new Array("jpg", "png", "gif"); // file extensions for local FACE lookups
+const mfPiconDatabases = new Array("unknown", "domains", "users", "misc", "news", "usenix",  "weather"); // picon database folders
+
 
 mfSyncStream = Components.Constructor("@mozilla.org/network/sync-stream-listener;1",
                                       Components.interfaces.nsIInputStream);
@@ -59,8 +62,11 @@ var mfGravatarEnabled;
 var mfGravatarURL;
 var mfXFaceUseJS;
 var mfFaceURLEnabled;
+var mfLocalImagesEnabled;
+var mfLocalPiconImagesEnabled;
 var mfMaxSize;
 var mfPiconEnabled;
+var mfLocalFolder;
 
 // subscript namespaces
 var mfMD5 = {};
@@ -76,10 +82,9 @@ var mfX_Cache = new Array();
 // globabl preference service for reading in values across functions
 var prefService;
 
-// Picons - lifted from https://bugzilla.mozilla.org/show_bug.cgi?id=60881
+// Picons - web lookup code partially lifted from https://bugzilla.mozilla.org/show_bug.cgi?id=60881
 var piconsSearchURL = "http://kinzler.com/cgi/piconsearch.cgi/";
 var piconsSearchSuffix = "/users+usenix+misc+domains+unknown/up/single/gif/order";
-
 
 function mfWrapUpdateMessageHeaders() {
     mfO_UpdateMessageHeaders();
@@ -89,7 +94,7 @@ function mfWrapUpdateMessageHeaders() {
 function mfGetHeaders() {
     //var messageURI = GetFirstSelectedMessage();
     //var messageURI = gFolderDisplay.selectedMessage;
-    var messageURI = gFolderDisplay.selectedMessageUris[0];
+    var messageURI = gFolderDisplay.selectedMessageUris[0]; // new way to GetFirstSelectedMessage();
     mfLog.info("Loading headers for '" + messageURI + "'.");
 
     var messageStream = null;
@@ -133,10 +138,10 @@ function mfGetHeaders() {
             content = content.substring(0, p2);
             break;
         }
-        if (content.length > 512 * 32) { // PROBLEM LINE: this had to be increased (modern mail servers)
+        if (content.length > 512 * 64) { // PROBLEM LINE: this had to be increased (modern mail servers)
             mfLog.warn("Could not find end-of-headers line in '" + messageURI + "'.");
             content = null;
-            alert("ERROR: content.length > 512 * 8");
+            alert("ERROR: content.length > 512 * 64");
             break;
         }
     }
@@ -194,16 +199,91 @@ function mfDisplayFace() {
 
     var extraPiconFace = null;
 
+    // support picons
     if (mfPiconEnabled) {
         mfLog.info("Falling back to Picon.");
-
-        // Compute the URL for the sender's picon
         var atSign = sender.indexOf('@');
 
+        // if we have a valid e-mail address..
         if (atSign != -1) {
             var host = sender.substring(atSign + 1)
             var user = sender.substring(0, atSign);
-            extraPiconFace = (piconsSearchURL + host + "/" + user + piconsSearchSuffix);
+
+            // do a local search for picons - we don't want to kill kinzler.com!
+            if(mfLocalPiconImagesEnabled) {
+                var host_pieces = host.split('.'); // split the host up into pieces (we need this since hosts can be different lengths, i.e. cs.gettysburg.edu vs comcast.net, etc.)
+                
+                // loop through the six different picon database folders
+                for (var i in mfPiconDatabases) {
+                    var localFile = mfLocalFolder.clone();
+                    localFile.append("picons"); // they are stored in $PROFILEPATH$/messagefaces/picons/ by default
+                    localFile.append(mfPiconDatabases[i]); // append one of the six database folders
+                    
+                    var l = host_pieces.length; // get number of database folders (probably six, but could theoretically change)
+                    var clonedLocal; // we will check to see if we have a match at EACH depth, so keep a cloned version w/o the 'unknown/face.gif' portion
+                    while (l >= 0) { // loop through however many pieces we have of the host
+                        localFile.append(host_pieces[l]); // add that portion of the host (ex: 'edu' or 'gettysburg' or 'cs')
+                        clonedLocal = localFile.clone();
+
+                        if(i == 2) { // we are in 'users' db  
+                            localFile.append(user); // username for 'users' db folder
+                            localFile.append("face.gif");
+                        } else {
+                            localFile.append("unknown");
+                            localFile.append("face.gif");
+                        }
+                        
+
+                        if (localFile.exists()) {
+                            mfLog.info("Found local picon image.");
+                            extraPiconFace = mfFileHandler.getURLSpecFromFile(localFile);
+                        } 
+                        localFile = clonedLocal.clone();
+                        //alert("AFTER IFELSE" + localFile.toString());
+                        l--;
+                    }
+                }
+
+                var l = host_pieces.length;
+                // if we don't already have a picon, check to see if one exists in MISC (no 'unknown stuff')
+                if(extraPiconFace == null) {
+                    var clonedLocal;
+                    var miscLocal = mfLocalFolder.clone();
+                    miscLocal.append("picons");
+                    miscLocal.append("misc");
+                    miscLocal.append("MISC");
+
+                    while (l >= 0) {
+                        miscLocal.append(host_pieces[l]);
+                        clonedLocal = miscLocal.clone();
+                        miscLocal.append("face.gif");
+
+                        if (miscLocal.exists()) {
+                            mfLog.info("Found local picon image.");
+                            extraPiconFace = mfFileHandler.getURLSpecFromFile(miscLocal);
+                            break;
+                        } else {
+                            miscLocal = clonedLocal.clone();
+                        }
+                        l--;
+                    }
+                    
+                    // finally, if there is no picon that corresponds to the user/host info, set the default
+                    if(extraPiconFace == null) {
+                        var defaultMisc = mfLocalFolder.clone();
+                        defaultMisc.append("picons"); 
+                        defaultMisc.append("unknown");
+                        defaultMisc.append("MISC");
+                        defaultMisc.append("unknown");
+                        defaultMisc.append("face.gif");
+                        extraPiconFace = mfFileHandler.getURLSpecFromFile(defaultMisc);
+                    }
+                }
+            } else { // if we are not using a local search, use a web lookup using piconsearch.pl
+                extraPiconFace = (piconsSearchURL + host + "/" + user + piconsSearchSuffix);
+            }
+
+            
             mfSetExtraPiconImage(extraPiconFace);
             //msgPaneData.PiconBox.removeAttribute('collapsed');
         }
@@ -268,17 +348,17 @@ function mfDisplayFace() {
     mfLog.fine("exiting mfDisplayFace().");
 }
 
-function mfSetImage(url) {
+function mfSetImage(url) { // set Face image
     mfLog.fine("Setting face: '" + url + "'.");
     mfImage.setAttribute("src", url);
 }
 
-function mfSetExtraGravImage(url) {
+function mfSetExtraGravImage(url) { // set Gravatar image
     mfLog.fine("Setting grav: '" + url + "'.");
     mfExtraGravImage.setAttribute("src", url);
 }
 
-function mfSetExtraPiconImage(url) {
+function mfSetExtraPiconImage(url) { // set Picon image
     mfLog.fine("Setting picon: '" + url + "'.");
     mfExtraPiconImage.setAttribute("src", url);
 }
@@ -289,9 +369,7 @@ function mfStartup() {
 
     var md5Type = "nsICryptoHash" in Components.interfaces ? "call" : "impl";
     jsLoader.loadSubScript("chrome://messagefaces/content/md5-" + md5Type + ".js", mfMD5);
-
     jsLoader.loadSubScript("chrome://messagefaces/content/xface.js", mfXFaceJS);
-
     jsLoader.loadSubScript("chrome://messagefaces/content/logging.js", mfLog);
 
     prefService = Components.classes["@mozilla.org/preferences-service;1"]
@@ -312,6 +390,7 @@ function mfLoadPrefs() {
     mfXFaceUseJS = mfGetPref("xface.useJS", "Bool");
     mfFaceURLEnabled = mfGetPref("faceURL.enabled", "Bool");
     mfLocalImagesEnabled = mfGetPref("local.enabled", "Bool");
+    mfLocalPiconImagesEnabled = mfGetPref("localPicon.enabled", "Bool");
     mfPiconEnabled = mfGetPref("picon.enabled", "Bool");
 
     mfLog.init("MessageFaces", mfGetPref("loglevel", "Int"));
@@ -333,38 +412,6 @@ function mfLoadPrefs() {
 
     mfMaxSize = mfGetPref("maxsize", "Int");
 
-/*
-    if(mfGravatarEnabled == true && mfPiconEnabled == true) {
-        // Thunderbird 2 no longer ships a "fromBuddyIcon" image, so we create our own
-        var gravBox = document.createElement("vbox");
-        var spacer = document.createElement("spacer");
-        spacer.setAttribute("flex", "1");
-        gravBox.appendChild(spacer);
-        mfExtraGravImage = document.createElement("image");
-        mfExtraGravImage.setAttribute("style", "padding: 5px");
-        mfExtraGravImage.setAttribute("id", "fromBuddyIconGrav");
-        gravBox.appendChild(mfExtraGravImage);
-        console.log(mfExtraGravImage);
-        spacer = document.createElement("spacer");
-        spacer.setAttribute("flex", "1");
-        gravBox.appendChild(spacer);
-        document.getElementById("expandedHeaderView").appendChild(gravBox);
-
-        var piconBox = document.createElement("vbox");
-        spacer = document.createElement("spacer");
-        spacer.setAttribute("flex", "1");
-        piconBox.appendChild(spacer);
-        mfExtraPiconImage = document.createElement("image");
-        mfExtraPiconImage.setAttribute("style", "padding: 5px");
-        mfExtraPiconImage.setAttribute("id", "fromBuddyIconPicon");
-        piconBox.appendChild(mfExtraPiconImage);
-        console.log(mfExtraPiconImage);
-        spacer = document.createElement("spacer");
-        spacer.setAttribute("flex", "1");
-        piconBox.appendChild(spacer);
-        document.getElementById("expandedHeaderView").appendChild(piconBox);
-    }
-    */
     if(mfGravatarEnabled) {
         var gravBox = document.createElement("vbox");
         var spacer = document.createElement("spacer");
@@ -393,7 +440,6 @@ function mfLoadPrefs() {
         spacer = document.createElement("spacer");
         spacer.setAttribute("flex", "1");
         piconBox.appendChild(spacer);
-
         document.getElementById("expandedHeaderView").appendChild(piconBox);
     }
 
@@ -416,10 +462,6 @@ function mfLoadPrefs() {
         vbox.appendChild(spacer);
         document.getElementById("expandedHeaderView").appendChild(vbox);
     }
-
-    
-
-    
     //mfImage.setAttribute("src", ksFaceURL);
 
     // Set maximum width/height, add 5px padding on each side
@@ -484,11 +526,11 @@ function mfCheckLocale() {
         const bundleService = Components.classes["@mozilla.org/intl/stringbundle;1"]
               .getService()
               .QueryInterface(Components.interfaces.nsIStringBundleService);
+
         var properties = bundleService.createBundle("chrome://messagefaces/content/mfbuild.properties");
         var supportedLocales = properties.GetStringFromName("messagefaces.supportedLocales");
         var appLocaleSupported = (","+supportedLocales+",").indexOf( (","+chromeLocale+",") ) > -1;
         var mfVersion = properties.GetStringFromName("messagefaces.release");
-
         var warningShown = mfGetPref("localeWarningShown", "Char");
 
         const url = "http://tecwizards.de/mozilla/messagefaces/localeproblems.html"

@@ -7,9 +7,9 @@
   </RDF:Seq>
 
   <RDF:Description about="urn:mozilla:package:messagefaces"
-        chrome:displayName="MessageFaces 1.0"
+        chrome:displayName="MessageFaces 1.2"
         chrome:author="Jens Bannmann (jens.b@web.de)"
-        chrome:authorURL="http://tecwizards.de/mozilla/messagefaces/"
+        chrome:authorURL="http://cs.gettysburg.edu/~duncjo01/MessageFaces"
         chrome:name="messagefaces"
         chrome:extension="true"
         chrome:description="Adds support for 'face' images embedded in messages.">

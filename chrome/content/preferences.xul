@@ -20,6 +20,7 @@
    -
    - Contributor(s) (alphabetical order):
    -  Jens Bannmann <jens.b@web.de>
+   -  John Duncan <duncjo01@gettysburg.edu>
    -
    - Alternatively, the contents of this file may be used under the terms of
    - either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -55,8 +56,8 @@
   <script type="application/x-javascript" src="chrome://messagefaces/content/preferences.js"/>
   <script type="application/x-javascript">
     <![CDATA[
-      var _elementIDs = ["xfaceUseJS", "enableLocalImages", "gravatarEnabled",
-                         "faceURLEnabled", "localFolder", "piconEnabled"];
+      var _elementIDs = ["xfaceUseJS", "enableLocalImages", "enableLocalPiconImages", "gravatarEnabled",
+                         "faceURLEnabled", "localFolder", "localPiconFolder", "piconEnabled"];
     ]]>
   </script>
 
@@ -123,6 +124,18 @@
               <button label="&mf.pref.local.chooseFolder;" oncommand="chooseFolder();"/>
             </hbox>
             <description>&mf.pref.local.hint;</description>
+          </groupbox>
+          <groupbox>
+            <caption label="&mf.pref.localPicon;"/>
+            <checkbox id="enableLocalPiconImages"
+                      label="&mf.pref.localPicon.enabled;"
+                      prefstring="extensions.messagefaces.localPicon.enabled"
+                      preftype="bool"/>
+            <hbox align="center">
+              <textbox id="localPiconFolder" flex="1" readonly="true" class="uri-element"/>
+              <button label="&mf.pref.localPicon.chooseFolder;" oncommand="chooseFolder();"/>
+            </hbox>
+            <description>&mf.pref.localPicon.hint;</description>
           </groupbox>
         </tabpanel>
 

@@ -250,14 +250,12 @@ const G =
 };
 
 
-function BigMul(a) 
-{ // multiply B.b_word by a (B.b_word[0]=LSB)
+function BigMul(a) { // multiply B.b_word by a (B.b_word[0]=LSB)
   var i;
   if (a == 1 || !B.b_words)
     return;
   /* Treat this as a == WORDCARRY and just shift everything left a WORD */
-  if (!a)
-  {
+  if (!a) {
     B.b_words++;
     if (B.b_first > 0) 
         B.b_first--;
@@ -273,8 +271,7 @@ function BigMul(a)
   var c = 0;
   var last = B.b_words + B.b_first - 1;
   var word = B.b_word;
-  for (i = B.b_first; i <= last; i++) 
-  {
+  for (i = B.b_first; i <= last; i++) {
     c += word[i] * a;
     word[i] = (c & WORDMASK);
     c >>= BITSPERWORD;
@@ -284,8 +281,7 @@ function BigMul(a)
 }
 
 
-function BigAdd(a) 
-{ // add a to B.b_word
+function BigAdd(a) { // add a to B.b_word
   var i;
   a &= WORDMASK;
   if (!a)
@@ -293,24 +289,21 @@ function BigAdd(a)
 
   var c = a;
   var last = B.b_words + B.b_first - 1;
-  for(i = B.b_first; i <= last; i++) 
-  {
+  for(i = B.b_first; i <= last; i++) {
     c += B.b_word[i];
     B.b_word[i] = c & WORDMASK;
     c >>= BITSPERWORD;
     if (!c)
       break;
   }
-  if ((i > last) && c)
-  { 
+  if ((i > last) && c) { 
     B.b_word[i] = c & WORDMASK;
     B.b_words++;
   }
 }
 
 
-function BigPop(p) 
-{ // p is freqs oder levels[lev]
+function BigPop(p) { // p is freqs oder levels[lev]
   var r = B.b_word[B.b_first]; // r = LSB; B >> 8
   B.b_first++;
   B.b_words--;
@@ -324,18 +317,14 @@ function BigPop(p)
 }
 
 
-function PopGreys(off, len) 
-{
-  if (len > 3) 
-  {
+function PopGreys(off, len) {
+  if (len > 3) {
     len /= 2;
     PopGreys(off,                      len);
     PopGreys(off + len,                len);
     PopGreys(off + LENGTH * len,       len);
     PopGreys(off + LENGTH * len + len, len);
-  }
-  else 
-  {
+  } else {
     len = BigPop(freqs);
     if (len & 1)
       F[off] = 1;
@@ -349,10 +338,8 @@ function PopGreys(off, len)
 }
 
 
-function UnCompress(off, len, lev) 
-{ 
-  switch (BigPop(levels[lev])) 
-  {
+function UnCompress(off, len, lev) { 
+  switch (BigPop(levels[lev])) {
     case WHITE:
       return;
     case BLACK:
@@ -369,15 +356,12 @@ function UnCompress(off, len, lev)
   }
 }
 
-
-function UnCompAll(fbuf) 
-{
+function UnCompAll(fbuf) {
   var i;
   B.b_words = B.b_first = 0;
   // convert base 94 to base 256
   const kl = fbuf.length;
-  for (i = 0; i < kl; ++i)
-  {
+  for (i = 0; i < kl; ++i) {
     BigMul(NUMPRINTS);
     BigAdd(fbuf.charCodeAt(i) - FIRSTPRINT);
   }
@@ -396,60 +380,49 @@ function UnCompAll(fbuf)
   UnCompress(1568, 16, 0);
 }
 
-
-function Gen() 
-{
+function Gen() {
   var m, l, k, j, i, h=0;
-  for (j = 0; j < LENGTH;  j++) 
-  {
-    for (i = 0; i < LENGTH;  i++) 
-    {
+  for (j = 0; j < LENGTH;  j++) {
+    for (i = 0; i < LENGTH;  i++) {
       k = 0;
       for (l = i - 2; l <= i + 2; l++)
-        for (m = j - 2; m <= j; m++) 
-        {
+        for (m = j - 2; m <= j; m++) {
           if ((l >= i) && (m == j))
             continue;
           if ((l > 0) && (l <= LENGTH) && (m > 0))
             k = F[l + m * LENGTH] ? k * 2 + 1 : k * 2;
         }
-      switch (i) 
-      {
+      switch (i) {
         case 1 :
-            switch (j) 
-            {
+            switch (j) {
                 case 1 : F[h] ^= G.g_22[k]; break;
                 case 2 : F[h] ^= G.g_21[k]; break;
                 default: F[h] ^= G.g_20[k]; break;
             }
             break;
         case 2 :
-            switch (j) 
-            {
+            switch (j) {
                 case 1 : F[h] ^= G.g_12[k]; break;
                 case 2 : F[h] ^= G.g_11[k]; break;
                 default: F[h] ^= G.g_10[k]; break;
             }
             break;
         case LENGTH - 1 :
-            switch (j) 
-            {
+            switch (j) {
                 case 1 : F[h] ^= G.g_42[k]; break;
                 case 2 : F[h] ^= G.g_41[k]; break;
                 default: F[h] ^= G.g_40[k]; break;
             }
             break;
         case LENGTH :
-            switch (j) 
-            {
+            switch (j) {
                 case 1 : F[h] ^= G.g_32[k]; break;
                 case 2 : F[h] ^= G.g_31[k]; break;
                 default: F[h] ^= G.g_30[k]; break;
             }
             break;
         default :
-            switch (j) 
-            {
+            switch (j) {
                 case 1 : F[h] ^= G.g_02[k]; break;
                 case 2 : F[h] ^= G.g_01[k]; break;
                 default: F[h] ^= G.g_00[k]; break;
@@ -461,17 +434,14 @@ function Gen()
   }
 }
 
-
-function FaceURL(face) 
-{
+function FaceURL(face) {
   var i;
   UnCompAll(face.replace(/[^!-~]/g, "")); // eliminate illegal chars
   Gen();
   var bmp = "BM\xBE\1\0\0\0\0\0\0>\0\0\0(\0\0\0\x30\0\0\0\x30\0\0\0\1\0\1\0\0\0\0\0\x80\1\0\0\xC4\x0E\0\0\xC4\x0E\0\0\0\0\0\0\0\0\0\0\xFF\xFF\xFF\0\0\0\0\0";
   var ff = F.join("").replace(/(.{48})/g, "$1,").split(",").reverse().join("")
             .replace(/(.{8})(.{8})(.{8})(.{8})(.{8})(.{8})/g, 
-            function(s,a,b,c,d,e,f)
-            {
+            function(s,a,b,c,d,e,f) {
               return String.fromCharCode(parseInt(a,2)) 
                    + String.fromCharCode(parseInt(b,2))
                    + String.fromCharCode(parseInt(c,2))

@@ -19,6 +19,7 @@
  *
  * Contributor(s) (alphabetical order):
  *  Jens Bannmann <jens.b@web.de>
+ *  John Duncan <duncjo01@gettysburg.edu>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -50,26 +51,20 @@ var testImage = null;
 var face = null;
 var localFolder = null;
 
-function getPref(name)
-{
-  try
-  {
+function getPref(name) {
+  try {
     return prefs.getComplexValue(name, Components.interfaces.nsIPrefLocalizedString).data;
-  }
-  catch (e)
-  {
+  } catch (e) {
     return null;
   }
 }
 
-function getList(name)
-{
+function getList(name) {
   var p = getPref(name);
   return (p != null) ? p.split(",") : Array();
 }
 
-function init()
-{
+function init() {
   loadPrefs();
   setTimeout("window.sizeToContent();", 0);
 
@@ -78,16 +73,13 @@ function init()
   testImage = document.getElementById("testImage");
 
   var accountList = getList("mail.accountmanager.accounts");
-  for (var i = 0; i < accountList.length; i++)
-  {
+  for (var i = 0; i < accountList.length; i++) {
     var account = accountList[i];
     var serverID = getPref("mail.account." + account + ".server");
     var accountName = getPref("mail.server." + serverID + ".name");
     var identityList = getList("mail.account." + account + ".identities");
-    if (getPref("mail.server." + serverID + ".type") != "none")
-    {
-      for (var j = 0; j < identityList.length; j++)
-      {
+    if (getPref("mail.server." + serverID + ".type") != "none") {
+      for (var j = 0; j < identityList.length; j++) {
         var identity = identityList[j];
         
         var face = null;
@@ -100,13 +92,11 @@ function init()
 
         // Find existing Face: header pref
         var headerList = getList(idPrefix + ".headers");
-        for (var k = 0; k < headerList.length; k++)
-        {
+        for (var k = 0; k < headerList.length; k++) {
           var curHeaderID = headerList[k];
           var curHeaderPref = idPrefix + ".header." + curHeaderID;
           var curHeaderValue = getPref(curHeaderPref);
-          if (curHeaderValue != null && curHeaderValue.indexOf("Face: ") == 0)
-          {
+          if (curHeaderValue != null && curHeaderValue.indexOf("Face: ") == 0) {
             headerID = curHeaderID;
             headerPref = curHeaderPref;
             headerValue = curHeaderValue;
@@ -159,8 +149,7 @@ function init()
   }
 }
 
-function setFace()
-{
+function setFace() {
   var nsIFilePicker = Components.interfaces.nsIFilePicker;
   var fp = Components.classes["@mozilla.org/filepicker;1"]
           .createInstance(nsIFilePicker);
@@ -171,12 +160,9 @@ function setFace()
   var res=fp.show();
   if (res == nsIFilePicker.returnOK){
     var thefile = fp.file;
-    if (thefile.fileSize > 726)
-    {
+    if (thefile.fileSize > 726) {
       imageError("exceedsMaxSize");
-    }
-    else
-    {
+    } else {
       var tmp;
       inputStream = Components.classes["@mozilla.org/network/file-input-stream;1"]
                     .createInstance( Components.interfaces.nsIFileInputStream );
@@ -191,30 +177,24 @@ function setFace()
       if (dataArray[0] == 0x89
           && dataArray[1] == 0x50
           && dataArray[2] == 0x4E
-          && dataArray[3] == 0x47)
-      {
+          && dataArray[3] == 0x47) {
         var png = String.fromCharCode.apply(null, dataArray);
         face = btoa(png);
         var faceURL = "data:image/png;base64," + encodeURIComponent(face);
         testImage.src = faceURL;
         listBox.disabled = true;
         setButtonsEnabled(false);
-      }
-      else
-      {
+      } else {
         imageError("invalidPNG");
       }
     }
   }
 }
 
-function processImage(success)
-{
-  if (success)
-  {
+function processImage(success) {
+  if (success) {
     if (testImage.boxObject.width == 48
-        && testImage.boxObject.height == 48)
-    {
+        && testImage.boxObject.height == 48) {
       // Display the image
       var cell = listBox.getSelectedItem(0).lastChild;
       cell.setAttribute("image", testImage.src);
@@ -222,8 +202,7 @@ function processImage(success)
       // Format the face (insert spaces for line breaks)
       var pos = 72;
       var header = "Face: " + face.substring(0, pos);
-      while (pos < face.length)
-      {
+      while (pos < face.length) {
         header += " ";
         header += face.substring(pos, pos + 76);
         pos += 76;
@@ -231,14 +210,11 @@ function processImage(success)
 
       // Save the formatted header
       prepareSaveHeader(header);
-    }
-    else
-    {
+    } else {
       imageError("wrongDimensions");
     }
   }
-  else
-  {
+  else {
     imageError("invalidPNG");
   }
   testImage.src = "";
@@ -246,8 +222,7 @@ function processImage(success)
   setButtonsEnabled(true);
 }
 
-function imageError(type)
-{
+function imageError(type) {
   var msg = bundle.getString("message.invalidFace");
   msg = msg.replace(/%ERROR%/, bundle.getString("error." + type));
   promptService.alert(window,
@@ -255,14 +230,12 @@ function imageError(type)
                       msg);
 }
 
-function setButtonsEnabled(enabled)
-{
+function setButtonsEnabled(enabled) {
   document.getElementById("setFaceButton").disabled = !enabled;
   document.getElementById("removeFaceButton").disabled = !enabled;
 }
 
-function prepareSaveHeader(value)
-{
+function prepareSaveHeader(value) {
   // Save the new face header to our info cell
   var infoCell = listBox.getSelectedItem(0).firstChild;
   infoCell.setAttribute("headerValue", value);
@@ -270,34 +243,28 @@ function prepareSaveHeader(value)
 
   var headerNamesNode = document.getElementById(infoCell.getAttribute("identity") + "HeaderNames");
   var headerNamesList = headerNamesNode.getAttribute("value");
-  if (value != null && value != "")
-  {
+  if (value != null && value != "") {
     // Ensure the face header is listed in the "headers" pref
     var headerNames;
     var headerRegistered = false;
-    if (headerNamesList != null && headerNamesList != "")
-    {
+    if (headerNamesList != null && headerNamesList != "") {
       headerNames = headerNamesList.split(",");
-      for (var i = 0; i < headerNames.length; i++)
-      {
+      for (var i = 0; i < headerNames.length; i++) {
         if (headerNames[i] == headerID)
         {
           headerRegistered = true;
         }
       }
     }
-    else
-    {
+    else {
       headerNames = Array();
     }
-    if (!headerRegistered)
-    {
+    if (!headerRegistered) {
       headerNames.push(headerID);
       headerNamesNode.setAttribute("value", headerNames.join(","));
     }
   }
-  else
-  {
+  else {
     // We just removed the face. Ensure the face header is no longer listed.
     eval("headerNamesList = headerNamesList.replace(/" + headerID + ",{0,1}/g, \"\");");
     headerNamesList = headerNamesList.replace(/^,+/, "");
@@ -308,29 +275,23 @@ function prepareSaveHeader(value)
   // Ensure our pref DOM nodes are listed in _elementIDs
   var infoCellRegistered = false;
   var headerNamesNodeRegistered = false;
-  for (var i = 0; i < _elementIDs.length; i++)
-  {
-    if (_elementIDs[i] == infoCell.id)
-    {
+  for (var i = 0; i < _elementIDs.length; i++) {
+    if (_elementIDs[i] == infoCell.id) {
       infoCellRegistered = true;
     }
-    else if (_elementIDs[i] == headerNamesNode.id)
-    {
+    else if (_elementIDs[i] == headerNamesNode.id) {
       headerNamesNodeRegistered = true;
     }
   }
-  if (!infoCellRegistered)
-  {
+  if (!infoCellRegistered) {
     _elementIDs.push(infoCell.id);
   }
-  if (!headerNamesNodeRegistered)
-  {
+  if (!headerNamesNodeRegistered) {
     _elementIDs.push(headerNamesNode.id);
   }
 }
 
-function removeFace()
-{
+function removeFace() {
   // Display the image
   var cell = listBox.getSelectedItem(0).lastChild;
   cell.setAttribute("image", BLANK_FACE);
@@ -338,8 +299,7 @@ function removeFace()
   prepareSaveHeader("");
 }
 
-function chooseFolder()
-{
+function chooseFolder() {
   const nsIFilePicker = Components.interfaces.nsIFilePicker;
   var fp = Components.classes["@mozilla.org/filepicker;1"]
           .createInstance(nsIFilePicker);
@@ -354,21 +314,16 @@ function chooseFolder()
   }
 }
 
-function showFolderPath()
-{
+function showFolderPath() {
   var dirBox = document.getElementById("localFolder");
   dirBox.value = (/Mac/.test(navigator.platform)) ? localFolder.leafName : localFolder.path;
 }  
 
-function loadPrefs()
-{
-  try
-  {
+function loadPrefs() {
+  try {
     localFolder = prefs.getComplexValue("extensions.messagefaces.local.folder",
                                         Components.interfaces.nsILocalFile);
-  }
-  catch (e)
-  {
+  } catch (e) {
     localFolder = Components.classes["@mozilla.org/file/directory_service;1"]
                      .getService(Components.interfaces.nsIProperties)
                      .get("ProfD", Components.interfaces.nsIFile);
@@ -381,8 +336,7 @@ function loadPrefs()
     var prefstring = curEl.getAttribute("prefstring");
     var preftype = curEl.getAttribute("preftype");
     var prefattribute = curEl.getAttribute("prefattribute");
-    if (!prefattribute)
-    {
+    if (!prefattribute) {
       prefattribute = "value";
     }
     try {
@@ -391,13 +345,11 @@ function loadPrefs()
         case "bool": curEl.checked = prefs.getBoolPref(prefstring); break;
         default: curEl.setAttribute("value", prefs.getCharPref(prefattribute)); break;
       }
-    } catch(e) {
-    }
+    } catch(e) {}
   }
 }
 
-function savePrefs()
-{
+function savePrefs() {
   prefs.setComplexValue("extensions.messagefaces.local.folder",
                         Components.interfaces.nsILocalFile,
                         localFolder);
@@ -407,8 +359,7 @@ function savePrefs()
     var prefstring = curEl.getAttribute("prefstring");
     var preftype = curEl.getAttribute("preftype");
     var prefattribute = curEl.getAttribute("prefattribute");
-    if (!prefattribute)
-    {
+    if (!prefattribute) {
       prefattribute = "value";
     }
     switch(preftype) {

@@ -10,8 +10,7 @@
  * Convert a 32-bit number to a hex string with ls-byte first
  */
 var hex_chr = "0123456789abcdef";
-function rhex(num)
-{
+function rhex(num) {
   str = "";
   for(j = 0; j <= 3; j++)
     str += hex_chr.charAt((num >> (j * 8 + 4)) & 0x0F) +
@@ -23,8 +22,7 @@ function rhex(num)
  * Convert a string to a sequence of 16-word blocks, stored as an array.
  * Append padding bits and the length, as described in the MD5 standard.
  */
-function str2blks_MD5(str)
-{
+function str2blks_MD5(str) {
   nblk = ((str.length + 8) >> 6) + 1;
   blks = new Array(nblk * 16);
   for(i = 0; i < nblk * 16; i++) blks[i] = 0;
@@ -39,8 +37,7 @@ function str2blks_MD5(str)
  * Add integers, wrapping at 2^32. This uses 16-bit operations internally 
  * to work around bugs in some JS interpreters.
  */
-function add(x, y)
-{
+function add(x, y) {
   var lsw = (x & 0xFFFF) + (y & 0xFFFF);
   var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
   return (msw << 16) | (lsw & 0xFFFF);
@@ -49,8 +46,7 @@ function add(x, y)
 /*
  * Bitwise rotate a 32-bit number to the left
  */
-function rol(num, cnt)
-{
+function rol(num, cnt) {
   return (num << cnt) | (num >>> (32 - cnt));
 }
 
@@ -58,40 +54,33 @@ function rol(num, cnt)
  * These functions implement the basic operation for each round of the
  * algorithm.
  */
-function cmn(q, a, b, x, s, t)
-{
+function cmn(q, a, b, x, s, t) {
   return add(rol(add(add(a, q), add(x, t)), s), b);
 }
-function ff(a, b, c, d, x, s, t)
-{
+function ff(a, b, c, d, x, s, t) {
   return cmn((b & c) | ((~b) & d), a, b, x, s, t);
 }
-function gg(a, b, c, d, x, s, t)
-{
+function gg(a, b, c, d, x, s, t) {
   return cmn((b & d) | (c & (~d)), a, b, x, s, t);
 }
-function hh(a, b, c, d, x, s, t)
-{
+function hh(a, b, c, d, x, s, t) {
   return cmn(b ^ c ^ d, a, b, x, s, t);
 }
-function ii(a, b, c, d, x, s, t)
-{
+function ii(a, b, c, d, x, s, t) {
   return cmn(c ^ (b | (~d)), a, b, x, s, t);
 }
 
 /*
  * Take a string and return the hex representation of its MD5.
  */
-function calcMD5(str)
-{
+function calcMD5(str) {
   x = str2blks_MD5(str);
   a =  1732584193;
   b = -271733879;
   c = -1732584194;
   d =  271733878;
 
-  for(i = 0; i < x.length; i += 16)
-  {
+  for(i = 0; i < x.length; i += 16) {
     olda = a;
     oldb = b;
     oldc = c;
@@ -172,5 +161,3 @@ function calcMD5(str)
   }
   return rhex(a) + rhex(b) + rhex(c) + rhex(d);
 }
- 
-

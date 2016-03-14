@@ -4,6 +4,7 @@
   locale files so I can put them in the next release. Thanks!
 
                                           Jens Bannmann (jens.b@web.de)
+                                          John Duncan <duncjo01@gettysburg.edu>
 -->
 <!-- The name "MessageFaces" should not be translated. -->
 <!ENTITY mf.pref.title "MessageFaces Settings">
@@ -26,6 +27,11 @@
 <!ENTITY mf.pref.local.enabled "Load face images from local folder">
 <!ENTITY mf.pref.local.chooseFolder "Choose folder...">
 <!ENTITY mf.pref.local.hint "Use the e-mail address as the name and one of the extensions .png, .jpg or .gif for each image.">
+
+<!ENTITY mf.pref.localPicon "Local Picon images">
+<!ENTITY mf.pref.localPicon.enabled "Load picon images from local folder">
+<!ENTITY mf.pref.localPicon.chooseFolder "Choose folder...">
+<!ENTITY mf.pref.localPicon.hint "By default, this will search $PROFILEPATH$/picons/ (for example, /Users/John/Library/Application\ Support/SeaMonkey/Profiles/SeaMonkey.default/">
 
 <!ENTITY mf.pref.gravatar "Gravatar">
 <!ENTITY mf.pref.gravatar.enabled "Load face images from gravatar.com">
