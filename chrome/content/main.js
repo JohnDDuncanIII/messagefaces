@@ -45,7 +45,7 @@ const mfIOService = Components.classes["@mozilla.org/network/io-service;1"]
 const mfFileHandler = mfIOService.getProtocolHandler("file")
       .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
 const mfFileExtensions = new Array("jpg", "png", "gif"); // file extensions for local FACE lookups
-const mfPiconDatabases = new Array("unknown", "domains", "users", "misc", "news", "usenix",  "weather"); // picon database folders
+const mfPiconDatabases = new Array("unknown", "domains", "users", "misc", "usenix"); // picon database folders
 
 
 mfSyncStream = Components.Constructor("@mozilla.org/network/sync-stream-listener;1",
@@ -197,12 +197,16 @@ function mfDisplayFace() {
         mfSetExtraGravImage(extraGravFace);
     }
 
-    var extraPiconFace = null;
+    var extraPiconFace = [];
 
     // support picons
     if (mfPiconEnabled) {
+        //var item = document.getElementById("masterBox"); // get the master box that contains the vboxs
+        //if(item != null) { item.parentNode.removeChild(item); } // if it contains something, remove it..
+
         mfLog.info("Falling back to Picon.");
         var atSign = sender.indexOf('@');
+        var numFaces = 0;
 
         // if we have a valid e-mail address..
         if (atSign != -1) {
@@ -218,73 +222,52 @@ function mfDisplayFace() {
                     var localFile = mfLocalFolder.clone();
                     localFile.append("picons"); // they are stored in $PROFILEPATH$/messagefaces/picons/ by default
                     localFile.append(mfPiconDatabases[i]); // append one of the six database folders
-                    
+                    if(i == 3) { localFile.append("MISC"); } // special case MISC
+
                     var l = host_pieces.length; // get number of database folders (probably six, but could theoretically change)
                     var clonedLocal; // we will check to see if we have a match at EACH depth, so keep a cloned version w/o the 'unknown/face.gif' portion
                     while (l >= 0) { // loop through however many pieces we have of the host
                         localFile.append(host_pieces[l]); // add that portion of the host (ex: 'edu' or 'gettysburg' or 'cs')
                         clonedLocal = localFile.clone();
-
-                        if(i == 2) { // we are in 'users' db  
-                            localFile.append(user); // username for 'users' db folder
-                            localFile.append("face.gif");
-                        } else {
-                            localFile.append("unknown");
-                            localFile.append("face.gif");
-                        }
-                        
+                        if(i == 2) { localFile.append(user); } // username for 'users' db folder (non-standard)
+                        else { localFile.append("unknown"); }
+                        localFile.append("face.gif");
 
                         if (localFile.exists()) {
                             mfLog.info("Found local picon image.");
-                            extraPiconFace = mfFileHandler.getURLSpecFromFile(localFile);
+                            numFaces++;
+                            extraPiconFace.push(mfFileHandler.getURLSpecFromFile(localFile));
                         } 
                         localFile = clonedLocal.clone();
-                        //alert("AFTER IFELSE" + localFile.toString());
                         l--;
                     }
                 }
 
-                var l = host_pieces.length;
-                // if we don't already have a picon, check to see if one exists in MISC (no 'unknown stuff')
-                if(extraPiconFace == null) {
-                    var clonedLocal;
-                    var miscLocal = mfLocalFolder.clone();
-                    miscLocal.append("picons");
-                    miscLocal.append("misc");
-                    miscLocal.append("MISC");
+                if(!(typeof extraPiconFace !== 'undefined' && extraPiconFace.length > 0)) { // check to see if the array is empty
+                    var rnd = Math.round(Math.random());
+                    var defaultMisc = mfLocalFolder.clone();
+                    defaultMisc.append("picons"); 
 
-                    while (l >= 0) {
-                        miscLocal.append(host_pieces[l]);
-                        clonedLocal = miscLocal.clone();
-                        miscLocal.append("face.gif");
-
-                        if (miscLocal.exists()) {
-                            mfLog.info("Found local picon image.");
-                            extraPiconFace = mfFileHandler.getURLSpecFromFile(miscLocal);
-                            break;
-                        } else {
-                            miscLocal = clonedLocal.clone();
-                        }
-                        l--;
-                    }
-                    
-                    // finally, if there is no picon that corresponds to the user/host info, set the default
-                    if(extraPiconFace == null) {
-                        var defaultMisc = mfLocalFolder.clone();
-                        defaultMisc.append("picons"); 
+                    if(rnd == 0) { 
+                        defaultMisc.append("misc");
+                        defaultMisc.append("MISC");
+                        defaultMisc.append("noface");
+                    } 
+                    else { 
                         defaultMisc.append("unknown");
                         defaultMisc.append("MISC");
                         defaultMisc.append("unknown");
-                        defaultMisc.append("face.gif");
-                        extraPiconFace = mfFileHandler.getURLSpecFromFile(defaultMisc);
                     }
+                    defaultMisc.append("face.gif");
+                    numFaces++;
+                    extraPiconFace.push(mfFileHandler.getURLSpecFromFile(defaultMisc));
                 }
             } else { // if we are not using a local search, use a web lookup using piconsearch.pl
-                extraPiconFace = (piconsSearchURL + host + "/" + user + piconsSearchSuffix);
+                numFaces++;
+                extraPiconFace.push(piconsSearchURL + host + "/" + user + piconsSearchSuffix);
             }
 
-            
-            mfSetExtraPiconImage(extraPiconFace);
+            mfSetExtraPiconImage(extraPiconFace, numFaces);
             //msgPaneData.PiconBox.removeAttribute('collapsed');
         }
     }
@@ -358,9 +341,61 @@ function mfSetExtraGravImage(url) { // set Gravatar image
     mfExtraGravImage.setAttribute("src", url);
 }
 
-function mfSetExtraPiconImage(url) { // set Picon image
-    mfLog.fine("Setting picon: '" + url + "'.");
-    mfExtraPiconImage.setAttribute("src", url);
+function mfSetExtraPiconImage(extraPiconFace, numFaces) { // set Picon image
+    mfLog.fine("Setting picon: '" + extraPiconFace[i] + "'.");
+
+    //var masterBox = document.createElement("hbox");
+    //masterBox.setAttribute("id", "masterBox");
+
+    for (var i = extraPiconFace.length - 1; i >= 0; i--) {
+    //for (var i = 0; i < extraPiconFace.length; i++) {
+        // get all of the existing piconBoxes for however many picons we found
+        var item = document.getElementById("piconBox" + i); 
+
+        if(item == null) { // if it does not already exist, create it
+            var piconBox = document.createElement("vbox");
+            piconBox.setAttribute("id", "piconBox" + i);
+            
+            var spacer = document.createElement("spacer");
+            spacer.setAttribute("flex", "1");
+            piconBox.appendChild(spacer);
+
+            mfExtraPiconImage = document.createElement("image");
+            mfExtraPiconImage.setAttribute("style", "padding: 5px");
+            mfExtraPiconImage.setAttribute("id", "fromBuddyIconPicon" + i);
+            mfExtraPiconImage.setAttribute("src", extraPiconFace[i]);
+            piconBox.appendChild(mfExtraPiconImage);
+
+            spacer = document.createElement("spacer");
+            spacer.setAttribute("flex", "1");
+            piconBox.appendChild(spacer);
+            //masterBox.appendChild(piconBox);
+            
+            if((i > 0) && (document.getElementById("piconBox" + (i-1)) != null)) { // if we are re-adding box, add it before the earlier ones (ordering)
+                document.getElementById("expandedHeaderView").insertBefore(piconBox, document.getElementById("piconBox" + (i-1)));
+            } else {
+                document.getElementById("expandedHeaderView").appendChild(piconBox); // normal add
+            }
+        } else { // if it does already exists, use it
+            document.getElementById("fromBuddyIconPicon" + i).setAttribute("src", extraPiconFace[i]);
+            //alert("set at " + i);
+        }   
+    }
+
+    // remove extra piconBoxes that could have previously been created
+    var count = extraPiconFace.length;
+    var rmBox = document.getElementById("piconBox" + count);
+
+    while(rmBox != null) {        
+        while (rmBox.firstChild) { // remove all children from the vbox
+            rmBox.removeChild(rmBox.firstChild);
+        }
+
+        rmBox.parentNode.removeChild(rmBox);
+        count++;
+        rmBox = document.getElementById("piconBox" + count);
+    }
+    //document.getElementById("expandedHeaderView").appendChild(masterBox);
 }
 
 function mfStartup() {
@@ -427,22 +462,7 @@ function mfLoadPrefs() {
         gravBox.appendChild(spacer);
         document.getElementById("expandedHeaderView").appendChild(gravBox);
     }
-    if(mfPiconEnabled) {
-        var piconBox = document.createElement("vbox");
-        var spacer = document.createElement("spacer");
-        spacer.setAttribute("flex", "1");
-        piconBox.appendChild(spacer);
-        mfExtraPiconImage = document.createElement("image");
-        mfExtraPiconImage.setAttribute("style", "padding: 5px");
-        mfExtraPiconImage.setAttribute("id", "fromBuddyIconPicon");
-        piconBox.appendChild(mfExtraPiconImage);
-        console.log(mfExtraPiconImage);
-        spacer = document.createElement("spacer");
-        spacer.setAttribute("flex", "1");
-        piconBox.appendChild(spacer);
-        document.getElementById("expandedHeaderView").appendChild(piconBox);
-    }
-
+    
     // Get face image element
     mfImage = document.getElementById("fromBuddyIcon");
     console.log(mfImage);
@@ -470,27 +490,27 @@ function mfLoadPrefs() {
 }
 
 var mfPrefObserver = {
-        // nsIPrefBranchInternal = pre-Gecko 1.8
-        PBI: "nsIPrefBranchInternal" in Components.interfaces ? Components.interfaces.nsIPrefBranchInternal
-            : Components.interfaces.nsIPrefBranch2,
+    // nsIPrefBranchInternal = pre-Gecko 1.8
+    PBI: "nsIPrefBranchInternal" in Components.interfaces ? Components.interfaces.nsIPrefBranchInternal
+        : Components.interfaces.nsIPrefBranch2,
 
-        register: function() {
-            prefService = Components.classes["@mozilla.org/preferences-service;1"]
-                .getService(Components.interfaces.nsIPrefService);
+    register: function() {
+        prefService = Components.classes["@mozilla.org/preferences-service;1"]
+            .getService(Components.interfaces.nsIPrefService);
 
-            mfPref.QueryInterface(this.PBI).addObserver("", this, false);
-        },
+        mfPref.QueryInterface(this.PBI).addObserver("", this, false);
+    },
 
-        unregister: function() {
-            mfPref.QueryInterface(this.PBI).removeObserver("", this);
-        },
+    unregister: function() {
+        mfPref.QueryInterface(this.PBI).removeObserver("", this);
+    },
 
-        observe: function(aSubject, aTopic, aData) {
-            if(aTopic == "nsPref:changed") {
-                mfLoadPrefs();
-            }
+    observe: function(aSubject, aTopic, aData) {
+        if(aTopic == "nsPref:changed") {
+            mfLoadPrefs();
         }
     }
+}
 
 function mfGetPref(name, type) {
     //return mfGetPrefImpl("extensions.messagefaces." + name, type, null);
