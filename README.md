@@ -125,6 +125,16 @@ A: Translations are always welcome - please contact me via the address given on 
 
 
 # Changelog
+1.2.2 (2016-04-01)
+- Added support for displaying multiple picons at once (for local lookups), if available
+
+- Can now display X-Image-URL, X-Face-URL, and Face-URL headers in separate vboxes (alongside all other headers)
+
+
+1.2.1 (2016-03-04)
+- Added local picon lookup support
+
+
 1.2 (2016-03-08)
 - Added picon support
 
