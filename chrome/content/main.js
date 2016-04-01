@@ -45,7 +45,7 @@ const mfIOService = Components.classes["@mozilla.org/network/io-service;1"]
 const mfFileHandler = mfIOService.getProtocolHandler("file")
       .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
 const mfFileExtensions = new Array("jpg", "png", "gif"); // file extensions for local FACE lookups
-const mfPiconDatabases = new Array("unknown", "domains", "users", "misc", "usenix"); // picon database folders
+const mfPiconDatabases = new Array("domains", "users", "misc", "usenix", "unknown"); // picon database folders
 
 
 mfSyncStream = Components.Constructor("@mozilla.org/network/sync-stream-listener;1",
@@ -74,6 +74,7 @@ var mfXFaceJS = {};
 var mfLog = {};
 
 var mfImage = null;
+var mfXImage = null;
 var mfExtraGravImage = null;
 var mfExtraPiconImage = null;
 var mfO_UpdateMessageHeaders = null;
@@ -206,7 +207,6 @@ function mfDisplayFace() {
 
         mfLog.info("Falling back to Picon.");
         var atSign = sender.indexOf('@');
-        var numFaces = 0;
 
         // if we have a valid e-mail address..
         if (atSign != -1) {
@@ -219,6 +219,8 @@ function mfDisplayFace() {
                 
                 // loop through the six different picon database folders
                 for (var i in mfPiconDatabases) {
+                    if(i == 4 && extraPiconFace != []) { break; }
+
                     var localFile = mfLocalFolder.clone();
                     localFile.append("picons"); // they are stored in $PROFILEPATH$/messagefaces/picons/ by default
                     localFile.append(mfPiconDatabases[i]); // append one of the six database folders
@@ -235,7 +237,6 @@ function mfDisplayFace() {
 
                         if (localFile.exists()) {
                             mfLog.info("Found local picon image.");
-                            numFaces++;
                             extraPiconFace.push(mfFileHandler.getURLSpecFromFile(localFile));
                         } 
                         localFile = clonedLocal.clone();
@@ -259,15 +260,14 @@ function mfDisplayFace() {
                         defaultMisc.append("unknown");
                     }
                     defaultMisc.append("face.gif");
-                    numFaces++;
+                    
                     extraPiconFace.push(mfFileHandler.getURLSpecFromFile(defaultMisc));
                 }
             } else { // if we are not using a local search, use a web lookup using piconsearch.pl
-                numFaces++;
                 extraPiconFace.push(piconsSearchURL + host + "/" + user + piconsSearchSuffix);
             }
 
-            mfSetExtraPiconImage(extraPiconFace, numFaces);
+            mfSetExtraPiconImage(extraPiconFace);
             //msgPaneData.PiconBox.removeAttribute('collapsed');
         }
     }
@@ -282,17 +282,6 @@ function mfDisplayFace() {
         else {
             mfSetImage("data:image/png;base64," + encodeURIComponent(face));
         }
-    }
-    // Older and not so simple X-Face image
-    // Cached because it's slow. TODO: persistent cache
-    else if (xFace != null && mfXFaceUseJS) {
-        mfLog.info("X-Face found.");
-        xFace = xFace.replace(/ /g, "");
-        if (mfX_Cache[xFace] == null) {
-            // It'd be nice to do this asyncronously. Wonder how. Me no know.
-            mfX_Cache[xFace] = mfXFaceJS.FaceURL(xFace);
-        }
-        mfSetImage(mfX_Cache[xFace]);
     }
     // Face that resides on a web server somewhere - POSSIBLE SECURITY/PRIVACY RISK!
     else if (faceURL != null && mfFaceURLEnabled) {
@@ -323,32 +312,75 @@ function mfDisplayFace() {
 
         if (face != null) {
             mfSetImage(face);
-        }
-        else {
+        } else {
             mfSetImage("");
         }
+    }
+    // Older and not so simple X-Face image
+    // Cached because it's slow. TODO: persistent cache
+    if (xFace != null && mfXFaceUseJS) {
+        mfLog.info("X-Face found.");
+        xFace = xFace.replace(/ /g, "");
+        if (mfX_Cache[xFace] == null) {
+            // It'd be nice to do this asyncronously. Wonder how. Me no know.
+            mfX_Cache[xFace] = mfXFaceJS.FaceURL(xFace);
+        }
+        mfSetXImage(mfX_Cache[xFace]);
+    } else if (xFace == null) {
+        mfSetXImage("");
     }
     mfLog.fine("exiting mfDisplayFace().");
 }
 
 function mfSetImage(url) { // set Face image
     mfLog.fine("Setting face: '" + url + "'.");
+
+    if(url=="") {
+        mfImage.style.display = "none";
+    } else {
+        mfImage.style.display = "block";
+    }
+
     mfImage.setAttribute("src", url);
+}
+
+function mfSetXImage(url) { // set X-Face image
+    mfLog.fine("Setting face: '" + url + "'.");
+
+    if(url=="") {
+        mfXImage.style.display = "none";
+    } else {
+        mfXImage.style.display = "block";
+    }
+
+    mfXImage.setAttribute("src", url);
+}
+
+// check to see if gravatar image exists
+// http://stackoverflow.com/questions/11442712/get-width-height-of-remote-image-from-url
+function getMeta(url, callback) {
+    var img = new Image();
+    img.src = url;
+    img.onload = function() { callback(this.width, this.height); }
 }
 
 function mfSetExtraGravImage(url) { // set Gravatar image
     mfLog.fine("Setting grav: '" + url + "'.");
-    mfExtraGravImage.setAttribute("src", url);
+    
+    getMeta(url, function(width, height) { 
+        mfExtraGravImage.style.display = "block"; mfExtraGravImage.setAttribute("src", url); return; 
+    });
+    
+    mfExtraGravImage.style.display = "none"
 }
 
-function mfSetExtraPiconImage(extraPiconFace, numFaces) { // set Picon image
+function mfSetExtraPiconImage(extraPiconFace) { // set Picon image
     mfLog.fine("Setting picon: '" + extraPiconFace[i] + "'.");
 
     //var masterBox = document.createElement("hbox");
     //masterBox.setAttribute("id", "masterBox");
 
     for (var i = extraPiconFace.length - 1; i >= 0; i--) {
-    //for (var i = 0; i < extraPiconFace.length; i++) {
         // get all of the existing piconBoxes for however many picons we found
         var item = document.getElementById("piconBox" + i); 
 
@@ -378,7 +410,6 @@ function mfSetExtraPiconImage(extraPiconFace, numFaces) { // set Picon image
             }
         } else { // if it does already exists, use it
             document.getElementById("fromBuddyIconPicon" + i).setAttribute("src", extraPiconFace[i]);
-            //alert("set at " + i);
         }   
     }
 
@@ -445,24 +476,40 @@ function mfLoadPrefs() {
         }
     }
 
-    mfMaxSize = mfGetPref("maxsize", "Int");
+    var gravBox = document.createElement("vbox");
+    var spacer = document.createElement("spacer");
+    spacer.setAttribute("flex", "1");
+    gravBox.appendChild(spacer);
+    mfExtraGravImage = document.createElement("image");
+    mfExtraGravImage.setAttribute("style", "padding: 5px");
+    mfExtraGravImage.setAttribute("id", "fromBuddyIconGrav");
+    gravBox.appendChild(mfExtraGravImage);
+    console.log(mfExtraGravImage);
+    spacer = document.createElement("spacer");
+    spacer.setAttribute("flex", "1");
+    gravBox.appendChild(spacer);
+    document.getElementById("expandedHeaderView").appendChild(gravBox);
 
-    if(mfGravatarEnabled) {
-        var gravBox = document.createElement("vbox");
+    // Get face image element
+    //mfXImage = document.getElementById("fromBuddyIconXFace");
+    console.log(mfXImage);
+    if (mfXImage == null) {
+        // Thunderbird 2 no longer ships a "fromBuddyIcon" image, so we create our own
+        var vbox = document.createElement("vbox");
         var spacer = document.createElement("spacer");
         spacer.setAttribute("flex", "1");
-        gravBox.appendChild(spacer);
-        mfExtraGravImage = document.createElement("image");
-        mfExtraGravImage.setAttribute("style", "padding: 5px");
-        mfExtraGravImage.setAttribute("id", "fromBuddyIconGrav");
-        gravBox.appendChild(mfExtraGravImage);
-        console.log(mfExtraGravImage);
+        vbox.appendChild(spacer);
+        mfXImage = document.createElement("image");
+        mfXImage.setAttribute("style", "padding: 5px");
+        mfXImage.setAttribute("id", "fromBuddyIconXFace");
+        vbox.appendChild(mfXImage);
+        console.log(mfXImage);
         spacer = document.createElement("spacer");
         spacer.setAttribute("flex", "1");
-        gravBox.appendChild(spacer);
-        document.getElementById("expandedHeaderView").appendChild(gravBox);
+        vbox.appendChild(spacer);
+        document.getElementById("expandedHeaderView").appendChild(vbox);
     }
-    
+
     // Get face image element
     mfImage = document.getElementById("fromBuddyIcon");
     console.log(mfImage);
@@ -483,10 +530,11 @@ function mfLoadPrefs() {
         document.getElementById("expandedHeaderView").appendChild(vbox);
     }
     //mfImage.setAttribute("src", ksFaceURL);
-
     // Set maximum width/height, add 5px padding on each side
-    mfImage.style.maxWidth = (mfMaxSize + 10) + "px";
-    mfImage.style.maxHeight = (mfMaxSize + 10) + "px";
+    //mfImage.style.maxWidth = (mfMaxSize + 10) + "px";
+    //mfImage.style.maxHeight = (mfMaxSize + 10) + "px";
+
+    mfMaxSize = mfGetPref("maxsize", "Int");
 }
 
 var mfPrefObserver = {
