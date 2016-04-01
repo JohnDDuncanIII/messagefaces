@@ -75,6 +75,9 @@ var mfLog = {};
 
 var mfImage = null;
 var mfXImage = null;
+var mfXImageURL = null;
+var mfXFaceURL = null;
+var mfFaceURL = null;
 var mfExtraGravImage = null;
 var mfExtraPiconImage = null;
 var mfO_UpdateMessageHeaders = null;
@@ -165,11 +168,11 @@ function mfDisplayFace() {
     if (headers == null) return;
     var face = headers.extractHeader("face", false);
     var xFace = headers.extractHeader("x-face", false);
-    var faceURL = headers.extractHeader("x-image-url", false);
-    
-    if (faceURL == null) faceURL = headers.extractHeader("x-face-url", false);
-    if (faceURL == null) faceURL = headers.extractHeader("face-url", false);
+    var x_image_url = headers.extractHeader("x-image-url", false);
+    var x_face_url = headers.extractHeader("x-face-url", false);
+    var face_url = headers.extractHeader("face-url", false);
 
+    
     var extraGravFace = null;
 
     var sender = "";
@@ -219,19 +222,20 @@ function mfDisplayFace() {
                 
                 // loop through the six different picon database folders
                 for (var i in mfPiconDatabases) {
-                    if(i == 4 && extraPiconFace != []) { break; }
+                    //alert(mfPiconDatabases[i]);
+                    if(i == 4 && (typeof extraPiconFace !== 'undefined' && extraPiconFace.length > 0)) { break; }
 
                     var localFile = mfLocalFolder.clone();
                     localFile.append("picons"); // they are stored in $PROFILEPATH$/messagefaces/picons/ by default
                     localFile.append(mfPiconDatabases[i]); // append one of the six database folders
-                    if(i == 3) { localFile.append("MISC"); } // special case MISC
+                    if(i == 2) { localFile.append("MISC"); } // special case MISC
 
                     var l = host_pieces.length; // get number of database folders (probably six, but could theoretically change)
                     var clonedLocal; // we will check to see if we have a match at EACH depth, so keep a cloned version w/o the 'unknown/face.gif' portion
                     while (l >= 0) { // loop through however many pieces we have of the host
                         localFile.append(host_pieces[l]); // add that portion of the host (ex: 'edu' or 'gettysburg' or 'cs')
                         clonedLocal = localFile.clone();
-                        if(i == 2) { localFile.append(user); } // username for 'users' db folder (non-standard)
+                        if(i == 1) { localFile.append(user); } // username for 'users' db folder (non-standard)
                         else { localFile.append("unknown"); }
                         localFile.append("face.gif");
 
@@ -283,17 +287,6 @@ function mfDisplayFace() {
             mfSetImage("data:image/png;base64," + encodeURIComponent(face));
         }
     }
-    // Face that resides on a web server somewhere - POSSIBLE SECURITY/PRIVACY RISK!
-    else if (faceURL != null && mfFaceURLEnabled) {
-        mfLog.info("Face-URL found.");
-        faceURL = faceURL.replace(/ /g, "");
-        if (faceURL.match(/^(http|ftp):/)) {
-            mfSetImage(faceURL);
-        }
-        else {
-            mfLog.warn("Malformed face URL encountered: '" + faceURL + "'.");
-        }
-    }
     else {
         var face = null;
 
@@ -329,6 +322,49 @@ function mfDisplayFace() {
     } else if (xFace == null) {
         mfSetXImage("");
     }
+
+    // Face that resides on a web server somewhere - POSSIBLE SECURITY/PRIVACY RISK!
+    if (mfFaceURLEnabled) {
+        if(x_image_url != null) {
+            mfLog.info("X-Image-URL found.");
+            x_image_url = x_image_url.replace(/ /g, "");
+
+            if (x_image_url.match(/^(http|https|ftp):/)) {
+                mfSetXImageURL(x_image_url);
+            } else {
+                mfLog.warn("Malformed face URL encountered: '" + x_image_url + "'.");
+            }
+        } else if (x_image_url == null) {
+            mfSetXImageURL("");
+        }
+
+        if(x_face_url != null) {
+            mfLog.info("X-Face-URL found.");
+            x_face_url = x_face_url.replace(/ /g, "");
+
+            if (x_face_url.match(/^(http|https|ftp):/)) {
+                mfSetXFaceURL(x_face_url);
+            } else {
+                mfLog.warn("Malformed face URL encountered: '" + x_face_url + "'.");
+            }
+        } else if (x_face_url == null) {
+            mfSetXFaceURL("");
+        }
+
+        if(face_url != null) {
+            mfLog.info("Face-URL found.");
+            face_url = face_url.replace(/ /g, "");
+
+            if (face_url.match(/^(http|https|ftp):/)) {
+                mfSetFaceURL(face_url);
+            } else {
+                mfLog.warn("Malformed face URL encountered: '" + face_url + "'.");
+            }
+        } else if (face_url == null) {
+            mfSetFaceURL("");
+        }
+    }
+
     mfLog.fine("exiting mfDisplayFace().");
 }
 
@@ -344,8 +380,44 @@ function mfSetImage(url) { // set Face image
     mfImage.setAttribute("src", url);
 }
 
+function mfSetXImageURL(url) { // set Face image
+    mfLog.fine("Setting X-Image-URL: '" + url + "'.");
+
+    if(url=="") {
+        mfXImageURL.style.display = "none";
+    } else {
+        mfXImageURL.style.display = "block";
+    }
+
+    mfXImageURL.setAttribute("src", url);
+}
+
+function mfSetXFaceURL(url) { // set Face image
+    mfLog.fine("Setting X-Face-URL: '" + url + "'.");
+
+    if(url=="") {
+        mfXFaceURL.style.display = "none";
+    } else {
+        mfXFaceURL.style.display = "block";
+    }
+
+    mfXFaceURL.setAttribute("src", url);
+}
+
+function mfSetFaceURL(url) { // set Face image
+    mfLog.fine("Setting Face-URL: '" + url + "'.");
+
+    if(url=="") {
+        mfFaceURL.style.display = "none";
+    } else {
+        mfFaceURL.style.display = "block";
+    }
+
+    mfFaceURL.setAttribute("src", url);
+}
+
 function mfSetXImage(url) { // set X-Face image
-    mfLog.fine("Setting face: '" + url + "'.");
+    mfLog.fine("Setting X-Face: '" + url + "'.");
 
     if(url=="") {
         mfXImage.style.display = "none";
@@ -370,7 +442,7 @@ function mfSetExtraGravImage(url) { // set Gravatar image
     getMeta(url, function(width, height) { 
         mfExtraGravImage.style.display = "block"; mfExtraGravImage.setAttribute("src", url); return; 
     });
-    
+
     mfExtraGravImage.style.display = "none"
 }
 
@@ -510,6 +582,60 @@ function mfLoadPrefs() {
         document.getElementById("expandedHeaderView").appendChild(vbox);
     }
 
+    console.log(mfXImageURL);
+    if (mfXImageURL == null) {
+        // Thunderbird 2 no longer ships a "fromBuddyIcon" image, so we create our own
+        var vbox = document.createElement("vbox");
+        var spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        vbox.appendChild(spacer);
+        mfXImageURL = document.createElement("image");
+        mfXImageURL.setAttribute("style", "padding: 5px");
+        mfXImageURL.setAttribute("id", "fromBuddyIconXImageURL");
+        vbox.appendChild(mfXImageURL);
+        console.log(mfXImageURL);
+        spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        vbox.appendChild(spacer);
+        document.getElementById("expandedHeaderView").appendChild(vbox);
+    }
+
+    console.log(mfXFaceURL);
+    if (mfXFaceURL == null) {
+        // Thunderbird 2 no longer ships a "fromBuddyIcon" image, so we create our own
+        var vbox = document.createElement("vbox");
+        var spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        vbox.appendChild(spacer);
+        mfXFaceURL = document.createElement("image");
+        mfXFaceURL.setAttribute("style", "padding: 5px");
+        mfXFaceURL.setAttribute("id", "fromBuddyIconXFaceURL");
+        vbox.appendChild(mfXFaceURL);
+        console.log(mfXFaceURL);
+        spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        vbox.appendChild(spacer);
+        document.getElementById("expandedHeaderView").appendChild(vbox);
+    }
+
+    console.log(mfFaceURL);
+    if (mfFaceURL == null) {
+        // Thunderbird 2 no longer ships a "fromBuddyIcon" image, so we create our own
+        var vbox = document.createElement("vbox");
+        var spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        vbox.appendChild(spacer);
+        mfFaceURL = document.createElement("image");
+        mfFaceURL.setAttribute("style", "padding: 5px");
+        mfFaceURL.setAttribute("id", "fromBuddyIconFaceURL");
+        vbox.appendChild(mfFaceURL);
+        console.log(mfFaceURL);
+        spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        vbox.appendChild(spacer);
+        document.getElementById("expandedHeaderView").appendChild(vbox);
+    }
+    
     // Get face image element
     mfImage = document.getElementById("fromBuddyIcon");
     console.log(mfImage);

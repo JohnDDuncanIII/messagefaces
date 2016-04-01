@@ -250,8 +250,7 @@ function prepareSaveHeader(value) {
     if (headerNamesList != null && headerNamesList != "") {
       headerNames = headerNamesList.split(",");
       for (var i = 0; i < headerNames.length; i++) {
-        if (headerNames[i] == headerID)
-        {
+        if (headerNames[i] == headerID) {
           headerRegistered = true;
         }
       }
