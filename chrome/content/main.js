@@ -166,22 +166,22 @@ function mfGetHeaders() {
 function mfDisplayFace() {
     var headers = mfGetHeaders();
     if (headers == null) return;
+    // declare local variables that will hold header vals
     var face = headers.extractHeader("face", false);
     var xFace = headers.extractHeader("x-face", false);
     var x_image_url = headers.extractHeader("x-image-url", false);
     var x_face_url = headers.extractHeader("x-face-url", false);
     var face_url = headers.extractHeader("face-url", false);
-
-    
     var extraGravFace = null;
 
     var sender = "";
-    if (currentHeaderData["from"] != null) {
+    if (currentHeaderData["from"] != null) { // get 'from' header values
         sender = currentHeaderData["from"].headerValue;
     }
     if ((sender == null || sender == "") && currentHeaderData["return-path"] != null) {
         sender = currentHeaderData["return-path"].headerValue;
     }
+    // regex replace
     sender = sender.replace(/^.*\</, "");
     sender = sender.replace(/\>.*$/, "");
     sender = sender.toLowerCase();
@@ -194,20 +194,16 @@ function mfDisplayFace() {
     if (mfGravatarEnabled) {
         mfLog.info("Falling back to Gravatar.");
         var mfCalcMD5 = mfMD5.calcMD5(sender);
-
         extraGravFace = mfGravatarURL;
         extraGravFace = extraGravFace.replace("%ID%", mfCalcMD5);
         extraGravFace = extraGravFace.replace("%SIZE%", mfMaxSize);
         mfSetExtraGravImage(extraGravFace);
     }
-
+    // array to hold URLs of picons stored on disk
     var extraPiconFace = [];
 
     // support picons
     if (mfPiconEnabled) {
-        //var item = document.getElementById("masterBox"); // get the master box that contains the vboxs
-        //if(item != null) { item.parentNode.removeChild(item); } // if it contains something, remove it..
-
         mfLog.info("Falling back to Picon.");
         var atSign = sender.indexOf('@');
 
@@ -222,20 +218,23 @@ function mfDisplayFace() {
                 
                 // loop through the six different picon database folders
                 for (var i in mfPiconDatabases) {
-                    //alert(mfPiconDatabases[i]);
-                    if(i == 4 && (typeof extraPiconFace !== 'undefined' && extraPiconFace.length > 0)) { break; }
+                    // kill the 'unknown' lookup if we already have a picon..
+                    if(mfPiconDatabases[i] == "unknown" && 
+                        (typeof extraPiconFace !== 'undefined' && 
+                            extraPiconFace.length > 0)) { break; }
 
+                    // clone the current URL, as we will need to use it for the next val in the array
                     var localFile = mfLocalFolder.clone();
                     localFile.append("picons"); // they are stored in $PROFILEPATH$/messagefaces/picons/ by default
                     localFile.append(mfPiconDatabases[i]); // append one of the six database folders
-                    if(i == 2) { localFile.append("MISC"); } // special case MISC
+                    if(mfPiconDatabases[i] == "misc") { localFile.append("MISC"); } // special case MISC
 
                     var l = host_pieces.length; // get number of database folders (probably six, but could theoretically change)
                     var clonedLocal; // we will check to see if we have a match at EACH depth, so keep a cloned version w/o the 'unknown/face.gif' portion
                     while (l >= 0) { // loop through however many pieces we have of the host
                         localFile.append(host_pieces[l]); // add that portion of the host (ex: 'edu' or 'gettysburg' or 'cs')
                         clonedLocal = localFile.clone();
-                        if(i == 1) { localFile.append(user); } // username for 'users' db folder (non-standard)
+                        if(mfPiconDatabases[i] == "users") { localFile.append(user); } // username for 'users' db folder (non-standard)
                         else { localFile.append("unknown"); }
                         localFile.append("face.gif");
 
@@ -243,16 +242,18 @@ function mfDisplayFace() {
                             mfLog.info("Found local picon image.");
                             extraPiconFace.push(mfFileHandler.getURLSpecFromFile(localFile));
                         } 
-                        localFile = clonedLocal.clone();
+                        localFile = clonedLocal.clone(); // revert back to old local URL (before above modifications)
                         l--;
                     }
                 }
 
-                if(!(typeof extraPiconFace !== 'undefined' && extraPiconFace.length > 0)) { // check to see if the array is empty
-                    var rnd = Math.round(Math.random());
+                if(!(typeof extraPiconFace !== 'undefined' && 
+                    extraPiconFace.length > 0)) { // check to see if the array is empty
+                    var rnd = Math.round(Math.random()); // random value between 0 and 1
                     var defaultMisc = mfLocalFolder.clone();
                     defaultMisc.append("picons"); 
 
+                    // randomly set unknown address to default unknown picon or pjw face
                     if(rnd == 0) { 
                         defaultMisc.append("misc");
                         defaultMisc.append("MISC");
@@ -264,7 +265,6 @@ function mfDisplayFace() {
                         defaultMisc.append("unknown");
                     }
                     defaultMisc.append("face.gif");
-                    
                     extraPiconFace.push(mfFileHandler.getURLSpecFromFile(defaultMisc));
                 }
             } else { // if we are not using a local search, use a web lookup using piconsearch.pl
@@ -280,7 +280,7 @@ function mfDisplayFace() {
     if (face != null) {
         mfLog.info("Face found.");
         face = face.replace(/(\s)+/g, "");
-        if (face.length > 966) {
+        if (face.length > 966) { // cap at 966 total bytes. see Face header spec for details
             mfLog.warn("Malformed face header encountered - length is " + face.length + " bytes.");
         }
         else {
