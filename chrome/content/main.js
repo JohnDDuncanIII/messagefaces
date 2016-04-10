@@ -67,6 +67,7 @@ var mfLocalPiconImagesEnabled;
 var mfMaxSize;
 var mfPiconEnabled;
 var mfLocalFolder;
+var mfContactPhotoEnabled;
 
 // subscript namespaces
 var mfMD5 = {};
@@ -80,6 +81,7 @@ var mfXFaceURL = null;
 var mfFaceURL = null;
 var mfExtraGravImage = null;
 var mfExtraPiconImage = null;
+var mfContactPhotoImage = null;
 var mfO_UpdateMessageHeaders = null;
 var mfX_Cache = new Array();
 
@@ -365,6 +367,25 @@ function mfDisplayFace() {
         }
     }
 
+    // Get images for sender stored in the address book
+    if(mfContactPhotoEnabled) {
+        var cardDetails = GetCardForEmail(sender); // grab the card details using builtin func
+        if(cardDetails.card != null) {
+            var photoURL = cardDetails.card.getProperty("PhotoName", null);
+            var localFile =  Components.classes["@mozilla.org/file/directory_service;1"]
+            .getService(Components.interfaces.nsIProperties)
+            .get("ProfD", Components.interfaces.nsIFile).clone();
+            localFile.append("Photos");
+            localFile.append(photoURL+""); // get the photo name from email address
+            if(photoURL != null) {
+                mfSetContactPhotoImage(mfFileHandler.getURLSpecFromFile(localFile));
+            } else { mfSetContactPhotoImage(""); }
+            
+        } else {
+            mfSetContactPhotoImage("");
+        }
+    }
+
     mfLog.fine("exiting mfDisplayFace().");
 }
 
@@ -426,6 +447,18 @@ function mfSetXImage(url) { // set X-Face image
     }
 
     mfXImage.setAttribute("src", url);
+}
+
+function mfSetContactPhotoImage(url) {
+    mfLog.fine("Setting Contact Photo: '" + url + "'.");
+
+    if(url=="") {
+        mfContactPhotoImage.style.display = "none";
+    } else {
+        mfContactPhotoImage.style.display = "block";
+    }
+
+    mfContactPhotoImage.setAttribute("src", url);
 }
 
 // check to see if gravatar image exists
@@ -530,6 +563,8 @@ function mfLoadPrefs() {
     mfLocalImagesEnabled = mfGetPref("local.enabled", "Bool");
     mfLocalPiconImagesEnabled = mfGetPref("localPicon.enabled", "Bool");
     mfPiconEnabled = mfGetPref("picon.enabled", "Bool");
+    mfContactPhotoEnabled = mfGetPref("contactPhoto.enabled", "Bool");
+    mfMaxSize = mfGetPref("maxsize", "Int");
 
     mfLog.init("MessageFaces", mfGetPref("loglevel", "Int"));
 
@@ -636,6 +671,24 @@ function mfLoadPrefs() {
         document.getElementById("expandedHeaderView").appendChild(vbox);
     }
     
+    if(mfContactPhotoImage == null) {
+        var vbox = document.createElement("vbox");
+        var spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        vbox.appendChild(spacer);
+        mfContactPhotoImage = document.createElement("image");
+        mfContactPhotoImage.setAttribute("style", "padding: 5px");
+        mfContactPhotoImage.setAttribute("id", "fromBuddyIconContactPhoto");
+        vbox.appendChild(mfContactPhotoImage);
+        console.log(mfContactPhotoImage);
+        spacer = document.createElement("spacer");
+        spacer.setAttribute("flex", "1");
+        vbox.appendChild(spacer);
+        mfContactPhotoImage.style.maxWidth = (mfMaxSize + 10) + "px";
+        mfContactPhotoImage.style.maxHeight = (mfMaxSize + 10) + "px";
+        document.getElementById("expandedHeaderView").appendChild(vbox);
+    }
+
     // Get face image element
     mfImage = document.getElementById("fromBuddyIcon");
     console.log(mfImage);
@@ -655,12 +708,14 @@ function mfLoadPrefs() {
         vbox.appendChild(spacer);
         document.getElementById("expandedHeaderView").appendChild(vbox);
     }
+
     //mfImage.setAttribute("src", ksFaceURL);
     // Set maximum width/height, add 5px padding on each side
     //mfImage.style.maxWidth = (mfMaxSize + 10) + "px";
     //mfImage.style.maxHeight = (mfMaxSize + 10) + "px";
 
-    mfMaxSize = mfGetPref("maxsize", "Int");
+    
+
 }
 
 var mfPrefObserver = {

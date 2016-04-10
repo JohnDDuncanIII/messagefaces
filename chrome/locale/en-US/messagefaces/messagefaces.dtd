@@ -28,6 +28,10 @@
 <!ENTITY mf.pref.local.chooseFolder "Choose folder...">
 <!ENTITY mf.pref.local.hint "Use the e-mail address as the name and one of the extensions .png, .jpg or .gif for each image.">
 
+<!ENTITY mf.pref.contactPhoto "Local contact photos">
+<!ENTITY mf.pref.contactPhoto.enabled "Load face images from the Address Book">
+<!ENTITY mf.pref.contactPhoto.description "You may manually set these face images in the Address Book graphical user interface. The photos are stored in $PROFILEPATH$/Images/">
+
 <!ENTITY mf.pref.localPicon "Local Picon images">
 <!ENTITY mf.pref.localPicon.enabled "Load picon images from local folder">
 <!ENTITY mf.pref.localPicon.chooseFolder "Choose folder...">

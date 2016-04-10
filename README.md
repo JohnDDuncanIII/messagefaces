@@ -13,6 +13,7 @@ This extension lets Mozilla Thunderbird display 'face' images in the message hea
 | x-face-url | Same as above ^ | Display only; optional |
 | face-url | Same as above ^ | Display only; optional |
 | picon | Personal Icons | Display only; optional |
+| address book | Displays the contact photo for the sender contained in the address book | Display only; optional |
 
 picon support coming in the near future. multiple-display of face/xface/gravatar coming soon too.
 
@@ -113,7 +114,7 @@ A: Lars Magne Ingebrigtsen, the creator of the Face header, maintains a list of 
 
 Q: Can I translate MessageFaces into another language?
 
-A: Translations are always welcome - please contact me via the address given on the bottom of this page. I only ask for two things: first, send me your locale files, so I can incorporate them into the next release. Second, expect that I contact you asking to update your translation for new releases. 
+A: Translations are always welcome - please contact me via the address given on the bottom of this page. I only ask for two things: first, send me your locale files, so I can incorporate them into the next release. Second, expect that I contact you asking to update your translation for new releases.
 
 
 # Creating a Face image
@@ -123,20 +124,26 @@ A: Translations are always welcome - please contact me via the address given on 
 3. Check the file size. If it is larger than 725 pixels, try to decrease the number of colors in the image (usually, 8 to 15 colors make the file small enough). Additionally, you can try command line tools like [pngrewrite](http://entropymine.com/jason/pngrewrite/) and [pngcrush](http://pmt.sourceforge.net/pngcrush/), which often further reduce the file size.
 4. Open Tools -> Extensions -> MessageFaces -> Options. Select the desired identity and press the "Set Face" button. Select the image file, and press the "OK" button. (Note: the Face is saved directly into the identity. If you plan to uninstall MessageFaces but don't want to keep the Face, you have to remove it via the MessageFaces settings window before uninstalling the extension.)
 
+# How do I set the contact photo image?
+
+Just click on the sender's contact card in your address book, then pick a local or remote (web) image. The image will then be copied into your profile directory's "Images" folder. 
 
 # Changelog
-1.2.2 (2016-04-01)
-- Added support for displaying multiple picons at once (for local lookups), if available
+1.2.3 (2016-04-09)
+- Added support for address book/contact photo faces in the message header.
 
-- Can now display X-Image-URL, X-Face-URL, and Face-URL headers in separate vboxes (alongside all other headers)
+1.2.2 (2016-04-01)
+- Added support for displaying multiple picons at once (for local lookups), if available.
+
+- Can now display X-Image-URL, X-Face-URL, and Face-URL headers in separate vboxes (alongside all other headers).
 
 
 1.2.1 (2016-03-04)
-- Added local picon lookup support
+- Added local picon lookup support.
 
 
 1.2 (2016-03-08)
-- Added picon support
+- Added picon support.
 
 
 1.1.3 (2016-03-07)
@@ -147,9 +154,9 @@ Version 1.1.2 of this add-on was completely broken on SeaMonkey 2.39.
 
 - Fixed a bug that would prevent the default preferences from being read
 
--  Fixed a bug that would assign the wrong variable preference values (changed gPrefBranch calls to global mfPref. gPrefBranch was never even initialized??)
+-  Fixed a bug that would assign the wrong variable preference values (changed gPrefBranch calls to global mfPref. gPrefBranch was never even initialized??).
 
-- Fixed a bug that would cause the program to give up before reading the entire header (this was especially bad for modern web-servers like Google's gmail. (changed '(content.length > 512 * 8)' to (content.length > 512 * 32)
+- Fixed a bug that would cause the program to give up before reading the entire header (this was especially bad for modern web-servers like Google's gmail. (changed '(content.length > 512 * 8)' to (content.length > 512 * 32).
 
 - Wow this was hard to debug without a working logger on SM 2.39...
 

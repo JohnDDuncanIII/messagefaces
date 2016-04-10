@@ -57,7 +57,7 @@
   <script type="application/x-javascript">
     <![CDATA[
       var _elementIDs = ["xfaceUseJS", "enableLocalImages", "enableLocalPiconImages", "gravatarEnabled",
-                         "faceURLEnabled", "localFolder", "localPiconFolder", "piconEnabled"];
+                         "faceURLEnabled", "localFolder", "localPiconFolder", "piconEnabled", "contactPhotoEnabled"];
     ]]>
   </script>
 
@@ -165,6 +165,15 @@
                       prefstring="extensions.messagefaces.picon.enabled"
                       preftype="bool"/>
             <description>&mf.pref.picon.description;</description>
+          </groupbox>
+
+          <groupbox>
+            <caption label="&mf.pref.contactPhoto;"/>
+            <checkbox id="contactPhotoEnabled"
+                      label="&mf.pref.contactPhoto.enabled;"
+                      prefstring="extensions.messagefaces.contactPhoto.enabled"
+                      preftype="bool"/>
+            <description>&mf.pref.contactPhoto.description;</description>
           </groupbox>
 
         </tabpanel>

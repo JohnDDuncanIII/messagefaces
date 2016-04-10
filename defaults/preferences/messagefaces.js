@@ -2,6 +2,7 @@ pref("extensions.messagefaces.faceURL.enabled", false);
 pref("extensions.messagefaces.gravatar.enabled", false);
 pref("extensions.messagefaces.gravatar.url", "http://www.gravatar.com/avatar.php?gravatar_id=%ID%&size=%SIZE%&d=404");
 pref("extensions.messagefaces.local.enabled", true);
+pref("extensions.messagefaces.contactPhoto.enabled", true);
 pref("extensions.messagefaces.loglevel", 1);
 pref("extensions.messagefaces.maxsize", 48);
 pref("extensions.messagefaces.xface.useJS", true);
