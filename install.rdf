@@ -9,11 +9,12 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>{FACE5779-9D08-48F9-922F-17AA9C065C9B}</em:id>
     <em:name>MessageFaces</em:name>
-    <em:version>1.2.3</em:version>
+    <em:version>1.2.4</em:version>
     <em:description>Displays 'face' images in the message header.</em:description>
     <em:creator>Jens Bannmann (jens.b@web.de)</em:creator>
 
     <em:contributor>Arvid Axelsson</em:contributor>
+    <em:contributor>John Duncan</em:contributor>
     <em:contributor>Marco de Freitas</em:contributor>
     <em:contributor>Jonas Eckerman</em:contributor>
     <em:contributor>Máté Farkas</em:contributor>
@@ -21,8 +22,6 @@
     <em:contributor>Pawel Kata</em:contributor>
     <em:contributor>Hans Christian Saustrup</em:contributor>
     <em:contributor>Andrew Taylor</em:contributor>
-    <em:contributor>John Duncan</em:contributor>
-
 
     <em:homepageURL>http://cs.gettysburg.edu/~duncjo01/MessageFaces</em:homepageURL>
     <em:optionsURL>chrome://messagefaces/content/preferences.xul</em:optionsURL>

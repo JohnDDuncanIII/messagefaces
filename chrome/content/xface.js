@@ -433,7 +433,7 @@ function Gen() {
     }
   }
 }
-
+/*
 function FaceURL(face) {
   var i;
   UnCompAll(face.replace(/[^!-~]/g, "")); // eliminate illegal chars
@@ -451,4 +451,169 @@ function FaceURL(face) {
             });
   bmp = "data:image/bmp;base64," + btoa(bmp + ff);
   return bmp;
+}
+*/
+//
+// PNG transformation
+//
+
+// call this only once, just use output with different xfaces!
+function PNGFace()
+{
+  // array of one byte strings, initialized to zero bytes
+  this.png = new Array(2444);
+  for (let n = 0; n < 2444; n++)
+    this.png[n] = String.fromCharCode(0);
+
+  this.Insert(   0, '\x00\x00\x00\rIHDR\x00\x00\x000\x00\x00\x000\b\x03');
+  this.Insert(  25, '\x00\x00\x00\x06PLTE');
+  this.Insert(  43, '\x00\x00\x00\x02tRNS');
+  this.Insert(  57, '\x00\x00\t;IDATx\xDA\x010\t\xCF\xF6');
+  this.Insert(2432, '\x00\x00\x00\x00IEND');
+
+  /* Table of CRCs of all 8-bit messages. */
+  this.crc32_table = new Array(256);
+  for (let n = 0; n < 256; n++)
+  {
+    let c = n;
+    for (let k = 0; k < 8; k++)
+    {
+      if (c & 1)
+        c = -306674912 ^ ((c >> 1) & 0x7fffffff);
+      else
+        c = (c >> 1) & 0x7fffffff;
+    }
+    this.crc32_table[n] = c;
+  }
+}
+
+// set color in PNG - with alpha in byte format (0-255)!
+// index 0 = background
+// index 1 = foreground
+PNGFace.prototype.Color = function(index, asRGBA)
+{
+  let oRGBA = asRGBA.split(",");
+  this.png[33+index*3+0] = String.fromCharCode(Number(oRGBA[0]));
+  this.png[33+index*3+1] = String.fromCharCode(Number(oRGBA[1]));
+  this.png[33+index*3+2] = String.fromCharCode(Number(oRGBA[2]));
+  this.png[51+index]     = String.fromCharCode(Number(oRGBA[3]) * 255);
+}
+
+// insert string into array
+PNGFace.prototype.Insert = function(offs, str)
+{
+  for (let j = 0; j < str.length; ++j)
+    this.png[offs++] = str.charAt(j);
+}
+PNGFace.prototype.Insert4 = function(offs, w)
+{
+  this.Insert(offs, String.fromCharCode((w>>24)&255, (w>>16)&255, (w>>8)&255, w&255));
+}
+
+// compute crc32 of the PNG chunks
+PNGFace.prototype.CRC32 = function(offs, size)
+{
+  let crc = -1; // initialize crc
+  for (let i = 4; i < size - 4; ++i)
+    crc = this.crc32_table[(crc ^ this.png[offs + i].charCodeAt(0)) & 0xff] ^ ((crc >> 8) & 0x00ffffff);
+  this.Insert4(offs + size - 4, crc ^ -1);
+}
+
+// output a PNG string
+PNGFace.prototype.URL = function(xface)
+{
+  // compute adler32 of output pixels + row filter bytes
+  let BASE = 65521; /* largest prime smaller than 65536 */
+  let NMAX = 5552;  /* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
+  let s1 = 1;
+  let s2 = 0;
+  let n = NMAX;
+  for (let y = 0; y < 48; ++y)
+    for (let x = -1; x < 48; ++x)
+    {
+      let i = y * 49 + x + 73;
+      if (x >= 0)
+        this.png[i] = String.fromCharCode(xface[x + y * 48]); // set X-Face dot
+      s1 += this.png[i].charCodeAt(0);
+      s2 += s1;
+      if (!(n -= 1))
+      {
+        s1 %= BASE;
+        s2 %= BASE;
+        n = NMAX;
+      }
+    }
+  s1 %= BASE;
+  s2 %= BASE;
+  this.Insert4(2424, (s2 << 16) | s1);
+
+  this.CRC32(   0,   25);
+  this.CRC32(  25,   18);
+  this.CRC32(  43,   14);
+  this.CRC32(  57, 2375);
+  this.CRC32(2432,   12);
+
+  // convert PNG to string
+  return "\211PNG\r\n\032\n"+this.png.join('');
+}
+
+
+function ReadCSSColor(aoComputedStyle, asColorName, asDefaultValue)
+{
+  let sColor = aoComputedStyle.getPropertyCSSValue(asColorName).cssText;
+  if (/^rgba\(/.test(sColor))
+  {
+    // have rgba values
+    sColor = sColor.substr(5, sColor.length - 6);
+  }
+  else if (/^rgb\(/.test(sColor))
+  {
+    // only rgb values, assume opaque
+    sColor = sColor.substr(4, sColor.length - 5) + ",1";
+  }
+  else if (sColor == "transparent")
+  {
+    // special value
+    sColor = "0,0,0,0";
+  }
+  else
+  {
+    // default: plain opaque white
+    sColor = asDefaultValue;
+  }
+  return sColor;
+}
+
+
+//
+//  Create data URL for X-Face-PNG
+//
+let goPNGFace = new PNGFace();
+
+function FaceURL(asFace, aoComputedStyle)
+{
+  UnCompAll(asFace.replace(/[^!-~]/g, "")); // eliminate illegal chars
+  Gen();
+
+  // set colour values:
+  //  #fromBuddyIconXFace
+  //  {
+  //    color:            green;
+  //    color:            -moz-rgba(50%, 50%, 50%, 0.5);
+  //    background-color: red;
+  //    background-color: transparent;
+  //    padding:          0 ! important;
+  //    margin:           5px;
+  //  }
+  // Unfortunately, the alpha channel value of -moz-rgba is retrievable
+  // only on trunk since about 2007-01-24...
+
+  // background; defaults to plain opaque white
+  let sBackColors = ReadCSSColor(aoComputedStyle, "background-color", "255,255,255,1");
+  goPNGFace.Color(0, sBackColors);
+  // foreground; defaults to plain opaque black
+  let oForeColors = ReadCSSColor(aoComputedStyle, "color", "0,0,0,1");
+  goPNGFace.Color(1, oForeColors);
+
+  return "data:image/png;base64," + btoa(goPNGFace.URL(F));
 }

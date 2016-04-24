@@ -319,11 +319,16 @@ function mfDisplayFace() {
     if (xFace != null && mfXFaceUseJS) {
         mfLog.info("X-Face found.");
         xFace = xFace.replace(/ /g, "");
+        var koComputedStyle = window.getComputedStyle(mfXImage, null);
+        //var ksFaceURL = mfXFaceJS.FaceURL(xFace, koComputedStyle);
+        
         if (mfX_Cache[xFace] == null) {
             // It'd be nice to do this asyncronously. Wonder how. Me no know.
-            mfX_Cache[xFace] = mfXFaceJS.FaceURL(xFace);
+            //mfX_Cache[xFace] = mfXFaceJS.FaceURL(xFace);
+            mfX_Cache[xFace] = mfXFaceJS.FaceURL(xFace, koComputedStyle);
         }
         mfSetXImage(mfX_Cache[xFace]);
+        //mfSetXImage(ksFaceURL);
     } else if (xFace == null) {
         mfSetXImage("");
     } else { mfSetXImage(""); }
@@ -667,7 +672,7 @@ function mfLoadPrefs() {
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
         mfXImage = document.createElement("image");
-        mfXImage.setAttribute("style", "padding: 5px");
+        mfXImage.setAttribute("style", "margin: 5px");
         mfXImage.setAttribute("id", "fromBuddyIconXFace");
         vbox.appendChild(mfXImage);
         console.log(mfXImage);

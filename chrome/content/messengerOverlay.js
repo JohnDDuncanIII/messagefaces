@@ -106,11 +106,17 @@ var columnHandler = {
 	    if (xfaceHdr != "" && mfXFaceUseJS) {
         	//dump("X-Face found.");
         	xfaceHdr = xfaceHdr.replace(/ /g, "");
+        	var koComputedStyle = window.getComputedStyle(mfXImage, null);
+        	//var ksFaceURL = mfXFaceJS.FaceURL(xfaceHdr, koComputedStyle);
+
         	if (mfX_Cache[xfaceHdr] == null) {
             	// It'd be nice to do this asyncronously. Wonder how. Me no know.
-            	mfX_Cache[xfaceHdr] = mfXFaceJS.FaceURL(xfaceHdr);
+            	//mfX_Cache[xfaceHdr] = mfXFaceJS.FaceURL(xfaceHdr);
+            	mfX_Cache[xfaceHdr] = mfXFaceJS.FaceURL(xfaceHdr, koComputedStyle);
         	}
         	return mfX_Cache[xfaceHdr];
+        	
+        	//return ksFaceURL;
     	}
 
     	if(mfGravatarEnabled) {

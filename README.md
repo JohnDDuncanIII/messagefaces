@@ -129,6 +129,9 @@ A: Translations are always welcome - please contact me via the address given on 
 Just click on the sender's contact card in your address book, then pick a local or remote (web) image. The image will then be copied into your profile directory's "Images" folder. 
 
 # Changelog
+1.2.4 (2016-04-24)
+- add custom mailnews column; cache gravatar images; enable x-face styling through #fromBuddyIconXFace element (for example, in the userChrome.css file).
+
 1.2.3 (2016-04-09)
 - Added support for address book/contact photo faces in the message header.
 
