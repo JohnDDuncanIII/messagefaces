@@ -40,13 +40,14 @@
 
 addEventListener('messagepane-loaded', mfStartup, true);
 
-const mfIOService = Components.classes["@mozilla.org/network/io-service;1"]
-      .getService(Components.interfaces.nsIIOService);
-const mfFileHandler = mfIOService.getProtocolHandler("file")
-      .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
-const mfFileExtensions = new Array("jpg", "png", "gif"); // file extensions for local FACE lookups
-const mfPiconDatabases = new Array("domains", "users", "misc", "usenix", "unknown"); // picon database folders
 
+var mfIOService = Components.classes["@mozilla.org/network/io-service;1"]
+      .getService(Components.interfaces.nsIIOService);
+var mfFileHandler = mfIOService.getProtocolHandler("file")
+      .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
+var mfPiconDatabases = new Array("domains", "users", "misc", "usenix", "unknown"); // picon database folders
+
+var mfFileExtensions = new Array("jpg", "png", "gif"); // file extensions for local FACE lookups
 
 mfSyncStream = Components.Constructor("@mozilla.org/network/sync-stream-listener;1",
                                       Components.interfaces.nsIInputStream);
@@ -59,6 +60,7 @@ mfMimeHeaders = Components.Constructor("@mozilla.org/messenger/mimeheaders;1",
 
 var mfPref;
 var mfGravatarEnabled;
+var mfGravatarEnableCache;
 var mfGravatarURL;
 var mfXFaceUseJS;
 var mfFaceURLEnabled;
@@ -84,6 +86,7 @@ var mfExtraPiconImage = null;
 var mfContactPhotoImage = null;
 var mfO_UpdateMessageHeaders = null;
 var mfX_Cache = new Array();
+var mfbase64Grav;
 
 // globabl preference service for reading in values across functions
 var prefService;
@@ -199,7 +202,7 @@ function mfDisplayFace() {
         extraGravFace = mfGravatarURL;
         extraGravFace = extraGravFace.replace("%ID%", mfCalcMD5);
         extraGravFace = extraGravFace.replace("%SIZE%", mfMaxSize);
-        mfSetExtraGravImage(extraGravFace);
+        mfSetExtraGravImage(extraGravFace, mfCalcMD5);
     }
     // array to hold URLs of picons stored on disk
     var extraPiconFace = [];
@@ -276,7 +279,7 @@ function mfDisplayFace() {
             mfSetExtraPiconImage(extraPiconFace);
             //msgPaneData.PiconBox.removeAttribute('collapsed');
         }
-    }
+    } else { mfSetExtraPiconImage(""); }
 
     // Simple Face PNG image
     if (face != null) {
@@ -323,7 +326,7 @@ function mfDisplayFace() {
         mfSetXImage(mfX_Cache[xFace]);
     } else if (xFace == null) {
         mfSetXImage("");
-    }
+    } else { mfSetXImage(""); }
 
     // Face that resides on a web server somewhere - POSSIBLE SECURITY/PRIVACY RISK!
     if (mfFaceURLEnabled) {
@@ -338,7 +341,7 @@ function mfDisplayFace() {
             }
         } else if (x_image_url == null) {
             mfSetXImageURL("");
-        }
+        } else { mfSetXImageURL(""); }
 
         if(x_face_url != null) {
             mfLog.info("X-Face-URL found.");
@@ -365,13 +368,14 @@ function mfDisplayFace() {
         } else if (face_url == null) {
             mfSetFaceURL("");
         }
-    }
+    } else { mfSetFaceURL(""); }
 
     // Get images for sender stored in the address book
     if(mfContactPhotoEnabled) {
         var cardDetails = GetCardForEmail(sender); // grab the card details using builtin func
         if(cardDetails.card != null) {
             var photoURL = cardDetails.card.getProperty("PhotoName", null);
+            //alert(photoURL+"");
             var localFile =  Components.classes["@mozilla.org/file/directory_service;1"]
             .getService(Components.interfaces.nsIProperties)
             .get("ProfD", Components.interfaces.nsIFile).clone();
@@ -380,11 +384,10 @@ function mfDisplayFace() {
             if(photoURL != null) {
                 mfSetContactPhotoImage(mfFileHandler.getURLSpecFromFile(localFile));
             } else { mfSetContactPhotoImage(""); }
-            
         } else {
             mfSetContactPhotoImage("");
         }
-    }
+    } else { mfSetContactPhotoImage(""); }
 
     mfLog.fine("exiting mfDisplayFace().");
 }
@@ -466,14 +469,68 @@ function mfSetContactPhotoImage(url) {
 function getMeta(url, callback) {
     var img = new Image();
     img.src = url;
-    img.onload = function() { callback(this.width, this.height); }
+    img.onload = function() { mfbase64Grav = getBase64Image(img); callback(this.width, this.height); }
 }
 
-function mfSetExtraGravImage(url) { // set Gravatar image
+// http://stackoverflow.com/questions/934012/get-image-data-in-javascript
+function getBase64Image(img) {
+    // Create an empty canvas element
+    var canvas = content.document.createElementNS("http://www.w3.org/1999/xhtml","canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Copy the image contents to the canvas
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    // Get the data-URL formatted image
+    // Firefox supports PNG and JPEG. You could check img.src to
+    // guess the original format, but be aware the using "image/jpg"
+    // will re-encode the image.
+    var dataURL = canvas.toDataURL("image/png");
+
+    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+}
+
+function mfSetExtraGravImage(url, mfCalcMD5) { // set Gravatar image
     mfLog.fine("Setting grav: '" + url + "'.");
     
+    var found = false;
+
     getMeta(url, function(width, height) { 
-        mfExtraGravImage.style.display = "block"; mfExtraGravImage.setAttribute("src", url); return; 
+        var localFile = mfLocalFolder.clone();
+        localFile.append(mfCalcMD5+".png");
+        if (!localFile.exists() && mfGravatarEnableCache) {
+            Components.utils.import("resource://gre/modules/osfile.jsm");
+
+            var file = OS.Path.join(OS.Constants.Path.profileDir, "messagefaces", mfCalcMD5 + ".png");
+
+            var str = mfbase64Grav.replace(/^.*?;base64,/, "");
+            // Decode to a byte string
+            str = atob(str);
+            // Decode to an Uint8Array, because OS.File.writeAtomic expects an ArrayBuffer(View).
+            var data = new Uint8Array(str.length);
+            for (var i = 0, e = str.length; i < e; ++i) {
+              data[i] = str.charCodeAt(i);
+            }
+
+            // To support Firefox 24 and earlier, you'll need to provide a tmpPath. See MDN.
+            // There is in my opinion no need to support these, as they are end-of-life and
+            // contain known security issues. Let's not encourage users. ;)
+            var promised = OS.File.writeAtomic(file, data);
+            promised.then(
+              function() {},  // Success!
+              function(ex) {} // Failed. Error information in ex
+            );
+        } else if (localFile.exists()) {
+            mfExtraGravImage.style.display = "block"; 
+            mfExtraGravImage.setAttribute("src", mfFileHandler.getURLSpecFromFile(localFile));
+            return;
+        }
+
+        mfExtraGravImage.style.display = "block"; 
+        mfExtraGravImage.setAttribute("src", url);
+        return; 
     });
 
     mfExtraGravImage.style.display = "none"
@@ -541,6 +598,8 @@ function mfStartup() {
     var md5Type = "nsICryptoHash" in Components.interfaces ? "call" : "impl";
     jsLoader.loadSubScript("chrome://messagefaces/content/md5-" + md5Type + ".js", mfMD5);
     jsLoader.loadSubScript("chrome://messagefaces/content/xface.js", mfXFaceJS);
+    
+    
     jsLoader.loadSubScript("chrome://messagefaces/content/logging.js", mfLog);
 
     prefService = Components.classes["@mozilla.org/preferences-service;1"]
@@ -557,6 +616,7 @@ function mfStartup() {
 
 function mfLoadPrefs() {
     mfGravatarEnabled = mfGetPref("gravatar.enabled", "Bool");
+    mfGravatarEnableCache = mfGetPref("gravatar.enableCache", "Bool");
     mfGravatarURL = mfGetPref("gravatar.url", "Char");
     mfXFaceUseJS = mfGetPref("xface.useJS", "Bool");
     mfFaceURLEnabled = mfGetPref("faceURL.enabled", "Bool");

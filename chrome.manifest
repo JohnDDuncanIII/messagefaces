@@ -6,4 +6,4 @@ locale messagefaces de-DE chrome/locale/en-US/messagefaces/
 locale messagefaces hu-HU chrome/locale/en-US/messagefaces/
 locale messagefaces pl-PL chrome/locale/en-US/messagefaces/
 overlay chrome://messenger/content/msgHdrViewOverlay.xul chrome://messagefaces/content/headerViewOverlay.xul
-
+overlay chrome://messenger/content/messenger.xul chrome://messagefaces/content/messengerOverlay.xul

@@ -56,8 +56,8 @@
   <script type="application/x-javascript" src="chrome://messagefaces/content/preferences.js"/>
   <script type="application/x-javascript">
     <![CDATA[
-      var _elementIDs = ["xfaceUseJS", "enableLocalImages", "enableLocalPiconImages", "gravatarEnabled",
-                         "faceURLEnabled", "localFolder", "localPiconFolder", "piconEnabled", "contactPhotoEnabled"];
+      var _elementIDs = ["xfaceUseJS", "enableLocalImages", "enableLocalPiconImages", "gravatarEnabled", "gravatarEnableCache",
+                         "faceURLEnabled", "localFolder", "columnEnabled", "localPiconFolder", "piconEnabled", "contactPhotoEnabled"];
     ]]>
   </script>
 
@@ -114,6 +114,24 @@
                       preftype="bool"/>
           </groupbox>
           <groupbox>
+            <caption label="&mf.pref.column;"/>
+            <checkbox id="columnEnabled"
+                      label="&mf.pref.column.enabled;"
+                      prefstring="extensions.messagefaces.column.enabled"
+                      preftype="bool"/>
+            <description>&mf.pref.column.hint;</description>
+          </groupbox>
+
+          <groupbox>
+            <caption label="&mf.pref.contactPhoto;"/>
+            <checkbox id="contactPhotoEnabled"
+                      label="&mf.pref.contactPhoto.enabled;"
+                      prefstring="extensions.messagefaces.contactPhoto.enabled"
+                      preftype="bool"/>
+            <description>&mf.pref.contactPhoto.description;</description>
+          </groupbox>
+          
+          <groupbox>
             <caption label="&mf.pref.local;"/>
             <checkbox id="enableLocalImages"
                       label="&mf.pref.local.enabled;"
@@ -147,6 +165,11 @@
                       prefstring="extensions.messagefaces.gravatar.enabled"
                       preftype="bool"/>
             <description>&mf.pref.gravatar.description;</description>
+            <checkbox id="gravatarEnableCache"
+                      label="&mf.pref.gravatar.enableCache;"
+                      prefstring="extensions.messagefaces.gravatar.enableCache"
+                      preftype="bool"/>
+            <description>&mf.pref.gravatar.cacheDescription;</description>
           </groupbox>
 
           <groupbox>
@@ -166,16 +189,6 @@
                       preftype="bool"/>
             <description>&mf.pref.picon.description;</description>
           </groupbox>
-
-          <groupbox>
-            <caption label="&mf.pref.contactPhoto;"/>
-            <checkbox id="contactPhotoEnabled"
-                      label="&mf.pref.contactPhoto.enabled;"
-                      prefstring="extensions.messagefaces.contactPhoto.enabled"
-                      preftype="bool"/>
-            <description>&mf.pref.contactPhoto.description;</description>
-          </groupbox>
-
         </tabpanel>
 
       </tabpanels>

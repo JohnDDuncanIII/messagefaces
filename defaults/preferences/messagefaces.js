@@ -1,5 +1,7 @@
 pref("extensions.messagefaces.faceURL.enabled", false);
+pref("extensions.messagefaces.column.enabled", false);
 pref("extensions.messagefaces.gravatar.enabled", false);
+pref("extensions.messagefaces.gravatar.enableCache", false);
 pref("extensions.messagefaces.gravatar.url", "http://www.gravatar.com/avatar.php?gravatar_id=%ID%&size=%SIZE%&d=404");
 pref("extensions.messagefaces.local.enabled", true);
 pref("extensions.messagefaces.contactPhoto.enabled", true);

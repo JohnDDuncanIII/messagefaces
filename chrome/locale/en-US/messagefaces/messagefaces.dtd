@@ -37,9 +37,15 @@
 <!ENTITY mf.pref.localPicon.chooseFolder "Choose folder...">
 <!ENTITY mf.pref.localPicon.hint "By default, this will search $PROFILEPATH$/picons/ (for example, /Users/John/Library/Application\ Support/SeaMonkey/Profiles/SeaMonkey.default/">
 
+<!ENTITY mf.pref.column "MessageFaces column">
+<!ENTITY mf.pref.column.enabled "Show faces in a custom mailnews column">
+<!ENTITY mf.pref.column.hint "By default, the search order is: Face > X-Face > Gravatar > Contact Photo > Face URL > Picon. Note that gravatars and picons will only be shown if you have cached gravatar images or there is a local picon database installed to $PROFILEPATH$/messagefaces/picons/, respectively.">
+
 <!ENTITY mf.pref.gravatar "Gravatar">
 <!ENTITY mf.pref.gravatar.enabled "Load face images from gravatar.com">
 <!ENTITY mf.pref.gravatar.description "The e-mail address of the sender is transmitted to the central gravatar.com service using one-way encryption. Your e-mail address is not transmitted. The sender can not find out if or when you read the message.">
+<!ENTITY mf.pref.gravatar.enableCache "Cache 48x48 gravatar images to $PROFILEPATH$/messagefaces/">
+<!ENTITY mf.pref.gravatar.cacheDescription "This will allow you to display gravatar images from the disk instead of requiring an internet connection. The image will be cached whenever you click on a message who's sender has a valid gravatar. This is requied to see gravatar images with column mode enabled">
 
 <!ENTITY mf.pref.faceURL "Face addresses">
 <!ENTITY mf.pref.faceURL.enabled "Load face images from web addresses included in messages">

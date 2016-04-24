@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://messagefaces/content/messengerOverlay.css" type="text/css"?> 
+
+<!DOCTYPE overlay>
+
+<overlay id="colFaceHeaderOverlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script type="application/x-javascript;version=1.8" src="chrome://messagefaces/content/compactHeader.js"/>
+	
+	<tree id="threadTree">
+		<treecols id="threadCols">
+			<splitter class="tree-splitter" />
+			<treecol id="compactHeader" persist="hidden ordinal width" currentView="unthreaded" flex="2" label="Compact" tooltiptext="Click to sort by the multiline compact header" />
+		</treecols>
+	</tree>
+</overlay>

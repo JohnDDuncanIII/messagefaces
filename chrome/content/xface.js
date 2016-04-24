@@ -65,26 +65,26 @@
 // digit is added an offset of '!' (0x21).
 // The resulting string is set as the X-Face header.
 
-const LENGTH=48;
-const PIXELS=(LENGTH * LENGTH);
+var LENGTH=48;
+var PIXELS=(LENGTH * LENGTH);
 
-const FIRSTPRINT = '!'.charCodeAt(0);
-const LASTPRINT  = '~'.charCodeAt(0);
-const NUMPRINTS = (LASTPRINT - FIRSTPRINT + 1);
+var FIRSTPRINT = '!'.charCodeAt(0);
+var LASTPRINT  = '~'.charCodeAt(0);
+var NUMPRINTS = (LASTPRINT - FIRSTPRINT + 1);
 
-const BITSPERWORD=8;
-const WORDCARRY=(1 << BITSPERWORD);
-const WORDMASK=(WORDCARRY - 1);
-const MAXWORDS=Math.floor(((PIXELS * 2 + BITSPERWORD - 1) / BITSPERWORD));
+var BITSPERWORD=8;
+var WORDCARRY=(1 << BITSPERWORD);
+var WORDMASK=(WORDCARRY - 1);
+var MAXWORDS=Math.floor(((PIXELS * 2 + BITSPERWORD - 1) / BITSPERWORD));
 
-const BLACK=0;
-const GREY =1;
-const WHITE=2;
+var BLACK=0;
+var GREY =1;
+var WHITE=2;
 
 var B = {b_first: 0, b_words: 0, b_word: new Array(MAXWORDS)};
 var F = new Array(PIXELS);
 
-const levels = 
+var levels = 
   [ /*        BLACK                        GREY                      WHITE  */
     [{p_offset:255, p_range:1  }, {p_offset:0, p_range:251}, {p_offset:251, p_range:4  }],/* Top of tree almost always grey */
     [{p_offset:255, p_range:1  }, {p_offset:0, p_range:200}, {p_offset:200, p_range:55 }],
@@ -96,7 +96,7 @@ const levels =
  * pixel is black.  The probabilities below give the distribution of the
  * 16 possible 2x2 patterns.  All white is not really a possibility and
  * has a probability range of zero.  Again, experimentally derived data */
-const freqs = 
+var freqs = 
   [
     {p_offset:0,   p_range:0 }, {p_offset:0,   p_range:38}, {p_offset:38,  p_range:38}, {p_offset:152, p_range:13},
     {p_offset:76,  p_range:38}, {p_offset:165, p_range:13}, {p_offset:178, p_range:13}, {p_offset:230, p_range:6 },
@@ -105,7 +105,7 @@ const freqs =
   ];
 
 // table for Gen()
-const G = 
+var G = 
 {
   g_00:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         1,1,1,0,0,0,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,1,0,1,0,0,0,1,0,1,1,1,0,0,0,0,0,1,0,1,0,0,0,0,1,1,1,1,
@@ -360,7 +360,7 @@ function UnCompAll(fbuf) {
   var i;
   B.b_words = B.b_first = 0;
   // convert base 94 to base 256
-  const kl = fbuf.length;
+  var kl = fbuf.length;
   for (i = 0; i < kl; ++i) {
     BigMul(NUMPRINTS);
     BigAdd(fbuf.charCodeAt(i) - FIRSTPRINT);
