@@ -72,8 +72,8 @@ var mfLocalFolder;
 var mfContactPhotoEnabled;
 
 // subscript namespaces
-var mfMD5 = {};
-var mfXFaceJS = {};
+var mfMD5m = {};
+var mfXFaceJSm = {};
 var mfLog = {};
 
 var mfImage = null;
@@ -198,7 +198,7 @@ function mfDisplayFace() {
     // Gravatar centralized email address images
     if (mfGravatarEnabled) {
         mfLog.info("Falling back to Gravatar.");
-        var mfCalcMD5 = mfMD5.calcMD5(sender);
+        var mfCalcMD5 = mfMD5m.calcMD5(sender);
         extraGravFace = mfGravatarURL;
         extraGravFace = extraGravFace.replace("%ID%", mfCalcMD5);
         extraGravFace = extraGravFace.replace("%SIZE%", mfMaxSize);
@@ -320,12 +320,12 @@ function mfDisplayFace() {
         mfLog.info("X-Face found.");
         xFace = xFace.replace(/ /g, "");
         var koComputedStyle = window.getComputedStyle(mfXImage, null);
-        //var ksFaceURL = mfXFaceJS.FaceURL(xFace, koComputedStyle);
+        //var ksFaceURL = mfXFaceJSm.FaceURL(xFace, koComputedStyle);
         
         if (mfX_Cache[xFace] == null) {
             // It'd be nice to do this asyncronously. Wonder how. Me no know.
-            //mfX_Cache[xFace] = mfXFaceJS.FaceURL(xFace);
-            mfX_Cache[xFace] = mfXFaceJS.FaceURL(xFace, koComputedStyle);
+            //mfX_Cache[xFace] = mfXFaceJSm.FaceURL(xFace);
+            mfX_Cache[xFace] = mfXFaceJSm.FaceURL(xFace, koComputedStyle);
         }
         mfSetXImage(mfX_Cache[xFace]);
         //mfSetXImage(ksFaceURL);
@@ -597,12 +597,12 @@ function mfSetExtraPiconImage(extraPiconFace) { // set Picon image
 }
 
 function mfStartup() {
-    const jsLoader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
+    var jsLoader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
           .getService(Components.interfaces.mozIJSSubScriptLoader);
 
     var md5Type = "nsICryptoHash" in Components.interfaces ? "call" : "impl";
-    jsLoader.loadSubScript("chrome://messagefaces/content/md5-" + md5Type + ".js", mfMD5);
-    jsLoader.loadSubScript("chrome://messagefaces/content/xface.js", mfXFaceJS);
+    jsLoader.loadSubScript("chrome://messagefaces/content/md5-" + md5Type + ".js", mfMD5m);
+    jsLoader.loadSubScript("chrome://messagefaces/content/xface.js", mfXFaceJSm);
     
     
     jsLoader.loadSubScript("chrome://messagefaces/content/logging.js", mfLog);

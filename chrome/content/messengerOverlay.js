@@ -52,11 +52,11 @@ var mfFaceURLEnabled;
 var mfColumnEnabled;
 var mfX_Cache = new Array();
 
-const mfFileExtensions = new Array("jpg", "png", "gif"); // file extensions for local FACE lookups
-const mfPiconDatabases = new Array("domains", "users", "misc", "usenix", "unknown"); // picon database folders
-const mfIOService = Components.classes["@mozilla.org/network/io-service;1"]
+var mfFileExtensions = new Array("jpg", "png", "gif"); // file extensions for local FACE lookups
+var mfPiconDatabases = new Array("domains", "users", "misc", "usenix", "unknown"); // picon database folders
+var mfIOService = Components.classes["@mozilla.org/network/io-service;1"]
       .getService(Components.interfaces.nsIIOService);
-const mfFileHandler = mfIOService.getProtocolHandler("file")
+var mfFileHandler = mfIOService.getProtocolHandler("file")
       .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
 
 // check to see if gravatar image exists
@@ -373,8 +373,8 @@ function computePicon(sender) {
 
             //return toReturn;
             if(toReturn != null) {
-    			return toReturn;
-    		}
+    			   return toReturn;
+    		  }
         }
     }
 }
@@ -394,54 +394,59 @@ var CreateDbObserver = {
   }
 }
 
-window.addEventListener("load", doOnceLoaded, false);
+//window.addEventListener("load", doOnceLoaded, false);
+//window.addEventListener('messagepane-loaded', doOnceLoaded, true);
 
 
 function doOnceLoaded() {
-	this._prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-	const jsLoader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
-	    .getService(Components.interfaces.mozIJSSubScriptLoader);
+	//if(gDBView != null) {
+    this._prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+    var jsLoaderMessenger = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
+        .getService(Components.interfaces.mozIJSSubScriptLoader);
 
-	var md5Type = "nsICryptoHash" in Components.interfaces ? "call" : "impl";
-	jsLoader.loadSubScript("chrome://messagefaces/content/md5-" + md5Type + ".js", mfMD5);
-	jsLoader.loadSubScript("chrome://messagefaces/content/xface.js", mfXFaceJS);
+    var md5Type = "nsICryptoHash" in Components.interfaces ? "call" : "impl";
+    jsLoaderMessenger.loadSubScript("chrome://messagefaces/content/md5-" + md5Type + ".js", mfMD5);
+    jsLoaderMessenger.loadSubScript("chrome://messagefaces/content/xface.js", mfXFaceJS);
 
-	mfGravatarEnabled = this._prefService.getBoolPref("extensions.messagefaces.gravatar.enabled");
-	//mfGravatarEnableCache = this._prefService.getBoolPref("extensions.messagefaces.gravatar.enableCache");
-   	mfXFaceUseJS = this._prefService.getBoolPref("extensions.messagefaces.xface.useJS");
-   	mfMaxSize = this._prefService.getIntPref("extensions.messagefaces.maxsize");
-   	mfPiconEnabled = this._prefService.getBoolPref("extensions.messagefaces.picon.enabled");
-   	mfGravatarURL = this._prefService.getCharPref("extensions.messagefaces.gravatar.url");
-   	mfLocalPiconImagesEnabled = this._prefService.getBoolPref("extensions.messagefaces.localPicon.enabled");
-   	mfLocalImagesEnabled = this._prefService.getBoolPref("extensions.messagefaces.local.enabled");
-   	mfContactPhotoEnabled = this._prefService.getBoolPref("extensions.messagefaces.contactPhoto.enabled");
-   	mfFaceURLEnabled = this._prefService.getBoolPref("extensions.messagefaces.faceURL.enabled");
-   	mfColumnEnabled = this._prefService.getBoolPref("extensions.messagefaces.column.enabled");
+    mfGravatarEnabled = this._prefService.getBoolPref("extensions.messagefaces.gravatar.enabled");
+    //mfGravatarEnableCache = this._prefService.getBoolPref("extensions.messagefaces.gravatar.enableCache");
+      mfXFaceUseJS = this._prefService.getBoolPref("extensions.messagefaces.xface.useJS");
+      mfMaxSize = this._prefService.getIntPref("extensions.messagefaces.maxsize");
+      mfPiconEnabled = this._prefService.getBoolPref("extensions.messagefaces.picon.enabled");
+      mfGravatarURL = this._prefService.getCharPref("extensions.messagefaces.gravatar.url");
+      mfLocalPiconImagesEnabled = this._prefService.getBoolPref("extensions.messagefaces.localPicon.enabled");
+      mfLocalImagesEnabled = this._prefService.getBoolPref("extensions.messagefaces.local.enabled");
+      mfContactPhotoEnabled = this._prefService.getBoolPref("extensions.messagefaces.contactPhoto.enabled");
+      mfFaceURLEnabled = this._prefService.getBoolPref("extensions.messagefaces.faceURL.enabled");
+      mfColumnEnabled = this._prefService.getBoolPref("extensions.messagefaces.column.enabled");
 
-   	if(mfColumnEnabled) {
-   		var prefService = Components.classes["@mozilla.org/preferences-service;1"]
-        .getService(Components.interfaces.nsIPrefService);
-	   	mfPref = prefService.getBranch("extensions.messagefaces.");
+      //if(mfColumnEnabled) {
+        var prefService = Components.classes["@mozilla.org/preferences-service;1"]
+          .getService(Components.interfaces.nsIPrefService);
+        mfPref = prefService.getBranch("extensions.messagefaces.");
 
-	    try {
-			mfLocalFolder = mfPref.getComplexValue("local.folder",
-				Components.interfaces.nsILocalFile);
-		} catch (e) {
-			mfLocalFolder = Components.classes["@mozilla.org/file/directory_service;1"]
-		    	.getService(Components.interfaces.nsIProperties)
-		    	.get("ProfD", Components.interfaces.nsIFile);
-			var p = mfLocalFolder.permissions;
-			mfLocalFolder.append("messagefaces");
-			if (!mfLocalFolder.exists()) {
-		    	mfLocalFolder.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, p);
-			}
-		}
+        try {
+           mfLocalFolder = mfPref.getComplexValue("local.folder",
+              Components.interfaces.nsILocalFile);
+        } catch (e) {
+           mfLocalFolder = Components.classes["@mozilla.org/file/directory_service;1"]
+             .getService(Components.interfaces.nsIProperties)
+             .get("ProfD", Components.interfaces.nsIFile);
+        var p = mfLocalFolder.permissions;
+        mfLocalFolder.append("messagefaces");
+        if (!mfLocalFolder.exists()) {
+            mfLocalFolder.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, p);
+        }
+      }
 
 
-		var ObserverService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
-		ObserverService.addObserver(CreateDbObserver, "MsgCreateDBView", false);
-	   	
-	  	window.document.getElementById('folderTree').addEventListener("select",addCustomColumnHandler,false);
-   	}
+        var ObserverService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+        ObserverService.addObserver(CreateDbObserver, "MsgCreateDBView", false);
+        
+        window.document.getElementById('folderTree').addEventListener("select",addCustomColumnHandler,false);
+    //}
+  
+  //}
    	
 }
+doOnceLoaded();
