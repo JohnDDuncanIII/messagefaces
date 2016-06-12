@@ -1,6 +1,9 @@
 /* Adjust Thread pane message row height */
 #threadTree treechildren:-moz-tree-row {
-	height: 48px !important;
+	height: 50px !important;
+}
+#threadTree treechildren:-moz-tree-row(hover) {
+	background-color: #e7e7e7 !important;
 }
 #threadTree treechildren:-moz-tree-cell-text {
 	font-size: 13px !important;
@@ -8,4 +11,5 @@
 #threadTree treechildren:-moz-tree-image(faceImage) {
 	width: 48px !important;
 	height: 48px !important;
+	margin-top:-1px !important;
 }
