@@ -15,39 +15,35 @@ This extension lets Mozilla Thunderbird display 'face' images in the message hea
 | picon | Personal Icons | Display only; optional |
 | address book | Displays the contact photo for the sender contained in the address book | Display only; optional |
 
-picon support coming in the near future. multiple-display of face/xface/gravatar coming soon too.
-
 # Screenshots
 face (from original site)
 
 ![original](screenshots/header-example.png)
 ***
-normal face
 
-![face](screenshots/face.png)
-***
-smaller face
+Face, Gravatar, X-Face, Picon
 
-![face-small](screenshots/face-small.png)
-***
-xface
-
-![xface](screenshots/xface.png)
-***
-gravatar
-
-![gravatar](screenshots/gravatar.png)
-***
-picon
-
-![picon_net](screenshots/picon_net.png)
+![all](screenshots/all.png)
 ***
 
-![picon_de](screenshots/picon_de.png)
+multi-picon support
+
+![work](screenshots/me_work.png)
 ***
 
-![picon_gov](screenshots/picopn_gov.png)
+University, country, domain, etc. support from Steve Kinzler's [Picon Archive](http://kinzler.com/picons/ftp/)
+
+![sweden](screenshots/sweden.png)
+
+![uk](screenshots/uk.png)
 ***
+
+Custom MessageFaces column mode supports all types (Face, X-Face, Gravatar, Picon, URLs) - picons must be read from local db (profile/MessageFaces/picons/) and gravatars must be read from profie/MessageFaces/; internet lookup not supported in this mode out of courtesy to the server operators.
+
+![flags](screenshots/flags.png)
+
+![action](screenshots/action.png)
+
 
 # Faq
 Q: How do I use it?
@@ -99,7 +95,7 @@ A: Recently, the idea of putting a link to a photo of the sender into the mail h
 
 Q: Are picons supported?
 
-A:  Not yet. This feature will be available in MessageFaces 1.2. (I still plan on doing this - John)
+A: Yes! This feature was added in MessageFaces 1.2. Local picons databases can be downloaded from [here](http://kinzler.com/ftp/faces/picons/db/) and untar'd and placed in profile/MessageFaces/picons/ to enable multi-picon and custom column picon support. 
 
 
 Q: Are favatars supported?
@@ -126,7 +122,7 @@ A: Translations are always welcome - please contact me via the address given on 
 
 # How do I set the contact photo image?
 
-Just click on the sender's contact card in your address book, then pick a local or remote (web) image. The image will then be copied into your profile directory's "Images" folder. 
+Just click on the sender's contact card in your address book, then pick a local or remote (web) image. The image will then be copied into your profile directory's "Images" folder (NOT profile/MessageFaces/images/; this is handled by the client itself, not the extension)
 
 # Changelog
 1.2.5 (2016-04-25)
