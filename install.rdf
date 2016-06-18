@@ -9,7 +9,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>{FACE5779-9D08-48F9-922F-17AA9C065C9B}</em:id>
     <em:name>MessageFaces</em:name>
-    <em:version>1.2.5</em:version>
+    <em:version>1.2.6</em:version>
     <em:description>Displays 'face' images in the message header.</em:description>
     <em:creator>Jens Bannmann (jens.b@web.de)</em:creator>
 
