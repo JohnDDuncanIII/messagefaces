@@ -93,6 +93,7 @@ var prefService;
 
 // Picons - web lookup code partially lifted from https://bugzilla.mozilla.org/show_bug.cgi?id=60881
 var piconsSearchURL = "http://kinzler.com/cgi/piconsearch.cgi/";
+var piconsDBURL = "https://kinzler.com/picons/db/";
 var piconsSearchSuffix = "/users+usenix+misc+domains+unknown/up/single/gif/order";
 
 function mfWrapUpdateMessageHeaders() {
@@ -272,11 +273,47 @@ function mfDisplayFace() {
                     defaultMisc.append("face.gif");
                     extraPiconFace.push(mfFileHandler.getURLSpecFromFile(defaultMisc));
                 }
+                mfSetExtraPiconImage(extraPiconFace);
             } else { // if we are not using a local search, use a web lookup using piconsearch.pl
-                extraPiconFace.push(piconsSearchURL + host + "/" + user + piconsSearchSuffix);
-            }
+                var host_pieces = host.split('.');
+                var faceCounter = 0;
 
-            mfSetExtraPiconImage(extraPiconFace);
+                // loop through the six different picon database folders
+                for (var i in mfPiconDatabases) {
+                    var k_url = piconsDBURL + mfPiconDatabases[i] + "/";
+                    var l = host_pieces.length - 1;
+                    var clonedLocal;
+                    if(mfPiconDatabases[i] == "misc") { k_url += "MISC/"; } // special case MISC
+
+                    while (l >= 0) { // loop through however many pieces we have of the host
+                        k_url += host_pieces[l] + "/"; // add that portion of the host (ex: 'edu' or 'gettysburg' or 'cs')
+                        // http://stackoverflow.com/questions/728360/how-to-correctly-clone-a-javascript-object
+                        clonedLocal = k_url+"";
+                        if(mfPiconDatabases[i] == "users") { k_url += user + "/"; } // username for 'users' db folder (non-standard)
+                        else { k_url += "unknown/"; }
+                        k_url += "face.gif";
+                        
+                        getMetaPicon(k_url, function(width, height, src) { 
+                            mfLog.info("Found local picon image.");
+
+                            if(!src.includes("db/unknown")) {
+                                faceCounter++;
+                                extraPiconFace.push(src);
+                                mfSetExtraPiconImage(extraPiconFace);
+                            } else if (src.includes("db/unknown") && faceCounter == 0) {
+                                faceCounter++;
+                                extraPiconFace.push(src);
+                                mfSetExtraPiconImage(extraPiconFace);
+                            }
+                            
+                            //return; 
+                        });
+
+                        k_url = clonedLocal; // revert back to old local URL (before above modifications)
+                        l--;
+                    }
+                }
+            }
             //msgPaneData.PiconBox.removeAttribute('collapsed');
         }
     } else { mfSetExtraPiconImage(""); }
@@ -475,6 +512,12 @@ function getMeta(url, callback) {
     var img = new Image();
     img.src = url;
     img.onload = function() { mfbase64Grav = getBase64Image(img); callback(this.width, this.height); }
+}
+
+function getMetaPicon(url, callback) {
+    var img = new Image();
+    img.onload = function() { callback(this.width, this.height, this.src); }
+    img.src = url;
 }
 
 // http://stackoverflow.com/questions/934012/get-image-data-in-javascript
@@ -778,9 +821,6 @@ function mfLoadPrefs() {
     // Set maximum width/height, add 5px padding on each side
     //mfImage.style.maxWidth = (mfMaxSize + 10) + "px";
     //mfImage.style.maxHeight = (mfMaxSize + 10) + "px";
-
-    
-
 }
 
 var mfPrefObserver = {
