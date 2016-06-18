@@ -36,6 +36,8 @@ University, country, domain, etc. support from Steve Kinzler's [Picon Archive](h
 ![sweden](screenshots/sweden.png)
 
 ![uk](screenshots/uk.png)
+
+![sites](screenshots/sites.png)
 ***
 
 Custom MessageFaces column mode supports all types (Face, X-Face, Gravatar, Picon, URLs) - picons must be read from local db (profile/MessageFaces/picons/) and gravatars must be read from profie/MessageFaces/; internet lookup not supported in this mode out of courtesy to the server operators.
