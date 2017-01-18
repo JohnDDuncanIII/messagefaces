@@ -4,7 +4,6 @@
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
      <!--xmlns:yuck="http://www.mozilla.org/2004/em-rdf#">
 	 -->
-  
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>{FACE5779-9D08-48F9-922F-17AA9C065C9B}</em:id>
@@ -38,10 +37,10 @@
       <Description>
         <em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id>
         <em:minVersion>2.0</em:minVersion>
-        <em:maxVersion>2.40</em:maxVersion>
+        <em:maxVersion>2.46</em:maxVersion>
       </Description>
     </em:targetApplication>
-    
+
     <em:targetApplication> <!-- Thunderbird -->
       <Description>
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
