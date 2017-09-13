@@ -81,7 +81,6 @@ function init() {
     if (getPref("mail.server." + serverID + ".type") != "none") {
       for (var j = 0; j < identityList.length; j++) {
         var identity = identityList[j];
-        
         var face = null;
         var idPrefix = "mail.identity." + identity;
 
@@ -105,7 +104,7 @@ function init() {
             face = "data:image/png;base64," + encodeURIComponent(face);
           }
         }
-        
+
         var data = document.createElement("data");
         data.setAttribute("id", identity + "HeaderNames");
         data.setAttribute("pref", true);
@@ -113,7 +112,7 @@ function init() {
         data.setAttribute("prefstring", idPrefix + ".headers");
         data.setAttribute("value", getPref(idPrefix + ".headers"));
         document.getElementById("dataBox").appendChild(data);
-        
+
         var item = document.createElement("listitem");
 
         // Create an info node. If the face is changed, this node's ID is added
@@ -316,7 +315,7 @@ function chooseFolder() {
 function showFolderPath() {
   var dirBox = document.getElementById("localFolder");
   dirBox.value = (/Mac/.test(navigator.platform)) ? localFolder.leafName : localFolder.path;
-}  
+}
 
 function loadPrefs() {
   try {

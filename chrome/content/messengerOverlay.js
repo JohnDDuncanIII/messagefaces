@@ -55,9 +55,9 @@ var mfX_Cache = new Array();
 var mfFileExtensions = new Array("jpg", "png", "gif"); // file extensions for local FACE lookups
 var mfPiconDatabases = new Array("domains", "users", "misc", "usenix", "unknown"); // picon database folders
 var mfIOService = Components.classes["@mozilla.org/network/io-service;1"]
-      .getService(Components.interfaces.nsIIOService);
+    .getService(Components.interfaces.nsIIOService);
 var mfFileHandler = mfIOService.getProtocolHandler("file")
-      .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
+    .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
 
 // check to see if gravatar image exists
 // http://stackoverflow.com/questions/11442712/get-width-height-of-remote-image-from-url
@@ -68,10 +68,12 @@ function getMeta(url, callback) {
 }
 
 var columnHandler = {
-	isEditable: 			function(aRow, aCol) {return false;},
-	getCellProperties:  	function(row, col, props){ return "faceImage"; },
-   	getImageSrc:         	function(row, col) {
-   		var hdr = gDBView.getMsgHdrAt(row);
+    isEditable: 		function(aRow, aCol) {return false;},
+
+    getCellProperties:  	function(row, col, props){ return "faceImage"; },
+
+    getImageSrc:         	function(row, col) {
+   	var hdr = gDBView.getMsgHdrAt(row);
     	var sender = hdr.getStringProperty("sender");
     	sender = sender.replace(/^.*\</, "");
     	sender = sender.replace(/\>.*$/, "");
@@ -79,263 +81,258 @@ var columnHandler = {
 
     	var faceHdr = hdr.getStringProperty("face");
 
-	    // Simple Face PNG image
-	    if (faceHdr != "") {
-	        //dump("Face found.");
-	        faceHdr = faceHdr.replace(/(\s)+/g, "");
-	        return "data:image/png;base64," + encodeURIComponent(faceHdr);
-	    }
-	    else {
-	        faceHdr = null;
+	// Simple Face PNG image
+	if (faceHdr != "") {
+	    //dump("Face found.");
+	    faceHdr = faceHdr.replace(/(\s)+/g, "");
+	    return "data:image/png;base64," + encodeURIComponent(faceHdr);
+	}
+	else {
+	    faceHdr = null;
 
-	        // Local icon directory enabled?
-	        if (mfLocalImagesEnabled) {
-	            for (var i in mfFileExtensions) {
-	                var localFile = mfLocalFolder.clone();
-	                localFile.append(sender + "." + mfFileExtensions[i]);
-	                if (localFile.exists()) {
-	                    //dump("Found local image.");
-	                    return mfFileHandler.getURLSpecFromFile(localFile);
-	                    //break;
-	                }
+	    // Local icon directory enabled?
+	    if (mfLocalImagesEnabled) {
+	        for (var i in mfFileExtensions) {
+	            var localFile = mfLocalFolder.clone();
+	            localFile.append(sender + "." + mfFileExtensions[i]);
+	            if (localFile.exists()) {
+	                //dump("Found local image.");
+	                return mfFileHandler.getURLSpecFromFile(localFile);
+	                //break;
 	            }
 	        }
 	    }
+	}
 
-	    var xfaceHdr = hdr.getStringProperty("x-face");
-	    if (xfaceHdr != "" && mfXFaceUseJS) {
-        	//dump("X-Face found.");
-        	xfaceHdr = xfaceHdr.replace(/ /g, "");
-        	var koComputedStyle = window.getComputedStyle(mfXImage, null);
-        	//var ksFaceURL = mfXFaceJS.FaceURL(xfaceHdr, koComputedStyle);
+	var xfaceHdr = hdr.getStringProperty("x-face");
+	if (xfaceHdr != "" && mfXFaceUseJS) {
+            //dump("X-Face found.");
+            xfaceHdr = xfaceHdr.replace(/ /g, "");
+            var koComputedStyle = window.getComputedStyle(mfXImage, null);
+            //var ksFaceURL = mfXFaceJS.FaceURL(xfaceHdr, koComputedStyle);
 
-        	if (mfX_Cache[xfaceHdr] == null) {
+            if (mfX_Cache[xfaceHdr] == null) {
             	// It'd be nice to do this asyncronously. Wonder how. Me no know.
             	//mfX_Cache[xfaceHdr] = mfXFaceJS.FaceURL(xfaceHdr);
             	mfX_Cache[xfaceHdr] = mfXFaceJS.FaceURL(xfaceHdr, koComputedStyle);
-        	}
-        	return mfX_Cache[xfaceHdr];
-        	
-        	//return ksFaceURL;
+            }
+            return mfX_Cache[xfaceHdr];
+            //return ksFaceURL;
     	}
 
+	// get image from gravatar service (or locally, if cached)
     	if(mfGravatarEnabled) {
-    		var mfCalcMD5 = mfMD5.calcMD5(sender);
-    		var localFile = mfLocalFolder.clone();
-	        localFile.append(mfCalcMD5+".png");
-	        if (localFile.exists()) {
+    	    var mfCalcMD5 = mfMD5.calcMD5(sender);
+    	    var localFile = mfLocalFolder.clone();
+	    localFile.append(mfCalcMD5+".png");
+	    if (localFile.exists()) {
                 //dump("Found local image.");
                 return mfFileHandler.getURLSpecFromFile(localFile);
             }
     	}
-    	
-	    // Get images for sender stored in the address book
-	    if(mfContactPhotoEnabled) {
-	        var cardDetails = GetCardForEmail(sender); // grab the card details using builtin func
-	        if(cardDetails.card != null) {
-	            var photoURL = cardDetails.card.getProperty("PhotoName", null);
-	            //alert(photoURL+"");
-	            var localFile =  Components.classes["@mozilla.org/file/directory_service;1"]
+
+	// Get images for sender stored in the address book
+	if(mfContactPhotoEnabled) {
+	    var cardDetails = GetCardForEmail(sender); // grab the card details using builtin func
+	    if(cardDetails.card != null) {
+	        var photoURL = cardDetails.card.getProperty("PhotoName", null);
+	        //alert(photoURL+"");
+	        var localFile =  Components.classes["@mozilla.org/file/directory_service;1"]
 	            .getService(Components.interfaces.nsIProperties)
 	            .get("ProfD", Components.interfaces.nsIFile).clone();
-	            localFile.append("Photos");
-	            localFile.append(photoURL+""); // get the photo name from email address
-	            if(photoURL != null) {
-	               return mfFileHandler.getURLSpecFromFile(localFile);
-	            } 
-	    	}
-	    }
-
-	    var x_image_url = hdr.getStringProperty("x-image-url");
-    	var x_face_url =  hdr.getStringProperty("x-face-url");
-    	var face_url =  hdr.getStringProperty("face-url");
-		// Face that resides on a web server somewhere - POSSIBLE SECURITY/PRIVACY RISK!
-	    if (mfFaceURLEnabled) {
-	        if(x_image_url != "") {
-	           //dump("X-Image-URL found.");
-	            x_image_url = x_image_url.replace(/ /g, "");
-
-	            if (x_image_url.match(/^(http|https|ftp):/)) {
-	                return x_image_url;
-	            } else {
-	                dump("Malformed face URL encountered: '" + x_image_url + "'.");
-	            }
-	        } 
-
-	        if(x_face_url != "") {
-	            //dump("X-Face-URL found.");
-	            x_face_url = x_face_url.replace(/ /g, "");
-
-	            if (x_face_url.match(/^(http|https|ftp):/)) {
-	                return x_face_url;
-	            } else {
-	                //dump("Malformed face URL encountered: '" + x_face_url + "'.");
-	            }
-	        } 
-
-	        if(face_url != "") {
-	            //dump("Face-URL found.");
-	            face_url = face_url.replace(/ /g, "");
-
-	            if (face_url.match(/^(http|https|ftp):/)) {
-	                return face_url;
-	            } else {
-	                //dump("Malformed face URL encountered: '" + face_url + "'.");
-	            }
+	        localFile.append("Photos");
+	        localFile.append(photoURL+""); // get the photo name from email address
+	        if(photoURL != null) {
+	            return mfFileHandler.getURLSpecFromFile(localFile);
 	        }
 	    }
-	    return computePicon(sender);
-   	},
-   	getCellText: 			function(row, col) { 
-    	
+	}
+
+	var x_image_url = hdr.getStringProperty("x-image-url");
+    	var x_face_url =  hdr.getStringProperty("x-face-url");
+    	var face_url =  hdr.getStringProperty("face-url");
+	// Face that resides on a web server somewhere - POSSIBLE SECURITY/PRIVACY RISK!
+	if (mfFaceURLEnabled) {
+	    if(x_image_url != "") {
+	        //dump("X-Image-URL found.");
+	        x_image_url = x_image_url.replace(/ /g, "");
+
+	        if (x_image_url.match(/^(http|https|ftp):/)) {
+	            return x_image_url;
+	        } else {
+	            dump("Malformed face URL encountered: '" + x_image_url + "'.");
+	        }
+	    }
+
+	    if(x_face_url != "") {
+	        //dump("X-Face-URL found.");
+	        x_face_url = x_face_url.replace(/ /g, "");
+
+	        if (x_face_url.match(/^(http|https|ftp):/)) {
+	            return x_face_url;
+	        } else {
+	            //dump("Malformed face URL encountered: '" + x_face_url + "'.");
+	        }
+	    }
+
+	    if(face_url != "") {
+	        //dump("Face-URL found.");
+	        face_url = face_url.replace(/ /g, "");
+
+	        if (face_url.match(/^(http|https|ftp):/)) {
+	            return face_url;
+	        } else {
+	            //dump("Malformed face URL encountered: '" + face_url + "'.");
+	        }
+	    }
+	}
+	return computePicon(sender);
+    },
+
+    getCellText: function(row, col) {
     	var key = gDBView.getKeyAt(row);
     	if(!key) { return "?"; }
-	    var hdr = gDBView.db.GetMsgHdrForKey(key);
-	    if(!hdr) { return "?"; }
-	   	
-	   	/*
-	   	return hdr.getProperty("face") || hdr.getProperty("x-face") ||
-	    	hdr.getProperty("face-url") || hdr.getProperty("x-image-url") || 
-	    	hdr.getProperty("x-face-url") || hdr.getProperty("sender") || "?";
-	    */
+	var hdr = gDBView.db.GetMsgHdrForKey(key);
+	if(!hdr) { return "?"; }
+	/*
+	  return hdr.getProperty("face") || hdr.getProperty("x-face") ||
+	  hdr.getProperty("face-url") || hdr.getProperty("x-image-url") ||
+	  hdr.getProperty("x-face-url") || hdr.getProperty("sender") || "?";
+	*/
 
-	   	var sender = hdr.getStringProperty("sender");
+	var sender = hdr.getStringProperty("sender");
     	if(sender.length > 0) {
-    		sender = sender.replace(/^.*\</, "");
-    		sender = sender.replace(/\>.*$/, "");
-    		sender = sender.toLowerCase();
+    	    sender = sender.replace(/^.*\</, "");
+    	    sender = sender.replace(/\>.*$/, "");
+    	    sender = sender.toLowerCase();
     	}
 
-	    if(hdr.getProperty("face").length > 0) {
-			return (hdr.getProperty("face"));
-	    }
+	if(hdr.getProperty("face").length > 0) {
+	    return (hdr.getProperty("face"));
+	}
 
-	    if(hdr.getProperty("x-face").length > 0) {
-	    	return (hdr.getProperty("x-face"));
-	    }
+	if(hdr.getProperty("x-face").length > 0) {
+	    return (hdr.getProperty("x-face"));
+	}
 
-	    if(mfGravatarEnabled) {
-    		var mfCalcMD5 = mfMD5.calcMD5(sender);
-    		var localFile = mfLocalFolder.clone();
-	        localFile.append(mfCalcMD5+".png");
-	        if (localFile.exists()) {
+	if(mfGravatarEnabled) {
+    	    var mfCalcMD5 = mfMD5.calcMD5(sender);
+    	    var localFile = mfLocalFolder.clone();
+	    localFile.append(mfCalcMD5+".png");
+	    if (localFile.exists()) {
                 return "" + mfFileHandler.getURLSpecFromFile(localFile);
             }
     	}
 
-	    if(hdr.getProperty("sender").length > 0) {
-	    	var atSign = sender.indexOf('@');
-	    	var user = sender.substring(0, atSign);
-	    	var host = sender.substring(atSign + 1)
-       		var host_pieces = host.split('.');
-       		var toReturn = "";
+	if(hdr.getProperty("sender").length > 0) {
+	    var atSign = sender.indexOf('@');
+	    var user = sender.substring(0, atSign);
+	    var host = sender.substring(atSign + 1)
+       	    var host_pieces = host.split('.');
+       	    var toReturn = "";
 
-       		for (var i = host_pieces.length - 1; i >= 0; i--) {
-       			toReturn += host_pieces[i];
-       			if(i != 0) { toReturn += "."; }
-       		}
-       		toReturn += "@" + user;
-	    	return (toReturn);
-	    }
+       	    for (var i = host_pieces.length - 1; i >= 0; i--) {
+       		toReturn += host_pieces[i];
+       		if(i != 0) { toReturn += "."; }
+       	    }
+       	    toReturn += "@" + user;
+	    return (toReturn);
+	}
 
-	    return "?";
+	return "?";
     },
-   	cycleCell: 				function(aRow, aCol) { },
-   	getSortStringForRow: 	function(hdr) { 
-	    if(!hdr) { return "?"; }
-	    var sender = hdr.getStringProperty("sender");
+    cycleCell: function(aRow, aCol) { },
+
+    getSortStringForRow: function(hdr) {
+	if(!hdr) { return "?"; }
+	var sender = hdr.getStringProperty("sender");
     	if(sender.length > 0) {
-    		sender = sender.replace(/^.*\</, "");
-    		sender = sender.replace(/\>.*$/, "");
-    		sender = sender.toLowerCase();
+    	    sender = sender.replace(/^.*\</, "");
+    	    sender = sender.replace(/\>.*$/, "");
+    	    sender = sender.toLowerCase();
     	}
 
     	/*
-	   	return ("0" + hdr.getProperty("face")) || ("1" + hdr.getProperty("x-face")) || 
-	   		("2" + hdr.getProperty("face-url")) || ("3" + hdr.getProperty("x-image-url")) || 
-	    	("4" + hdr.getProperty("x-face-url")) || ("5" + hdr.getProperty("sender")) || ("?");
-	    	*/
+	  return ("0" + hdr.getProperty("face")) || ("1" + hdr.getProperty("x-face")) ||
+	  ("2" + hdr.getProperty("face-url")) || ("3" + hdr.getProperty("x-image-url")) ||
+	  ("4" + hdr.getProperty("x-face-url")) || ("5" + hdr.getProperty("sender")) || ("?");
+	*/
 
-	    if(hdr.getProperty("face").length > 0) {
-			return ("0" + hdr.getProperty("face"));
-	    }
+	if(hdr.getProperty("face").length > 0) {
+	    return ("0" + hdr.getProperty("face"));
+	}
 
-	    if(hdr.getProperty("x-face").length > 0) {
-	    	return ("1" + hdr.getProperty("x-face"));
-	    }
+	if(hdr.getProperty("x-face").length > 0) {
+	    return ("1" + hdr.getProperty("x-face"));
+	}
 
-	    if(mfGravatarEnabled) {
-    		var mfCalcMD5 = mfMD5.calcMD5(sender);
-    		var localFile = mfLocalFolder.clone();
-	        localFile.append(mfCalcMD5+".png");
-	        if (localFile.exists()) {
+	if(mfGravatarEnabled) {
+    	    var mfCalcMD5 = mfMD5.calcMD5(sender);
+    	    var localFile = mfLocalFolder.clone();
+	    localFile.append(mfCalcMD5+".png");
+	    if (localFile.exists()) {
                 return "2" + mfFileHandler.getURLSpecFromFile(localFile).toString();
             }
     	}
 
-	    if(hdr.getProperty("sender").length > 0) {
-	    	var atSign = sender.indexOf('@');
-	    	var user = sender.substring(0, atSign);
-	    	var host = sender.substring(atSign + 1)
-       		var host_pieces = host.split('.');
-       		var toReturn = "";
+	if(hdr.getProperty("sender").length > 0) {
+	    var atSign = sender.indexOf('@');
+	    var user = sender.substring(0, atSign);
+	    var host = sender.substring(atSign + 1)
+       	    var host_pieces = host.split('.');
+       	    var toReturn = "";
 
-       		for (var i = host_pieces.length - 1; i >= 0; i--) {
-       			toReturn += host_pieces[i];
-       			if(i != 0) { toReturn += "."; }
-       		}
-       		toReturn += "@" + user;
-	    	return ("5" + toReturn);
-	    }
+       	    for (var i = host_pieces.length - 1; i >= 0; i--) {
+       		toReturn += host_pieces[i];
+       		if(i != 0) { toReturn += "."; }
+       	    }
+       	    toReturn += "@" + user;
+	    return ("5" + toReturn);
+	}
+	return "?";
+	//return hdr.mime2DecodedAuthor.charAt(1).toUpperCase() || "?";
+    },
 
-	    return "?";
+    getSortLongForRow:   	function(hdr) { return 0; },
 
-	    //return hdr.mime2DecodedAuthor.charAt(1).toUpperCase() || "?";
-   	},
-   	getSortLongForRow:   	function(hdr) { return 0; },
-   	isString:            	function() { return true; }, 
-   	getRowProperties:    	function(row, props){ return "faceImage"; }
+    isString:            	function() { return true; },
+
+    getRowProperties:    	function(row, props){ return "faceImage"; }
 }
 
 function get(url) {
-  // Return a new promise.
-  return new Promise(function(resolve, reject) {
-    var img = new Image();
-	
-	img.onload = function() { 
-		resolve("Stuff worked!"); 
+    // Return a new promise.
+    return new Promise(function(resolve, reject) {
+	var img = new Image();
+
+	img.onload = function() {
+	    resolve("Stuff worked!");
 	};
-	
-	img.onerror = function() { 
-		reject(Error("It broke")); 
+
+	img.onerror = function() {
+	    reject(Error("It broke"));
 	};
 	img.src = url;
-  });
+    });
 }
 
 function computePicon(sender) {
-	var toReturn = null;
-    //alert("startingPiconSearch");
-    // support picons
-    
+    var toReturn = null;
     if (mfPiconEnabled) {
-        
         var atSign = sender.indexOf('@');
-
         // if we have a valid e-mail address..
         if (atSign != -1) {
             var host = sender.substring(atSign + 1)
             var user = sender.substring(0, atSign);
 
-            // do a local search for picons - we don't want to kill kinzler.com!
+            // do a local search for picons
             if(mfLocalPiconImagesEnabled) {
                 var host_pieces = host.split('.'); // split the host up into pieces (we need this since hosts can be different lengths, i.e. cs.gettysburg.edu vs comcast.net, etc.)
-                
                 // loop through the six different picon database folders
                 for (var i in mfPiconDatabases) {
                     // kill the 'unknown' lookup if we already have a picon..
-                    if(mfPiconDatabases[i] == "unknown" && 
-                        toReturn != null) { break; }
+                    if(mfPiconDatabases[i] == "unknown" &&
+                       toReturn != null) { break; }
 
                     // clone the current URL, as we will need to use it for the next val in the array
                     var localFile = mfLocalFolder.clone();
@@ -354,7 +351,7 @@ function computePicon(sender) {
 
                         if (localFile.exists()) {
                             toReturn = mfFileHandler.getURLSpecFromFile(localFile);
-                        } 
+                        }
                         localFile = clonedLocal.clone(); // revert back to old local URL (before above modifications)
                         l--;
                     }
@@ -362,44 +359,43 @@ function computePicon(sender) {
 
                 if(toReturn == null) { // check to see if the val is null
                     var defaultMisc = mfLocalFolder.clone();
-                    defaultMisc.append("picons"); 
+                    defaultMisc.append("picons");
                     defaultMisc.append("misc");
                     defaultMisc.append("MISC");
                     defaultMisc.append("noface");
                     defaultMisc.append("face.gif");
                     toReturn = mfFileHandler.getURLSpecFromFile(defaultMisc);
                 }
-            } 
+            }
 
             //return toReturn;
             if(toReturn != null) {
-    			   return toReturn;
-    		  }
+    		return toReturn;
+    	    }
         }
     }
 }
 
 function addCustomColumnHandler() {
-   	if(gDBView != null) {
-   		gDBView.addColumnHandler("colFaceHeader", columnHandler);
-   	}
+    if(gDBView != null) {
+   	gDBView.addColumnHandler("colFaceHeader", columnHandler);
+    }
 }
 
 var CreateDbObserver = {
-  // Components.interfaces.nsIObserver
-  observe: function(aMsgFolder, aTopic, aData) {  
-    //if (aTopic=='MsgCreateDBView') {
+    // Components.interfaces.nsIObserver
+    observe: function(aMsgFolder, aTopic, aData) {
+	//if (aTopic=='MsgCreateDBView') {
      	addCustomColumnHandler();
- 	//}	
-  }
+ 	//}
+    }
 }
 
 //window.addEventListener("load", doOnceLoaded, false);
 //window.addEventListener('messagepane-loaded', doOnceLoaded, true);
 
-
 function doOnceLoaded() {
-	//if(gDBView != null) {
+    //if(gDBView != null) {
     this._prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
     var jsLoaderMessenger = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
         .getService(Components.interfaces.mozIJSSubScriptLoader);
@@ -410,43 +406,41 @@ function doOnceLoaded() {
 
     mfGravatarEnabled = this._prefService.getBoolPref("extensions.messagefaces.gravatar.enabled");
     //mfGravatarEnableCache = this._prefService.getBoolPref("extensions.messagefaces.gravatar.enableCache");
-      mfXFaceUseJS = this._prefService.getBoolPref("extensions.messagefaces.xface.useJS");
-      mfMaxSize = this._prefService.getIntPref("extensions.messagefaces.maxsize");
-      mfPiconEnabled = this._prefService.getBoolPref("extensions.messagefaces.picon.enabled");
-      mfGravatarURL = this._prefService.getCharPref("extensions.messagefaces.gravatar.url");
-      mfLocalPiconImagesEnabled = this._prefService.getBoolPref("extensions.messagefaces.localPicon.enabled");
-      mfLocalImagesEnabled = this._prefService.getBoolPref("extensions.messagefaces.local.enabled");
-      mfContactPhotoEnabled = this._prefService.getBoolPref("extensions.messagefaces.contactPhoto.enabled");
-      mfFaceURLEnabled = this._prefService.getBoolPref("extensions.messagefaces.faceURL.enabled");
-      mfColumnEnabled = this._prefService.getBoolPref("extensions.messagefaces.column.enabled");
+    mfXFaceUseJS = this._prefService.getBoolPref("extensions.messagefaces.xface.useJS");
+    mfMaxSize = this._prefService.getIntPref("extensions.messagefaces.maxsize");
+    mfPiconEnabled = this._prefService.getBoolPref("extensions.messagefaces.picon.enabled");
+    mfGravatarURL = this._prefService.getCharPref("extensions.messagefaces.gravatar.url");
+    mfLocalPiconImagesEnabled = this._prefService.getBoolPref("extensions.messagefaces.localPicon.enabled");
+    mfLocalImagesEnabled = this._prefService.getBoolPref("extensions.messagefaces.local.enabled");
+    mfContactPhotoEnabled = this._prefService.getBoolPref("extensions.messagefaces.contactPhoto.enabled");
+    mfFaceURLEnabled = this._prefService.getBoolPref("extensions.messagefaces.faceURL.enabled");
+    mfColumnEnabled = this._prefService.getBoolPref("extensions.messagefaces.column.enabled");
 
-      //if(mfColumnEnabled) {
-        var prefService = Components.classes["@mozilla.org/preferences-service;1"]
-          .getService(Components.interfaces.nsIPrefService);
-        mfPref = prefService.getBranch("extensions.messagefaces.");
+    //if(mfColumnEnabled) {
+    var prefService = Components.classes["@mozilla.org/preferences-service;1"]
+        .getService(Components.interfaces.nsIPrefService);
+    mfPref = prefService.getBranch("extensions.messagefaces.");
 
-        try {
-           mfLocalFolder = mfPref.getComplexValue("local.folder",
-              Components.interfaces.nsILocalFile);
-        } catch (e) {
-           mfLocalFolder = Components.classes["@mozilla.org/file/directory_service;1"]
-             .getService(Components.interfaces.nsIProperties)
-             .get("ProfD", Components.interfaces.nsIFile);
+    try {
+        mfLocalFolder = mfPref.getComplexValue("local.folder",
+					       Components.interfaces.nsILocalFile);
+    } catch (e) {
+        mfLocalFolder = Components.classes["@mozilla.org/file/directory_service;1"]
+            .getService(Components.interfaces.nsIProperties)
+            .get("ProfD", Components.interfaces.nsIFile);
         var p = mfLocalFolder.permissions;
         mfLocalFolder.append("messagefaces");
         if (!mfLocalFolder.exists()) {
             mfLocalFolder.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, p);
         }
-      }
+    }
 
 
-        var ObserverService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
-        ObserverService.addObserver(CreateDbObserver, "MsgCreateDBView", false);
-        
-        window.document.getElementById('folderTree').addEventListener("select",addCustomColumnHandler,false);
+    var ObserverService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+    ObserverService.addObserver(CreateDbObserver, "MsgCreateDBView", false);
+
+    window.document.getElementById('folderTree').addEventListener("select",addCustomColumnHandler,false);
     //}
-  
-  //}
-   	
+    //}
 }
 doOnceLoaded();

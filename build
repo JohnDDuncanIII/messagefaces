@@ -1,0 +1,25 @@
+#!/bin/bash
+
+rm -rf temp
+mkdir temp
+cp chrome.manifest temp
+cp install.rdf temp
+cp chrome temp -r
+cp locale temp -r
+cp defaults temp -r
+
+cd temp
+
+#Substitute variables
+FILES="`find . -name "*.rdf"` `find . -name "*.xul"` `find . -name "*.js"` `find . -name "*.css"` `find . -name "*.xml"` `find . -name "*.manifest"`"
+while read LINE; do
+    if [[ $LINE != [A-Z]* ]]; then
+        continue
+    fi
+    LINE1=`echo $LINE | grep -oE "^[^=]+"`
+    LINE2=`echo $LINE | grep -oE "[^=]+$"`
+    sed "s|\$$LINE1|$LINE2|g" -i $FILES
+    eval "$LINE1=\"$LINE2\""
+done < "../config.txt"
+
+zip ../$NAME-$VERSION.xpi * -rq

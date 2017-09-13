@@ -9,14 +9,14 @@ function doOnceLoaded() {
 
 	//window.removeEventListener("load", load, false);
 
-	// Load an overlay file var 
-	callback = { 
-		observe : function (subject, topic, data) { 
-			if (topic == 'xul-overlay-merged') { 
-				dump("Overlay loaded successfully"); 
-			} 
-		} 
-	}; // Load the current file as an overlay 
+	// Load an overlay file var
+	callback = {
+		observe : function (subject, topic, data) {
+			if (topic == 'xul-overlay-merged') {
+				dump("Overlay loaded successfully");
+			}
+		}
+	}; // Load the current file as an overlay
 
 	if(mfColumnEnabled) {
 		window.document.loadOverlay("chrome://messagefaces/content/messengerOverlay.xul", callback);

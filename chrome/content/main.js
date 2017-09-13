@@ -42,9 +42,9 @@ addEventListener('messagepane-loaded', mfStartup, true);
 
 
 var mfIOService = Components.classes["@mozilla.org/network/io-service;1"]
-      .getService(Components.interfaces.nsIIOService);
+    .getService(Components.interfaces.nsIIOService);
 var mfFileHandler = mfIOService.getProtocolHandler("file")
-      .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
+    .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
 var mfPiconDatabases = new Array("domains", "users", "misc", "usenix", "unknown"); // picon database folders
 
 var mfFileExtensions = new Array("jpg", "png", "gif"); // file extensions for local FACE lookups
@@ -221,13 +221,12 @@ function mfDisplayFace() {
             // do a local search for picons - we don't want to kill kinzler.com!
             if(mfLocalPiconImagesEnabled) {
                 var host_pieces = host.split('.'); // split the host up into pieces (we need this since hosts can be different lengths, i.e. cs.gettysburg.edu vs comcast.net, etc.)
-                
                 // loop through the six different picon database folders
                 for (var i in mfPiconDatabases) {
                     // kill the 'unknown' lookup if we already have a picon..
-                    if(mfPiconDatabases[i] == "unknown" && 
-                        (typeof extraPiconFace !== 'undefined' && 
-                            extraPiconFace.length > 0)) { break; }
+                    if(mfPiconDatabases[i] == "unknown" &&
+                       (typeof extraPiconFace !== 'undefined' &&
+                        extraPiconFace.length > 0)) { break; }
 
                     // clone the current URL, as we will need to use it for the next val in the array
                     var localFile = mfLocalFolder.clone();
@@ -247,25 +246,25 @@ function mfDisplayFace() {
                         if (localFile.exists()) {
                             mfLog.info("Found local picon image.");
                             extraPiconFace.push(mfFileHandler.getURLSpecFromFile(localFile));
-                        } 
+                        }
                         localFile = clonedLocal.clone(); // revert back to old local URL (before above modifications)
                         l--;
                     }
                 }
 
-                if(!(typeof extraPiconFace !== 'undefined' && 
-                    extraPiconFace.length > 0)) { // check to see if the array is empty
-                    var rnd = Math.round(Math.random()); // random value between 0 and 1
-                    var defaultMisc = mfLocalFolder.clone();
-                    defaultMisc.append("picons"); 
+                if(!(typeof extraPiconFace !== 'undefined' &&
+                     extraPiconFace.length > 0)) { // check to see if the array is empty
+			var rnd = Math.round(Math.random()); // random value between 0 and 1
+			var defaultMisc = mfLocalFolder.clone();
+                    defaultMisc.append("picons");
 
                     // randomly set unknown address to default unknown picon or pjw face
-                    if(rnd == 0) { 
+                    if(rnd == 0) {
                         defaultMisc.append("misc");
                         defaultMisc.append("MISC");
                         defaultMisc.append("noface");
-                    } 
-                    else { 
+                    }
+                    else {
                         defaultMisc.append("unknown");
                         defaultMisc.append("MISC");
                         defaultMisc.append("unknown");
@@ -292,8 +291,8 @@ function mfDisplayFace() {
                         if(mfPiconDatabases[i] == "users") { k_url += user + "/"; } // username for 'users' db folder (non-standard)
                         else { k_url += "unknown/"; }
                         k_url += "face.gif";
-                        
-                        getMetaPicon(k_url, function(width, height, src) { 
+
+                        getMetaPicon(k_url, function(width, height, src) {
                             mfLog.info("Found local picon image.");
 
                             if(!src.includes("db/unknown")) {
@@ -305,8 +304,8 @@ function mfDisplayFace() {
                                 extraPiconFace.push(src);
                                 mfSetExtraPiconImage(extraPiconFace);
                             }
-                            
-                            //return; 
+
+                            //return;
                         });
 
                         k_url = clonedLocal; // revert back to old local URL (before above modifications)
@@ -358,7 +357,7 @@ function mfDisplayFace() {
         xFace = xFace.replace(/ /g, "");
         var koComputedStyle = window.getComputedStyle(mfXImage, null);
         //var ksFaceURL = mfXFaceJSm.FaceURL(xFace, koComputedStyle);
-        
+
         if (mfX_Cache[xFace] == null) {
             // It'd be nice to do this asyncronously. Wonder how. Me no know.
             //mfX_Cache[xFace] = mfXFaceJSm.FaceURL(xFace);
@@ -419,8 +418,8 @@ function mfDisplayFace() {
             var photoURL = cardDetails.card.getProperty("PhotoName", null);
             //alert(photoURL+"");
             var localFile =  Components.classes["@mozilla.org/file/directory_service;1"]
-            .getService(Components.interfaces.nsIProperties)
-            .get("ProfD", Components.interfaces.nsIFile).clone();
+		.getService(Components.interfaces.nsIProperties)
+		.get("ProfD", Components.interfaces.nsIFile).clone();
             localFile.append("Photos");
             localFile.append(photoURL+""); // get the photo name from email address
             if(photoURL != null) {
@@ -542,10 +541,9 @@ function getBase64Image(img) {
 
 function mfSetExtraGravImage(url, mfCalcMD5) { // set Gravatar image
     mfLog.fine("Setting grav: '" + url + "'.");
-    
-    var found = false;
 
-    getMeta(url, function(width, height) { 
+    var found = false;
+    getMeta(url, function(width, height) {
         var localFile = mfLocalFolder.clone();
         localFile.append(mfCalcMD5+".png");
         if (!localFile.exists() && mfGravatarEnableCache) {
@@ -559,7 +557,7 @@ function mfSetExtraGravImage(url, mfCalcMD5) { // set Gravatar image
             // Decode to an Uint8Array, because OS.File.writeAtomic expects an ArrayBuffer(View).
             var data = new Uint8Array(str.length);
             for (var i = 0, e = str.length; i < e; ++i) {
-              data[i] = str.charCodeAt(i);
+		data[i] = str.charCodeAt(i);
             }
 
             // To support Firefox 24 and earlier, you'll need to provide a tmpPath. See MDN.
@@ -567,18 +565,18 @@ function mfSetExtraGravImage(url, mfCalcMD5) { // set Gravatar image
             // contain known security issues. Let's not encourage users. ;)
             var promised = OS.File.writeAtomic(file, data);
             promised.then(
-              function() {},  // Success!
-              function(ex) {} // Failed. Error information in ex
+		function() {},  // Success!
+		function(ex) {} // Failed. Error information in ex
             );
         } else if (localFile.exists()) {
-            mfExtraGravImage.style.display = "block"; 
+            mfExtraGravImage.style.display = "block";
             mfExtraGravImage.setAttribute("src", mfFileHandler.getURLSpecFromFile(localFile));
             return;
         }
 
-        mfExtraGravImage.style.display = "block"; 
+        mfExtraGravImage.style.display = "block";
         mfExtraGravImage.setAttribute("src", url);
-        return; 
+        return;
     });
 
     mfExtraGravImage.style.display = "none"
@@ -592,12 +590,12 @@ function mfSetExtraPiconImage(extraPiconFace) { // set Picon image
 
     for (var i = extraPiconFace.length - 1; i >= 0; i--) {
         // get all of the existing piconBoxes for however many picons we found
-        var item = document.getElementById("piconBox" + i); 
+        var item = document.getElementById("piconBox" + i);
 
         if(item == null) { // if it does not already exist, create it
             var piconBox = document.createElement("vbox");
             piconBox.setAttribute("id", "piconBox" + i);
-            
+
             var spacer = document.createElement("spacer");
             spacer.setAttribute("flex", "1");
             piconBox.appendChild(spacer);
@@ -612,7 +610,7 @@ function mfSetExtraPiconImage(extraPiconFace) { // set Picon image
             spacer.setAttribute("flex", "1");
             piconBox.appendChild(spacer);
             //masterBox.appendChild(piconBox);
-            
+
             if((i > 0) && (document.getElementById("piconBox" + (i-1)) != null)) { // if we are re-adding box, add it before the earlier ones (ordering)
                 document.getElementById("expandedHeaderView").insertBefore(piconBox, document.getElementById("piconBox" + (i-1)));
             } else {
@@ -620,14 +618,14 @@ function mfSetExtraPiconImage(extraPiconFace) { // set Picon image
             }
         } else { // if it does already exists, use it
             document.getElementById("fromBuddyIconPicon" + i).setAttribute("src", extraPiconFace[i]);
-        }   
+        }
     }
 
     // remove extra piconBoxes that could have previously been created
     var count = extraPiconFace.length;
     var rmBox = document.getElementById("piconBox" + count);
 
-    while(rmBox != null) {        
+    while(rmBox != null) {
         while (rmBox.firstChild) { // remove all children from the vbox
             rmBox.removeChild(rmBox.firstChild);
         }
@@ -641,13 +639,11 @@ function mfSetExtraPiconImage(extraPiconFace) { // set Picon image
 
 function mfStartup() {
     var jsLoader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
-          .getService(Components.interfaces.mozIJSSubScriptLoader);
+        .getService(Components.interfaces.mozIJSSubScriptLoader);
 
     var md5Type = "nsICryptoHash" in Components.interfaces ? "call" : "impl";
     jsLoader.loadSubScript("chrome://messagefaces/content/md5-" + md5Type + ".js", mfMD5m);
     jsLoader.loadSubScript("chrome://messagefaces/content/xface.js", mfXFaceJSm);
-    
-    
     jsLoader.loadSubScript("chrome://messagefaces/content/logging.js", mfLog);
 
     prefService = Components.classes["@mozilla.org/preferences-service;1"]
@@ -778,7 +774,7 @@ function mfLoadPrefs() {
         vbox.appendChild(spacer);
         document.getElementById("expandedHeaderView").appendChild(vbox);
     }
-    
+
     if(mfContactPhotoImage == null) {
         var vbox = document.createElement("vbox");
         var spacer = document.createElement("spacer");

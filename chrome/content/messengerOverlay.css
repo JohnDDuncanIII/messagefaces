@@ -1,98 +1,13 @@
 /* Adjust Thread pane message row height */
 #threadTree treechildren:-moz-tree-row {
-	height: 50px !important;
+    height: 50px !important;
 }
-/*
-#threadTree treechildren:-moz-tree-row(hover) {
-	background-color: #e7e7e7 !important;
-}
-*/
-
-/* test */
-#threadTree > treechildren::-moz-tree-row(odd) {
-    background-color: White !important;
-    }
-
-#threadTree > treechildren::-moz-tree-row(even) {
-    /* #CCFFCC = gives a pale green, like greenbar paper */
-    /* background-color: #CCFFCC !important; */
-    /* most folks will likely prefer this pale gray */
-    background-color: WhiteSmoke !important; 
-    }
-
-#threadTree > treechildren::-moz-tree-row(selected) {
-    background-color: Highlight !important;
-    border: none !important;
-    }
-#threadTree > treechildren::-moz-tree-row(current) {
-    border: 1px solid Black !important;
-    }
-#threadTree > treechildren::-moz-tree-row(current, selected) {
-    background-color: Highlight !important;
-    border: 1px solid Black !important;
-    }
-
-#threadTree > treechildren::-moz-tree-row(selected, hover) {
-    background-color: Highlight !important;
-    border: 1px dashed Black !important;
-    }
-#threadTree > treechildren::-moz-tree-row(current, hover) {
-    border: 1px dashed Black !important;
-    }
-#threadTree > treechildren::-moz-tree-row(current, selected, hover) {
-    background-color: Highlight !important;
-    border: 1px dashed Black !important;
-    }
-    #threadTree > treechildren::-moz-tree-row(hover) {
-    background-color: Highlight !important;
-    border: 1px dashed Black !important;
-    }
-
-    /* folder */
-    #folderTree > treechildren::-moz-tree-row(odd) {
-    background-color: White !important;
-    }
-
-#folderTree > treechildren::-moz-tree-row(even) {
-    /* #CCFFCC = gives a pale green, like greenbar paper */
-    /* background-color: #CCFFCC !important; */
-    /* most folks will likely prefer this pale gray */
-    background-color: WhiteSmoke !important; 
-    }
-
-#folderTree > treechildren::-moz-tree-row(selected) {
-    background-color: Highlight !important;
-    border: none !important;
-    }
-#folderTree > treechildren::-moz-tree-row(current) {
-    border: 1px solid Black !important;
-    }
-#folderTree > treechildren::-moz-tree-row(current, selected) {
-    background-color: Highlight !important;
-    border: 1px solid Black !important;
-    }
-
-#folderTree > treechildren::-moz-tree-row(selected, hover) {
-    background-color: Highlight !important;
-    border: 1px dashed Black !important;
-    }
-#folderTree > treechildren::-moz-tree-row(current, hover) {
-    border: 1px dashed Black !important;
-    }
-#folderTree > treechildren::-moz-tree-row(current, selected, hover) {
-    background-color: Highlight !important;
-    border: 1px dashed Black !important;
-    }
-
-/* unable to find any reason to use 'focus' so i left that out */
-    /* end test */
-
 
 #threadTree treechildren:-moz-tree-cell-text {
-	font-size: 13px !important;
+    font-size: 13px !important;
 }
 #threadTree treechildren:-moz-tree-image(faceImage) {
-	width: 48px !important;
-	height: 48px !important;
-	margin-top:-1px !important;
+    width: auto !important;
+    height: 48px; !important;
+    margin-top:-1px !important;
 }

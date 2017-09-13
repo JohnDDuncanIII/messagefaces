@@ -53,7 +53,7 @@
 // Each area can be entirely black or entirely white or some shade of grey. If grey, it will
 // be divided into 4 squares of 8*8 pixels that, again, can be black, white or grey.
 // This will be iterated until such a block is either black or white or 2*2.
-// 
+//
 // How to encode the X-Face?
 // ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 // The compressed X-Face needs at most 288 bytes (48*48/8), but due to compression, the size
@@ -96,7 +96,7 @@ var levels =
  * pixel is black.  The probabilities below give the distribution of the
  * 16 possible 2x2 patterns.  All white is not really a possibility and
  * has a probability range of zero.  Again, experimentally derived data */
-var freqs = 
+var freqs =
   [
     {p_offset:0,   p_range:0 }, {p_offset:0,   p_range:38}, {p_offset:38,  p_range:38}, {p_offset:152, p_range:13},
     {p_offset:76,  p_range:38}, {p_offset:165, p_range:13}, {p_offset:178, p_range:13}, {p_offset:230, p_range:6 },
@@ -105,7 +105,7 @@ var freqs =
   ];
 
 // table for Gen()
-var G = 
+var G =
 {
   g_00:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         1,1,1,0,0,0,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,1,0,1,0,0,0,1,0,1,1,1,0,0,0,0,0,1,0,1,0,0,0,0,1,1,1,1,
@@ -257,11 +257,11 @@ function BigMul(a) { // multiply B.b_word by a (B.b_word[0]=LSB)
   /* Treat this as a == WORDCARRY and just shift everything left a WORD */
   if (!a) {
     B.b_words++;
-    if (B.b_first > 0) 
+    if (B.b_first > 0)
         B.b_first--;
-    else 
+    else
     {
-      for (i = B.b_words - 1; i >= 1; i--) 
+      for (i = B.b_words - 1; i >= 1; i--)
         B.b_word[i] = B.b_word[i - 1];
     }
     B.b_word[B.b_first] = 0;
@@ -276,7 +276,7 @@ function BigMul(a) { // multiply B.b_word by a (B.b_word[0]=LSB)
     word[i] = (c & WORDMASK);
     c >>= BITSPERWORD;
   }
-  if (c) 
+  if (c)
     word[B.b_first + B.b_words++] = c & WORDMASK;
 }
 
@@ -296,7 +296,7 @@ function BigAdd(a) { // add a to B.b_word
     if (!c)
       break;
   }
-  if ((i > last) && c) { 
+  if ((i > last) && c) {
     B.b_word[i] = c & WORDMASK;
     B.b_words++;
   }
@@ -338,7 +338,7 @@ function PopGreys(off, len) {
 }
 
 
-function UnCompress(off, len, lev) { 
+function UnCompress(off, len, lev) {
   switch (BigPop(levels[lev])) {
     case WHITE:
       return;
@@ -440,9 +440,9 @@ function FaceURL(face) {
   Gen();
   var bmp = "BM\xBE\1\0\0\0\0\0\0>\0\0\0(\0\0\0\x30\0\0\0\x30\0\0\0\1\0\1\0\0\0\0\0\x80\1\0\0\xC4\x0E\0\0\xC4\x0E\0\0\0\0\0\0\0\0\0\0\xFF\xFF\xFF\0\0\0\0\0";
   var ff = F.join("").replace(/(.{48})/g, "$1,").split(",").reverse().join("")
-            .replace(/(.{8})(.{8})(.{8})(.{8})(.{8})(.{8})/g, 
+            .replace(/(.{8})(.{8})(.{8})(.{8})(.{8})(.{8})/g,
             function(s,a,b,c,d,e,f) {
-              return String.fromCharCode(parseInt(a,2)) 
+              return String.fromCharCode(parseInt(a,2))
                    + String.fromCharCode(parseInt(b,2))
                    + String.fromCharCode(parseInt(c,2))
                    + String.fromCharCode(parseInt(d,2))
