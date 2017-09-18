@@ -82,6 +82,7 @@ var mfXImageURL = null;
 var mfXFaceURL = null;
 var mfFaceURL = null;
 var mfExtraGravImage = null;
+//var gravHref = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
 var mfExtraPiconImage = null;
 var mfContactPhotoImage = null;
 var mfO_UpdateMessageHeaders = null;
@@ -96,14 +97,9 @@ var piconsSearchURL = "http://kinzler.com/cgi/piconsearch.cgi/";
 var piconsDBURL = "https://kinzler.com/picons/db/";
 var piconsSearchSuffix = "/users+usenix+misc+domains+unknown/up/single/gif/order";
 
-function mfWrapUpdateMessageHeaders() {
-    mfO_UpdateMessageHeaders();
-    window.setTimeout(mfDisplayFace, 5);
-}
+
 
 function mfGetHeaders() {
-    //var messageURI = GetFirstSelectedMessage();
-    //var messageURI = gFolderDisplay.selectedMessage;
     var messageURI = gFolderDisplay.selectedMessageUris[0]; // new way to GetFirstSelectedMessage();
     mfLog.info("Loading headers for '" + messageURI + "'.");
 
@@ -148,7 +144,7 @@ function mfGetHeaders() {
             content = content.substring(0, p2);
             break;
         }
-        if (content.length > 512 * 64) { // PROBLEM LINE: this had to be increased (modern mail servers)
+        if (content.length > 512 * 64) {
             mfLog.warn("Could not find end-of-headers line in '" + messageURI + "'.");
             content = null;
             alert("ERROR: content.length > 512 * 64");
@@ -175,9 +171,9 @@ function mfDisplayFace() {
     // declare local variables that will hold header vals
     var face = headers.extractHeader("face", false);
     var xFace = headers.extractHeader("x-face", false);
-    var x_image_url = headers.extractHeader("x-image-url", false);
-    var x_face_url = headers.extractHeader("x-face-url", false);
-    var face_url = headers.extractHeader("face-url", false);
+    var xImageUrl = headers.extractHeader("x-image-url", false);
+    var xFaceUrl = headers.extractHeader("x-face-url", false);
+    var faceUrl = headers.extractHeader("face-url", false);
     var extraGravFace = null;
 
     var sender = "";
@@ -254,21 +250,13 @@ function mfDisplayFace() {
 
                 if(!(typeof extraPiconFace !== 'undefined' &&
                      extraPiconFace.length > 0)) { // check to see if the array is empty
-			var rnd = Math.round(Math.random()); // random value between 0 and 1
 			var defaultMisc = mfLocalFolder.clone();
                     defaultMisc.append("picons");
 
                     // randomly set unknown address to default unknown picon or pjw face
-                    if(rnd == 0) {
-                        defaultMisc.append("misc");
-                        defaultMisc.append("MISC");
-                        defaultMisc.append("noface");
-                    }
-                    else {
-                        defaultMisc.append("unknown");
-                        defaultMisc.append("MISC");
-                        defaultMisc.append("unknown");
-                    }
+                    defaultMisc.append("unknown");
+                    defaultMisc.append("MISC");
+                    defaultMisc.append("unknown");
                     defaultMisc.append("face.gif");
                     extraPiconFace.push(mfFileHandler.getURLSpecFromFile(defaultMisc));
                 }
@@ -371,42 +359,42 @@ function mfDisplayFace() {
 
     // Face that resides on a web server somewhere - POSSIBLE SECURITY/PRIVACY RISK!
     if (mfFaceURLEnabled) {
-        if(x_image_url != null) {
+        if(xImageUrl != null) {
             mfLog.info("X-Image-URL found.");
-            x_image_url = x_image_url.replace(/ /g, "");
+            xImageUrl = xImageUrl.replace(/ /g, "");
 
-            if (x_image_url.match(/^(http|https|ftp):/)) {
-                mfSetXImageURL(x_image_url);
+            if (xImageUrl.match(/^(http|https|ftp):/)) {
+                mfSetXImageURL(xImageUrl);
             } else {
-                mfLog.warn("Malformed face URL encountered: '" + x_image_url + "'.");
+                mfLog.warn("Malformed face URL encountered: '" + xImageUrl + "'.");
             }
-        } else if (x_image_url == null) {
+        } else if (xImageUrl == null) {
             mfSetXImageURL("");
         } else { mfSetXImageURL(""); }
 
-        if(x_face_url != null) {
+        if(xFaceUrl != null) {
             mfLog.info("X-Face-URL found.");
-            x_face_url = x_face_url.replace(/ /g, "");
+            xFaceUrl = xFaceUrl.replace(/ /g, "");
 
-            if (x_face_url.match(/^(http|https|ftp):/)) {
-                mfSetXFaceURL(x_face_url);
+            if (xFaceUrl.match(/^(http|https|ftp):/)) {
+                mfSetXFaceURL(xFaceUrl);
             } else {
-                mfLog.warn("Malformed face URL encountered: '" + x_face_url + "'.");
+                mfLog.warn("Malformed face URL encountered: '" + xFaceUrl + "'.");
             }
-        } else if (x_face_url == null) {
+        } else if (xFaceUrl == null) {
             mfSetXFaceURL("");
         }
 
-        if(face_url != null) {
+        if(faceUrl != null) {
             mfLog.info("Face-URL found.");
-            face_url = face_url.replace(/ /g, "");
+            faceUrl = faceUrl.replace(/ /g, "");
 
-            if (face_url.match(/^(http|https|ftp):/)) {
-                mfSetFaceURL(face_url);
+            if (faceUrl.match(/^(http|https|ftp):/)) {
+                mfSetFaceURL(faceUrl);
             } else {
-                mfLog.warn("Malformed face URL encountered: '" + face_url + "'.");
+                mfLog.warn("Malformed face URL encountered: '" + faceUrl + "'.");
             }
-        } else if (face_url == null) {
+        } else if (faceUrl == null) {
             mfSetFaceURL("");
         }
     } else { mfSetFaceURL(""); }
@@ -569,13 +557,16 @@ function mfSetExtraGravImage(url, mfCalcMD5) { // set Gravatar image
 		function(ex) {} // Failed. Error information in ex
             );
         } else if (localFile.exists()) {
+	    //gravHref.href = mfFileHandler.getURLSpecFromFile(localFile);
             mfExtraGravImage.style.display = "block";
             mfExtraGravImage.setAttribute("src", mfFileHandler.getURLSpecFromFile(localFile));
             return;
         }
 
+	//gravHref.href = url;
         mfExtraGravImage.style.display = "block";
         mfExtraGravImage.setAttribute("src", url);
+
         return;
     });
 
@@ -584,9 +575,6 @@ function mfSetExtraGravImage(url, mfCalcMD5) { // set Gravatar image
 
 function mfSetExtraPiconImage(extraPiconFace) { // set Picon image
     mfLog.fine("Setting picon: '" + extraPiconFace[i] + "'.");
-
-    //var masterBox = document.createElement("hbox");
-    //masterBox.setAttribute("id", "masterBox");
 
     for (var i = extraPiconFace.length - 1; i >= 0; i--) {
         // get all of the existing piconBoxes for however many picons we found
@@ -601,7 +589,7 @@ function mfSetExtraPiconImage(extraPiconFace) { // set Picon image
             piconBox.appendChild(spacer);
 
             mfExtraPiconImage = document.createElement("image");
-            mfExtraPiconImage.setAttribute("style", "padding: 5px");
+            mfExtraPiconImage.setAttribute("style", "margin: 5px");
             mfExtraPiconImage.setAttribute("id", "fromBuddyIconPicon" + i);
             mfExtraPiconImage.setAttribute("src", extraPiconFace[i]);
             piconBox.appendChild(mfExtraPiconImage);
@@ -609,7 +597,6 @@ function mfSetExtraPiconImage(extraPiconFace) { // set Picon image
             spacer = document.createElement("spacer");
             spacer.setAttribute("flex", "1");
             piconBox.appendChild(spacer);
-            //masterBox.appendChild(piconBox);
 
             if((i > 0) && (document.getElementById("piconBox" + (i-1)) != null)) { // if we are re-adding box, add it before the earlier ones (ordering)
                 document.getElementById("expandedHeaderView").insertBefore(piconBox, document.getElementById("piconBox" + (i-1)));
@@ -692,18 +679,16 @@ function mfLoadPrefs() {
     spacer.setAttribute("flex", "1");
     gravBox.appendChild(spacer);
     mfExtraGravImage = document.createElement("image");
-    mfExtraGravImage.setAttribute("style", "padding: 5px");
+    mfExtraGravImage.setAttribute("style", "margin: 5px");
     mfExtraGravImage.setAttribute("id", "fromBuddyIconGrav");
+    //gravHref.appendChild(mfExtraGravImage);
     gravBox.appendChild(mfExtraGravImage);
-    console.log(mfExtraGravImage);
     spacer = document.createElement("spacer");
     spacer.setAttribute("flex", "1");
     gravBox.appendChild(spacer);
     document.getElementById("expandedHeaderView").appendChild(gravBox);
 
     // Get face image element
-    //mfXImage = document.getElementById("fromBuddyIconXFace");
-    console.log(mfXImage);
     if (mfXImage == null) {
         // Thunderbird 2 no longer ships a "fromBuddyIcon" image, so we create our own
         var vbox = document.createElement("vbox");
@@ -714,14 +699,13 @@ function mfLoadPrefs() {
         mfXImage.setAttribute("style", "margin: 5px");
         mfXImage.setAttribute("id", "fromBuddyIconXFace");
         vbox.appendChild(mfXImage);
-        console.log(mfXImage);
+        //console.log(mfXImage);
         spacer = document.createElement("spacer");
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
         document.getElementById("expandedHeaderView").appendChild(vbox);
     }
 
-    console.log(mfXImageURL);
     if (mfXImageURL == null) {
         // Thunderbird 2 no longer ships a "fromBuddyIcon" image, so we create our own
         var vbox = document.createElement("vbox");
@@ -729,17 +713,16 @@ function mfLoadPrefs() {
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
         mfXImageURL = document.createElement("image");
-        mfXImageURL.setAttribute("style", "padding: 5px");
+        mfXImageURL.setAttribute("style", "margin: 5px");
         mfXImageURL.setAttribute("id", "fromBuddyIconXImageURL");
         vbox.appendChild(mfXImageURL);
-        console.log(mfXImageURL);
+        //console.log(mfXImageURL);
         spacer = document.createElement("spacer");
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
         document.getElementById("expandedHeaderView").appendChild(vbox);
     }
 
-    console.log(mfXFaceURL);
     if (mfXFaceURL == null) {
         // Thunderbird 2 no longer ships a "fromBuddyIcon" image, so we create our own
         var vbox = document.createElement("vbox");
@@ -747,17 +730,16 @@ function mfLoadPrefs() {
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
         mfXFaceURL = document.createElement("image");
-        mfXFaceURL.setAttribute("style", "padding: 5px");
+        mfXFaceURL.setAttribute("style", "margin: 5px");
         mfXFaceURL.setAttribute("id", "fromBuddyIconXFaceURL");
         vbox.appendChild(mfXFaceURL);
-        console.log(mfXFaceURL);
+        //console.log(mfXFaceURL);
         spacer = document.createElement("spacer");
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
         document.getElementById("expandedHeaderView").appendChild(vbox);
     }
 
-    console.log(mfFaceURL);
     if (mfFaceURL == null) {
         // Thunderbird 2 no longer ships a "fromBuddyIcon" image, so we create our own
         var vbox = document.createElement("vbox");
@@ -765,10 +747,10 @@ function mfLoadPrefs() {
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
         mfFaceURL = document.createElement("image");
-        mfFaceURL.setAttribute("style", "padding: 5px");
+        mfFaceURL.setAttribute("style", "margin: 5px");
         mfFaceURL.setAttribute("id", "fromBuddyIconFaceURL");
         vbox.appendChild(mfFaceURL);
-        console.log(mfFaceURL);
+        //console.log(mfFaceURL);
         spacer = document.createElement("spacer");
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
@@ -781,21 +763,17 @@ function mfLoadPrefs() {
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
         mfContactPhotoImage = document.createElement("image");
-        mfContactPhotoImage.setAttribute("style", "padding: 5px");
+        mfContactPhotoImage.setAttribute("style", "margin: 5px");
         mfContactPhotoImage.setAttribute("id", "fromBuddyIconContactPhoto");
         vbox.appendChild(mfContactPhotoImage);
-        console.log(mfContactPhotoImage);
+        //console.log(mfContactPhotoImage);
         spacer = document.createElement("spacer");
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
-        mfContactPhotoImage.style.maxWidth = (mfMaxSize + 10) + "px";
-        mfContactPhotoImage.style.maxHeight = (mfMaxSize + 10) + "px";
         document.getElementById("expandedHeaderView").appendChild(vbox);
     }
 
-    // Get face image element
     mfImage = document.getElementById("fromBuddyIcon");
-    console.log(mfImage);
     if (mfImage == null) {
         // Thunderbird 2 no longer ships a "fromBuddyIcon" image, so we create our own
         var vbox = document.createElement("vbox");
@@ -803,20 +781,19 @@ function mfLoadPrefs() {
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
         mfImage = document.createElement("image");
-        mfImage.setAttribute("style", "padding: 5px");
+        mfImage.setAttribute("style", "margin: 5px");
         mfImage.setAttribute("id", "fromBuddyIconFace");
         vbox.appendChild(mfImage);
-        console.log(mfImage);
+        //console.log(mfImage);
         spacer = document.createElement("spacer");
         spacer.setAttribute("flex", "1");
         vbox.appendChild(spacer);
         document.getElementById("expandedHeaderView").appendChild(vbox);
+    } else {
+	mfImage.style.padding = "0";
     }
 
-    //mfImage.setAttribute("src", ksFaceURL);
-    // Set maximum width/height, add 5px padding on each side
-    //mfImage.style.maxWidth = (mfMaxSize + 10) + "px";
-    //mfImage.style.maxHeight = (mfMaxSize + 10) + "px";
+    //window.open("chrome://messagefaces/content/vismon.xul", "Vismon", "chrome");
 }
 
 var mfPrefObserver = {
@@ -843,7 +820,6 @@ var mfPrefObserver = {
 }
 
 function mfGetPref(name, type) {
-    //return mfGetPrefImpl("extensions.messagefaces." + name, type, null);
     return mfGetPrefImpl(name, type, null);
 }
 
@@ -862,6 +838,11 @@ function mfGetPrefImpl(name, type, defaultValue, setIt) {
         value = defaultValue;
     }
     return value;
+}
+
+function mfWrapUpdateMessageHeaders() {
+    mfO_UpdateMessageHeaders();
+    mfDisplayFace();
 }
 
 // Work around (or at least detect) locale-related bugs in TB

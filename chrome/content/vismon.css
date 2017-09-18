@@ -1,0 +1,37 @@
+#vismon {
+    background-color: blue;
+}
+
+#container {
+    display: table;
+}
+
+.faces {
+    border: 1px solid black;
+    background-color: Beige;
+    margin: 4px;
+    display: table;
+}
+
+.faces a {
+    width: 64px;
+    display: inline-block;
+    text-align: center;
+}
+
+.faces a:hover {
+    background-color: white;
+}
+
+.faces a:not(:last-child) {
+    border-right: 1px solid black;
+}
+
+.faces vbox {
+    display: initial;
+}
+
+.faces label {
+    text-align: center;
+    font-weight: bold;
+}

@@ -33,7 +33,6 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-// broken things: internal database does not append values from customDBHeaders pref (sometimes)...
 var mfPref;
 var _prefService;
 var mfGravatarEnabled;
@@ -59,16 +58,8 @@ var mfIOService = Components.classes["@mozilla.org/network/io-service;1"]
 var mfFileHandler = mfIOService.getProtocolHandler("file")
     .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
 
-// check to see if gravatar image exists
-// http://stackoverflow.com/questions/11442712/get-width-height-of-remote-image-from-url
-function getMeta(url, callback) {
-    var img = new Image();
-    img.onload = function() { callback(this.width, this.height); }
-    img.src = url;
-}
-
 var columnHandler = {
-    isEditable: 		function(aRow, aCol) {return false;},
+    isEditable: 		function(aRow, aCol) { return false; },
 
     getCellProperties:  	function(row, col, props){ return "faceImage"; },
 
@@ -383,19 +374,12 @@ function addCustomColumnHandler() {
 }
 
 var CreateDbObserver = {
-    // Components.interfaces.nsIObserver
     observe: function(aMsgFolder, aTopic, aData) {
-	//if (aTopic=='MsgCreateDBView') {
      	addCustomColumnHandler();
- 	//}
     }
 }
 
-//window.addEventListener("load", doOnceLoaded, false);
-//window.addEventListener('messagepane-loaded', doOnceLoaded, true);
-
 function doOnceLoaded() {
-    //if(gDBView != null) {
     this._prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
     var jsLoaderMessenger = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
         .getService(Components.interfaces.mozIJSSubScriptLoader);
@@ -435,12 +419,9 @@ function doOnceLoaded() {
         }
     }
 
-
     var ObserverService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
     ObserverService.addObserver(CreateDbObserver, "MsgCreateDBView", false);
 
-    window.document.getElementById('folderTree').addEventListener("select",addCustomColumnHandler,false);
-    //}
-    //}
+    window.document.getElementById('folderTree').addEventListener("select", addCustomColumnHandler, false);
 }
 doOnceLoaded();

@@ -1,4 +1,9 @@
 #fromBuddyIconXFace {
-	color: black;
-	background-color: white;
+    color: black;
+    background-color: white;
+}
+
+#fromBuddyIcon, #fromBuddyIconXImageURL, #fromBuddyIconContactPhoto {
+    width: auto;
+    height: 48px;
 }
