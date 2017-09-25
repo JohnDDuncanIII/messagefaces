@@ -2,21 +2,21 @@
     background-color: blue;
 }
 
-#container {
-    display: table;
-}
-
 .faces {
     border: 1px solid black;
     background-color: Beige;
     margin: 4px;
     display: table;
+    line-height: 0;
 }
 
 .faces a {
     width: 64px;
+    height: 64px;
     display: inline-block;
     text-align: center;
+    /*overflow: auto;*/
+    overflow: hidden;
 }
 
 .faces a:hover {
@@ -32,6 +32,6 @@
 }
 
 .faces label {
-    text-align: center;
     font-weight: bold;
+    margin-left: 1px;
 }

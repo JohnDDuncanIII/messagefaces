@@ -14,6 +14,8 @@ This extension lets Mozilla Thunderbird display 'face' images in the message hea
 | face-url | Same as above ^ | Display only; optional |
 | picon | Personal Icons | Display only; optional |
 | address book | Displays the contact photo for the sender contained in the address book | Display only; optional |
+| gmail/google+ | Display the google profile image of the sender using [gcontactsync](https://addons.mozilla.org/en-US/thunderbird/addon/gcontactsync/) | Display only; optional |
+
 
 # Screenshots
 face (from original site)

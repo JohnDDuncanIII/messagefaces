@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://messagefaces/content/vismon.css" type="text/css"?>
+<window
+    id="vismon"
+    title="newscheck"
+    orient="horizontal"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <vbox id="container"></vbox>
+  <script src="chrome://messagefaces/content/newscheck.js"/>
+</window>

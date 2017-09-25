@@ -56,8 +56,9 @@
   <script type="application/x-javascript" src="chrome://messagefaces/content/preferences.js"/>
   <script type="application/x-javascript">
     <![CDATA[
-      var _elementIDs = ["xfaceUseJS", "enableLocalImages", "enableLocalPiconImages", "gravatarEnabled", "gravatarEnableCache",
-                         "faceURLEnabled", "localFolder", "columnEnabled", "localPiconFolder", "piconEnabled", "contactPhotoEnabled"];
+	     var _elementIDs = ["xfaceUseJS", "enableLocalImages", "enableLocalPiconImages", "gravatarEnabled", "gravatarEnableCache",
+	     "faceURLEnabled", "localFolder", "columnEnabled", "localPiconFolder", "piconEnabled", "contactPhotoEnabled",
+	     "mailcheckEnabled", "newscheckEnabled"];
     ]]>
   </script>
 
@@ -82,9 +83,10 @@
         <tab label="&mf.pref.accountsTab;"/>
         <tab label="&mf.pref.faceTypesTab;"/>
         <tab label="&mf.pref.onlineServicesTab;"/>
+	<tab label="&mf.pref.monitoringTab;"/>
       </tabs>
       <tabpanels flex="1">
-    
+
         <tabpanel orient="vertical" flex="1">
           <listbox id="identities" flex="1">
             <listhead>
@@ -130,7 +132,7 @@
                       preftype="bool"/>
             <description>&mf.pref.contactPhoto.description;</description>
           </groupbox>
-          
+
           <groupbox>
             <caption label="&mf.pref.local;"/>
             <checkbox id="enableLocalImages"
@@ -180,7 +182,7 @@
                       preftype="bool"/>
             <description>&mf.pref.faceURL.description;</description>
           </groupbox>
-          
+
           <groupbox>
             <caption label="&mf.pref.picon;"/>
             <checkbox id="piconEnabled"
@@ -191,10 +193,26 @@
           </groupbox>
         </tabpanel>
 
+	<tabpanel orient="vertical">
+          <groupbox>
+            <caption label="&mf.pref.mailcheck;"/>
+            <checkbox id="mailcheckEnabled"
+                      label="&mf.pref.mailcheck.enabled;"
+                      prefstring="extensions.messagefaces.mailcheck.enabled"
+                      preftype="bool"/>
+          </groupbox>
+
+          <groupbox>
+            <caption label="&mf.pref.newscheck;"/>
+            <checkbox id="newscheckEnabled"
+                      label="&mf.pref.newscheck.enabled;"
+                      prefstring="extensions.messagefaces.newscheck.enabled"
+                      preftype="bool"/>
+          </groupbox>
+        </tabpanel>
       </tabpanels>
     </tabbox>
   </stack>
-  
   <vbox id="dataBox" hidden="true">
   </vbox>
 

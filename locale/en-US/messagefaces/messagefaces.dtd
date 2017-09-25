@@ -12,6 +12,7 @@
 <!ENTITY mf.pref.accountsTab "Accounts">
 <!ENTITY mf.pref.faceTypesTab "Face types">
 <!ENTITY mf.pref.onlineServicesTab "Online services">
+<!ENTITY mf.pref.monitoringTab "Monitoring">
 
 <!ENTITY mf.pref.accountCol "Account">
 <!ENTITY mf.pref.emailCol "Email">
@@ -54,3 +55,11 @@
 <!ENTITY mf.pref.picon "Personal Icons">
 <!ENTITY mf.pref.picon.enabled "Load picons from http://www.cs.indiana.edu/ftp/faces/picons/">
 <!ENTITY mf.pref.picon.description "This is a potential security problem - you are accessing files that are stored on either http://www.cs.indiana.edu/ftp/faces/picons/ or http://kinzler.com/picons/ftp/">
+
+<!ENTITY mf.pref.mailcheck "mailcheck">
+<!ENTITY mf.pref.mailcheck.enabled "Display a window that shows a picon for each mail message waiting in your account mail spool file.">
+
+<!ENTITY mf.pref.newscheck "newscheck">
+<!ENTITY mf.pref.newscheck.enabled "Display a window that showw a picon (w/ number of unread messages) for each newsgroup in a news server.">
+
+

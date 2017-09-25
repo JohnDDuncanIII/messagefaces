@@ -10,4 +10,6 @@ pref("extensions.messagefaces.maxsize", 48);
 pref("extensions.messagefaces.xface.useJS", true);
 pref("extensions.messagefaces.picon.enabled", false);
 pref("extensions.messagefaces.localPicon.enabled", true);
+pref("extensions.messagefaces.mailcheck.enabled", true);
+pref("extensions.messagefaces.newscheck.enabled", true);
 pref("extensions.{FACE5779-9D08-48F9-922F-17AA9C065C9B}.description", "chrome://messagefaces/locale/messagefaces.properties");
