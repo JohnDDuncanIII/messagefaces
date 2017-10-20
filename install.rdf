@@ -8,6 +8,7 @@
     <em:version>$VERSION</em:version>
     <em:description>$EXT_DESC</em:description>
     <em:creator>Jens Bannmann (jens.b@web.de)</em:creator>
+    <em:unpack>true</em:unpack>
 
     <em:contributor>Arvid Axelsson</em:contributor>
     <em:contributor>John Duncan</em:contributor>
@@ -20,15 +21,9 @@
     <em:contributor>Andrew Taylor</em:contributor>
 
     <em:homepageURL>http://cs.gettysburg.edu/~duncjo01/MessageFaces</em:homepageURL>
+    <em:optionsType>1</em:optionsType>
     <em:optionsURL>chrome://messagefaces/content/preferences.xul</em:optionsURL>
-    <em:iconURL>chrome://messagefaces/content/mf-icon.png</em:iconURL>
-
-    <!-- Front End Integration Hooks (used by Extension Manager) for pref dialog -->
-    <!--
-	<yuck:optionsURL>chrome://messagefaces/content/preferences.xul</yuck:optionsURL>
-	<yuck:optionsType>1</yuck:optionsType>
-	<yuck:iconURL>chrome://messagefaces/content/mf-icon.png</yuck:iconURL>
-    -->
+    <em:iconURL>chrome://messagefaces/content/img/mf.png</em:iconURL>
 
     <em:targetApplication>
       <Description>
@@ -45,16 +40,5 @@
         <em:maxVersion>$TB_MAX_VERSION</em:maxVersion>
       </Description>
     </em:targetApplication>
-
-    <em:file>
-      <Description about="urn:mozilla:extension:file:messagefaces.jar">
-        <em:package>content/</em:package>
-        <em:locale>locale/en-US/messagefaces/</em:locale>
-        <em:locale>locale/ca-AD/messagefaces/</em:locale>
-        <em:locale>locale/de-DE/messagefaces/</em:locale>
-        <em:locale>locale/hu-HU/messagefaces/</em:locale>
-        <em:locale>locale/pl-PL/messagefaces/</em:locale>
-      </Description>
-    </em:file>
   </Description>
 </RDF>

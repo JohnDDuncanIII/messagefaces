@@ -36,7 +36,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 
-const BLANK_FACE = "chrome://messagefaces/content/blank.png";
+const BLANK_FACE = "chrome://messagefaces/content/img/blank.png";
 const promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
                       .getService(Components.interfaces.nsIPromptService);
 const fileHandler = Components.classes["@mozilla.org/network/io-service;1"]

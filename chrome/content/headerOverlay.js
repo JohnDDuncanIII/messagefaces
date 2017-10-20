@@ -629,9 +629,9 @@ function mfStartup() {
         .getService(Components.interfaces.mozIJSSubScriptLoader);
 
     var md5Type = "nsICryptoHash" in Components.interfaces ? "call" : "impl";
-    jsLoader.loadSubScript("chrome://messagefaces/content/md5-" + md5Type + ".js", mfMD5m);
-    jsLoader.loadSubScript("chrome://messagefaces/content/xface.js", mfXFaceJSm);
-    jsLoader.loadSubScript("chrome://messagefaces/content/logging.js", mfLog);
+    jsLoader.loadSubScript("chrome://messagefaces/content/lib/md5-" + md5Type + ".js", mfMD5m);
+    jsLoader.loadSubScript("chrome://messagefaces/content/lib/xface.js", mfXFaceJSm);
+    jsLoader.loadSubScript("chrome://messagefaces/content/lib/logging.js", mfLog);
 
     prefService = Components.classes["@mozilla.org/preferences-service;1"]
         .getService(Components.interfaces.nsIPrefService);

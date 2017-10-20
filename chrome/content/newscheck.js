@@ -107,9 +107,9 @@ function news() {
 		var image = document.createElement("image");
 
 		if(rootFolder.getNumUnread(true) != 0 ) {
-		    src = "images/news.gif";
+		    src = "img/news.gif";
 		} else {
-		    src = "images/news_none.gif";
+		    src = "img/news_none.gif";
 		}
 
 		vbox.setAttribute("tooltiptext", rootFolder.prettiestName);
@@ -194,9 +194,9 @@ function newsCheck(folder) {
 
     var rootImage = document.getElementById(rootFolder.prettiestName + "-image");
     if(rootFolder.getNumUnread(true) != 0 ) {
-	src = "images/news.gif";
+	src = "img/news.gif";
     } else {
-	src = "images/news_none.gif";
+	src = "img/news_none.gif";
     }
     rootImage.setAttribute("src", src);
 }

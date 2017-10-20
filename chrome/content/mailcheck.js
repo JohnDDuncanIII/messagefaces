@@ -114,9 +114,9 @@ function mail() {
 
 			var src;
 			if(folder.getNumUnread(true) != 0 ) {
-			    src = "images/mail.gif";
+			    src = "img/mail.gif";
 			} else {
-			    src = "images/mail_none.gif";
+			    src = "img/mail_none.gif";
 			}
 
 			vbox.setAttribute("tooltiptext", rootFolder.prettiestName);
@@ -165,9 +165,9 @@ function mailCheck(folder) {
     var src;
 
     if(numUnread != 0 ) {
-	src = "images/mail.gif";
+	src = "img/mail.gif";
     } else {
-	src = "images/mail_none.gif";
+	src = "img/mail_none.gif";
     }
     rootImage.setAttribute("src", src);
 

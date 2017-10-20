@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="chrome://messagefaces/content/messengerOverlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://messagefaces/content/css/messengerOverlay.css" type="text/css"?>
 
 <!DOCTYPE overlay>
 
@@ -8,10 +8,10 @@
 
   <tree id="threadTree">
     <treecols id="threadCols">
-      <splitter class="tree-splitter" />
-      <treecol id="colFaceHeader" persist="hidden ordinal width" currentView="unthreaded" flex="2" label="Face" tooltiptext="Click to sort by graphical Face header, if available." />
+      <splitter class="tree-splitter"/>
+      <treecol id="colFaceHeader" persist="hidden ordinal width" currentView="unthreaded" flex="2" label="Face" tooltiptext="Click to sort by graphical Face header, if available."/>
     </treecols>
   </tree>
-  <script type="application/x-javascript;version=1.8" src="chrome://messagefaces/content/messengerOverlay.js"/>
+  <script src="chrome://messagefaces/content/messengerOverlay.js"/>
 </overlay>
 

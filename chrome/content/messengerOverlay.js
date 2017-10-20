@@ -385,8 +385,8 @@ function doOnceLoaded() {
         .getService(Components.interfaces.mozIJSSubScriptLoader);
 
     var md5Type = "nsICryptoHash" in Components.interfaces ? "call" : "impl";
-    jsLoaderMessenger.loadSubScript("chrome://messagefaces/content/md5-" + md5Type + ".js", mfMD5);
-    jsLoaderMessenger.loadSubScript("chrome://messagefaces/content/xface.js", mfXFaceJS);
+    jsLoaderMessenger.loadSubScript("chrome://messagefaces/content/lib/md5-" + md5Type + ".js", mfMD5);
+    jsLoaderMessenger.loadSubScript("chrome://messagefaces/content/lib/xface.js", mfXFaceJS);
 
     mfGravatarEnabled = this._prefService.getBoolPref("extensions.messagefaces.gravatar.enabled");
     //mfGravatarEnableCache = this._prefService.getBoolPref("extensions.messagefaces.gravatar.enableCache");
