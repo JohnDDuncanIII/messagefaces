@@ -1,44 +1,46 @@
 <?xml version="1.0"?>
 
-<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
-  <Description about="urn:mozilla:install-manifest">
-    <em:id>$EXT_ID</em:id>
-    <em:name>$EXT_NAME</em:name>
-    <em:version>$VERSION</em:version>
-    <em:description>$EXT_DESC</em:description>
-    <em:creator>Jens Bannmann (jens.b@web.de)</em:creator>
-    <em:unpack>true</em:unpack>
+<RDF
+    xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+>
+    <Description about="urn:mozilla:install-manifest">
+        <em:id>{FACE5779-9D08-48F9-922F-17AA9C065C9B}</em:id>
+        <em:name>MessageFaces</em:name>
+        <em:version>1.3</em:version>
+        <em:description>Displays 'face' images in the message header.</em:description>
+        <em:creator>Jens Bannmann (jens.b@web.de), John Duncan (duncanjdiii@gmail.com)</em:creator>
+        <em:unpack>true</em:unpack>
 
-    <em:contributor>Arvid Axelsson</em:contributor>
-    <em:contributor>John Duncan</em:contributor>
-    <em:contributor>Marco de Freitas</em:contributor>
-    <em:contributor>Jonas Eckerman</em:contributor>
-    <em:contributor>Máté Farkas</em:contributor>
-    <em:contributor>Toni Hermoso</em:contributor>
-    <em:contributor>Pawel Kata</em:contributor>
-    <em:contributor>Hans Christian Saustrup</em:contributor>
-    <em:contributor>Andrew Taylor</em:contributor>
+        <em:contributor>Andrew Taylor</em:contributor>
+        <em:contributor>Arvid Axelsson</em:contributor>
+        <em:contributor>Hans Christian Saustrup</em:contributor>
+        <em:contributor>John Duncan</em:contributor>
+        <em:contributor>Jonas Eckerman</em:contributor>
+        <em:contributor>Marco de Freitas</em:contributor>
+        <em:contributor>Máté Farkas</em:contributor>
+        <em:contributor>Pawel Kata</em:contributor>
+        <em:contributor>Toni Hermoso</em:contributor>
 
-    <em:homepageURL>http://cs.gettysburg.edu/~duncjo01/MessageFaces</em:homepageURL>
-    <em:optionsType>1</em:optionsType>
-    <em:optionsURL>chrome://messagefaces/content/preferences.xul</em:optionsURL>
-    <em:iconURL>chrome://messagefaces/content/img/mf.png</em:iconURL>
+        <em:homepageURL>http://cs.gettysburg.edu/~duncjo01/MessageFaces</em:homepageURL>
+        <em:optionsType>1</em:optionsType>
+        <em:optionsURL>chrome://messagefaces/content/preferences.xul</em:optionsURL>
+        <em:iconURL>chrome://messagefaces/content/img/mf.png</em:iconURL>
 
-    <em:targetApplication>
-      <Description>
-        <em:id>$SM_ID</em:id>
-        <em:minVersion>$SM_MIN_VERSION</em:minVersion>
-        <em:maxVersion>$SM_MAX_VERSION</em:maxVersion>
-      </Description>
-    </em:targetApplication>
+        <em:targetApplication>
+            <Description>
+                <em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id>
+                <em:minVersion>2.17</em:minVersion>
+                <em:maxVersion>2.54</em:maxVersion>
+            </Description>
+        </em:targetApplication>
 
-    <em:targetApplication>
-      <Description>
-        <em:id>$TB_ID</em:id>
-        <em:minVersion>$TB_MIN_VERSION</em:minVersion>
-        <em:maxVersion>$TB_MAX_VERSION</em:maxVersion>
-      </Description>
-    </em:targetApplication>
-  </Description>
+        <em:targetApplication>
+            <Description>
+                <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
+                <em:minVersion>14.0</em:minVersion>
+                <em:maxVersion>51.0</em:maxVersion>
+            </Description>
+        </em:targetApplication>
+    </Description>
 </RDF>
