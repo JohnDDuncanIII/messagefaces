@@ -135,6 +135,16 @@ A: Translations are always welcome - please contact me via the address given on 
 Just click on the sender's contact card in your address book, then pick a local or remote (web) image. The image will then be copied into your profile directory's "Images" folder (NOT profile/MessageFaces/images/; this is handled by the client itself, not the extension)
 
 # Changelog
+1.3.1 (2020-12-14)
+- Fix https://github.com/JohnDDuncanIII/messagefaces/issues/4
+- Fix `mailcheck.js` breakage which occurred due to http://mozilla.6506.n7.nabble.com/Upcoming-change-to-fixIterator-function-in-iteratorUtils-jsm-td367711.html
+- Begin codebase cleanup
+
+1.3.0 (2017-10-20)
+- add support for monitoring windows (similar to picons newscheck-faces and xfaces unix programs)
+- allow multi-picon support for web lookups
+- style treerows in mailnews
+
 1.2.5 (2016-04-25)
 - implement a dirty hack that will only apply the column to the mailnews view when the preference is enabled
 
