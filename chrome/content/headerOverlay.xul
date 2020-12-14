@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://messagefaces/content/css/headerViewOverlay.css" type="text/css"?>
+
+<!DOCTYPE overlay>
+
+<overlay
+	id="messagefaces"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+>
+	<script src="chrome://messagefaces/content/headerOverlay.js"/>
+</overlay>

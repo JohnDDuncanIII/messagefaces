@@ -1,219 +1,297 @@
 <?xml version="1.0"?>
-<!-- ***** BEGIN LICENSE BLOCK *****
-   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
-   -
-   - The contents of this file are subject to the Mozilla Public License Version
-   - 1.1 (the "License"); you may not use this file except in compliance with
-   - the License. You may obtain a copy of the License at
-   - http://www.mozilla.org/MPL/
-   -
-   - Software distributed under the License is distributed on an "AS IS" basis,
-   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-   - for the specific language governing rights and limitations under the
-   - License.
-   -
-   - The Original Code is MessageFaces extension.
-   -
-   - The Initial Developer of the Original Code is Jens Bannmann.
-   - Portions created by the Initial Developer are Copyright (C) 2004
-   - the Initial Developer. All Rights Reserved.
-   -
-   - Contributor(s) (alphabetical order):
-   -  Jens Bannmann <jens.b@web.de>
-   -  John Duncan <duncjo01@gettysburg.edu>
-   -
-   - Alternatively, the contents of this file may be used under the terms of
-   - either the GNU General Public License Version 2 or later (the "GPL"), or
-   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
-   - in which case the provisions of the GPL or the LGPL are applicable instead
-   - of those above. If you wish to allow use of your version of this file only
-   - under the terms of either the GPL or the LGPL, and not to allow others to
-   - use your version of this file under the terms of the MPL, indicate your
-   - decision by deleting the provisions above and replace them with the notice
-   - and other provisions required by the LGPL or the GPL. If you do not delete
-   - the provisions above, a recipient may use your version of this file under
-   - the terms of any one of the MPL, the GPL or the LGPL.
-   -
-   - ***** END LICENSE BLOCK ***** -->
-
+<!--
+***** BEGIN LICENSE BLOCK *****
+* Version: MPL 1.1/GPL 2.0/LGPL 2.1
+*
+* The contents of this file are subject to the Mozilla Public License Version
+* 1.1 (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+* http://www.mozilla.org/MPL/
+*
+* Software distributed under the License is distributed on an "AS IS" basis,
+* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+* for the specific language governing rights and limitations under the
+* License.
+*
+* The Original Code is MessageFaces extension.
+*
+* The Initial Developer of the Original Code is Jens Bannmann.
+* Portions created by the Initial Developer are Copyright (C) 2004
+* the Initial Developer. All Rights Reserved.
+*
+* Contributor(s) (alphabetical order):
+*  Jens Bannmann <jens.b@web.de>
+*  John Duncan <duncjo01@gettysburg.edu>
+*
+* Alternatively, the contents of this file may be used under the terms of
+* either the GNU General Public License Version 2 or later (the "GPL"), or
+* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+* in which case the provisions of the GPL or the LGPL are applicable instead
+* of those above. If you wish to allow use of your version of this file only
+* under the terms of either the GPL or the LGPL, and not to allow others to
+* use your version of this file under the terms of the MPL, indicate your
+* decision by deleting the provisions above and replace them with the notice
+* and other provisions required by the LGPL or the GPL. If you do not delete
+* the provisions above, a recipient may use your version of this file under
+* the terms of any one of the MPL, the GPL or the LGPL.
+*
+*
+***** END LICENSE BLOCK *****
+-->
 <?xml-stylesheet href="chrome://communicator/skin/" type="text/css"?>
 
 <!DOCTYPE window [
-<!ENTITY % messagefacesDTD SYSTEM "chrome://messagefaces/locale/messagefaces.dtd" >
-%messagefacesDTD;
+	<!ENTITY % messagefacesDTD SYSTEM "chrome://messagefaces/locale/messagefaces.dtd" >
+	%messagefacesDTD;
 ]>
 
-<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        title="&mf.pref.title;"
-        id="messagefacesPreferences"
-        buttons="accept,cancel"
-        persist="screenX, screenY"
-        onload="init();"
-        ondialogaccept="return savePrefs();"
-        width="450"
-        height="360">
+<dialog
+	buttons="accept,cancel"
+	height="360"
+	id="messagefacesPreferences"
+	ondialogaccept="return savePrefs();"
+	onload="init();"
+	persist="screenX, screenY"
+	title="&mf.pref.title;"
+	width="450"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+>
+	<script src="chrome://messagefaces/content/preferences.js"/>
+	<script type="application/x-javascript">
+		<![CDATA[
+			var _elementIDs = [
+				"xfaceUseJS",
+				"enableLocalImages",
+				"enableLocalPiconImages",
+				"gravatarEnabled",
+				"gravatarEnableCache",
+				"faceURLEnabled",
+				"localFolder",
+				"columnEnabled",
+				"localPiconFolder",
+				"piconEnabled",
+				"contactPhotoEnabled",
+				"mailcheckEnabled",
+				"newscheckEnabled"
+			];
+		]]>
+	</script>
 
-  <script src="chrome://messagefaces/content/preferences.js"/>
-  <script type="application/x-javascript">
-    <![CDATA[
-	     var _elementIDs = ["xfaceUseJS", "enableLocalImages", "enableLocalPiconImages", "gravatarEnabled", "gravatarEnableCache",
-	     "faceURLEnabled", "localFolder", "columnEnabled", "localPiconFolder", "piconEnabled", "contactPhotoEnabled",
-	     "mailcheckEnabled", "newscheckEnabled"];
-    ]]>
-  </script>
+	<stringbundleset id="stringbundleset">
+		<stringbundle
+			id="bundle"
+			src="chrome://messagefaces/locale/messagefaces.properties"
+		/>
+	</stringbundleset>
 
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="bundle" src="chrome://messagefaces/locale/messagefaces.properties"/>
-  </stringbundleset>
+	<stack flex="1">
+		<vbox flex="1">
+			<spacer flex="1"/>
+			<hbox>
+				<spacer flex="1"/>
+				<image
+					id="testImage"
+					maxheight="49"
+					maxwidth="49"
+					onerror="processImage(false);"
+					onload="processImage(true);"
+				/>
+				<spacer flex="1"/>
+			</hbox>
+			<spacer flex="1"/>
+		</vbox>
 
-  <stack flex="1">
-    <vbox flex="1">
-      <spacer flex="1"/>
-      <hbox>
-        <spacer flex="1"/>
-        <image id="testImage" maxwidth="49" maxheight="49"
-               onload="processImage(true);" onerror="processImage(false);"/>
-        <spacer flex="1"/>
-      </hbox>
-      <spacer flex="1"/>
-    </vbox>
+		<tabbox flex="1">
+			<tabs>
+				<tab label="&mf.pref.accountsTab;"/>
+				<tab label="&mf.pref.faceTypesTab;"/>
+				<tab label="&mf.pref.onlineServicesTab;"/>
+				<tab label="&mf.pref.monitoringTab;"/>
+			</tabs>
+			<tabpanels flex="1">
+				<tabpanel
+					flex="1"
+					orient="vertical"
+				>
+					<listbox
+						flex="1"
+						id="identities"
+					>
+						<listhead>
+							<listheader
+								id="accountCol"
+								label="&mf.pref.accountCol;"
+							/>
+							<listheader
+								id="emailCol"
+								label="&mf.pref.emailCol;"
+							/>
+							<listheader
+								id="faceCol"
+								label="&mf.pref.faceCol;"
+							/>
+						</listhead>
+						<listcols>
+							<listcol flex="1"/>
+							<listcol flex="2"/>
+							<listcol width="72"/>
+						</listcols>
+					</listbox>
+					<hbox>
+						<button
+							id="setFaceButton"
+							label="&mf.pref.setFaceBtn;" oncommand="setFace();"
+						/>
+						<button
+							id="removeFaceButton"
+							label="&mf.pref.removeFaceBtn;" oncommand="removeFace();"
+						/>
+						<spacer flex="1"/>
+					 </hbox>
+				</tabpanel>
 
-    <tabbox flex="1">
-      <tabs>
-        <tab label="&mf.pref.accountsTab;"/>
-        <tab label="&mf.pref.faceTypesTab;"/>
-        <tab label="&mf.pref.onlineServicesTab;"/>
-	<tab label="&mf.pref.monitoringTab;"/>
-      </tabs>
-      <tabpanels flex="1">
+				<tabpanel orient="vertical">
+					<groupbox>
+						<caption label="&mf.pref.xface;"/>
+						<checkbox
+							id="xfaceUseJS"
+							label="&mf.pref.xface.enabled;"
+							prefstring="extensions.messagefaces.xface.useJS"
+							preftype="bool"
+						/>
+					</groupbox>
+					<groupbox>
+						<caption label="&mf.pref.column;"/>
+						<checkbox
+							id="columnEnabled"
+							label="&mf.pref.column.enabled;"
+							prefstring="extensions.messagefaces.column.enabled"
+							preftype="bool"
+						/>
+						<description>&mf.pref.column.hint;</description>
+				  </groupbox>
 
-        <tabpanel orient="vertical" flex="1">
-          <listbox id="identities" flex="1">
-            <listhead>
-              <listheader id="accountCol" label="&mf.pref.accountCol;"/>
-              <listheader id="emailCol" label="&mf.pref.emailCol;"/>
-              <listheader id="faceCol" label="&mf.pref.faceCol;"/>
-            </listhead>
-            <listcols>
-              <listcol flex="1"/>
-              <listcol flex="2"/>
-              <listcol width="72"/>
-            </listcols>
-          </listbox>
-          <hbox>
-            <button id="setFaceButton" label="&mf.pref.setFaceBtn;" oncommand="setFace();"/>
-            <button id="removeFaceButton" label="&mf.pref.removeFaceBtn;" oncommand="removeFace();"/>
-            <spacer flex="1"/>
-          </hbox>
-        </tabpanel>
+				  <groupbox>
+						<caption label="&mf.pref.contactPhoto;"/>
+						<checkbox
+							id="contactPhotoEnabled"
+							label="&mf.pref.contactPhoto.enabled;"
+							prefstring="extensions.messagefaces.contactPhoto.enabled"
+							preftype="bool"
+						/>
+						<description>&mf.pref.contactPhoto.description;</description>
+				  </groupbox>
 
-        <tabpanel orient="vertical">
-          <groupbox>
-            <caption label="&mf.pref.xface;"/>
-            <checkbox id="xfaceUseJS"
-                      label="&mf.pref.xface.enabled;"
-                      prefstring="extensions.messagefaces.xface.useJS"
-                      preftype="bool"/>
-          </groupbox>
-          <groupbox>
-            <caption label="&mf.pref.column;"/>
-            <checkbox id="columnEnabled"
-                      label="&mf.pref.column.enabled;"
-                      prefstring="extensions.messagefaces.column.enabled"
-                      preftype="bool"/>
-            <description>&mf.pref.column.hint;</description>
-          </groupbox>
+				  <groupbox>
+						<caption label="&mf.pref.local;"/>
+						<checkbox
+							id="enableLocalImages"
+							label="&mf.pref.local.enabled;"
+							prefstring="extensions.messagefaces.local.enabled"
+							preftype="bool"
+						/>
+						<hbox align="center">
+							<textbox id="localFolder"
+								class="uri-element"
+								flex="1"
+								readonly="true"
+							/>
+							<button
+								label="&mf.pref.local.chooseFolder;"
+								oncommand="chooseFolder();"
+							/>
+						</hbox>
+						<description>&mf.pref.local.hint;</description>
+					</groupbox>
+					<groupbox>
+						<caption label="&mf.pref.localPicon;"/>
+						<checkbox
+							id="enableLocalPiconImages"
+							label="&mf.pref.localPicon.enabled;"
+							prefstring="extensions.messagefaces.localPicon.enabled"
+							preftype="bool"
+						/>
+						<hbox align="center">
+							<textbox
+								class="uri-element"
+								flex="1"
+								id="localPiconFolder"
+								readonly="true"
+							/>
+							<button
+								label="&mf.pref.localPicon.chooseFolder;"
+								oncommand="chooseFolder();"
+							/>
+						</hbox>
+						<description>&mf.pref.localPicon.hint;</description>
+					</groupbox>
+				</tabpanel>
 
-          <groupbox>
-            <caption label="&mf.pref.contactPhoto;"/>
-            <checkbox id="contactPhotoEnabled"
-                      label="&mf.pref.contactPhoto.enabled;"
-                      prefstring="extensions.messagefaces.contactPhoto.enabled"
-                      preftype="bool"/>
-            <description>&mf.pref.contactPhoto.description;</description>
-          </groupbox>
+				<tabpanel orient="vertical">
+					<groupbox>
+						<caption label="&mf.pref.gravatar;"/>
+						<checkbox
+							id="gravatarEnabled"
+							label="&mf.pref.gravatar.enabled;"
+							prefstring="extensions.messagefaces.gravatar.enabled"
+							preftype="bool"
+						/>
+						<description>&mf.pref.gravatar.description;</description>
+						<checkbox
+							id="gravatarEnableCache"
+							label="&mf.pref.gravatar.enableCache;"
+							prefstring="extensions.messagefaces.gravatar.enableCache"
+							preftype="bool"
+						/>
+						<description>&mf.pref.gravatar.cacheDescription;</description>
+					</groupbox>
 
-          <groupbox>
-            <caption label="&mf.pref.local;"/>
-            <checkbox id="enableLocalImages"
-                      label="&mf.pref.local.enabled;"
-                      prefstring="extensions.messagefaces.local.enabled"
-                      preftype="bool"/>
-            <hbox align="center">
-              <textbox id="localFolder" flex="1" readonly="true" class="uri-element"/>
-              <button label="&mf.pref.local.chooseFolder;" oncommand="chooseFolder();"/>
-            </hbox>
-            <description>&mf.pref.local.hint;</description>
-          </groupbox>
-          <groupbox>
-            <caption label="&mf.pref.localPicon;"/>
-            <checkbox id="enableLocalPiconImages"
-                      label="&mf.pref.localPicon.enabled;"
-                      prefstring="extensions.messagefaces.localPicon.enabled"
-                      preftype="bool"/>
-            <hbox align="center">
-              <textbox id="localPiconFolder" flex="1" readonly="true" class="uri-element"/>
-              <button label="&mf.pref.localPicon.chooseFolder;" oncommand="chooseFolder();"/>
-            </hbox>
-            <description>&mf.pref.localPicon.hint;</description>
-          </groupbox>
-        </tabpanel>
+					<groupbox>
+						<caption label="&mf.pref.faceURL;"/>
+						<checkbox
+							id="faceURLEnabled"
+							label="&mf.pref.faceURL.enabled;"
+							prefstring="extensions.messagefaces.faceURL.enabled"
+							preftype="bool"
+						/>
+						<description>&mf.pref.faceURL.description;</description>
+					</groupbox>
 
-        <tabpanel orient="vertical">
-          <groupbox>
-            <caption label="&mf.pref.gravatar;"/>
-            <checkbox id="gravatarEnabled"
-                      label="&mf.pref.gravatar.enabled;"
-                      prefstring="extensions.messagefaces.gravatar.enabled"
-                      preftype="bool"/>
-            <description>&mf.pref.gravatar.description;</description>
-            <checkbox id="gravatarEnableCache"
-                      label="&mf.pref.gravatar.enableCache;"
-                      prefstring="extensions.messagefaces.gravatar.enableCache"
-                      preftype="bool"/>
-            <description>&mf.pref.gravatar.cacheDescription;</description>
-          </groupbox>
+					<groupbox>
+						<caption label="&mf.pref.picon;"/>
+						<checkbox
+							id="piconEnabled"
+							label="&mf.pref.picon.enabled;"
+							prefstring="extensions.messagefaces.picon.enabled"
+							preftype="bool"
+						/>
+						<description>&mf.pref.picon.description;</description>
+					</groupbox>
+				</tabpanel>
 
-          <groupbox>
-            <caption label="&mf.pref.faceURL;"/>
-            <checkbox id="faceURLEnabled"
-                      label="&mf.pref.faceURL.enabled;"
-                      prefstring="extensions.messagefaces.faceURL.enabled"
-                      preftype="bool"/>
-            <description>&mf.pref.faceURL.description;</description>
-          </groupbox>
+				<tabpanel orient="vertical">
+					<groupbox>
+						<caption label="&mf.pref.mailcheck;"/>
+						<checkbox
+							id="mailcheckEnabled"
+							label="&mf.pref.mailcheck.enabled;"
+							prefstring="extensions.messagefaces.mailcheck.enabled"
+							preftype="bool"
+						/>
+					</groupbox>
 
-          <groupbox>
-            <caption label="&mf.pref.picon;"/>
-            <checkbox id="piconEnabled"
-                      label="&mf.pref.picon.enabled;"
-                      prefstring="extensions.messagefaces.picon.enabled"
-                      preftype="bool"/>
-            <description>&mf.pref.picon.description;</description>
-          </groupbox>
-        </tabpanel>
-
-	<tabpanel orient="vertical">
-          <groupbox>
-            <caption label="&mf.pref.mailcheck;"/>
-            <checkbox id="mailcheckEnabled"
-                      label="&mf.pref.mailcheck.enabled;"
-                      prefstring="extensions.messagefaces.mailcheck.enabled"
-                      preftype="bool"/>
-          </groupbox>
-
-          <groupbox>
-            <caption label="&mf.pref.newscheck;"/>
-            <checkbox id="newscheckEnabled"
-                      label="&mf.pref.newscheck.enabled;"
-                      prefstring="extensions.messagefaces.newscheck.enabled"
-                      preftype="bool"/>
-          </groupbox>
-        </tabpanel>
-      </tabpanels>
-    </tabbox>
-  </stack>
-  <vbox id="dataBox" hidden="true">
-  </vbox>
-
+					<groupbox>
+						<caption label="&mf.pref.newscheck;"/>
+						<checkbox
+							id="newscheckEnabled"
+							label="&mf.pref.newscheck.enabled;"
+							prefstring="extensions.messagefaces.newscheck.enabled"
+							preftype="bool"
+						/>
+					</groupbox>
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</stack>
+	<vbox id="dataBox" hidden="true"/>
 </dialog>

@@ -1,8 +1,9 @@
-content $NAME chrome/content/
-locale $NAME en-US locale/en-US/$NAME/
-locale $NAME ca-AD locale/ca-AD/$NAME/
-locale $NAME de-DE locale/de-DE/$NAME/
-locale $NAME hu-HU locale/hu-HU/$NAME/
-locale $NAME pl-PL locale/pl-PL/$NAME/
-overlay chrome://messenger/content/msgHdrViewOverlay.xul chrome://$NAME/content/headerViewOverlay.xul
-overlay chrome://messenger/content/messenger.xul chrome://$NAME/content/messengerOverlayHack.xul
+content messagefaces chrome/content/
+content messagefaces/icons/ chrome/icons/default/
+locale messagefaces en-US locale/en-US/messagefaces/
+locale messagefaces ca-AD locale/ca-AD/messagefaces/
+locale messagefaces de-DE locale/de-DE/messagefaces/
+locale messagefaces hu-HU locale/hu-HU/messagefaces/
+locale messagefaces pl-PL locale/pl-PL/messagefaces/
+overlay chrome://messenger/content/msgHdrViewOverlay.xul chrome://messagefaces/content/headerOverlay.xul
+overlay chrome://messenger/content/messenger.xul chrome://messagefaces/content/messengerOverlayHack.xul

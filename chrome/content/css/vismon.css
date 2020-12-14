@@ -3,20 +3,19 @@
 }
 
 .faces {
-    border: 1px solid black;
     background-color: Beige;
-    margin: 4px;
+    border: 1px solid black;
     display: table;
     line-height: 0;
+    margin: 4px;
 }
 
 .faces a {
-    width: 64px;
-    height: 64px;
     display: inline-block;
-    text-align: center;
-    /*overflow: auto;*/
+    height: 64px;
     overflow: hidden;
+    text-align: center;
+    width: 64px;
 }
 
 .faces a:hover {

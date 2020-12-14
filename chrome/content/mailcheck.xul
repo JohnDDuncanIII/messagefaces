@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="chrome://messagefaces/content/css/vismon.css" type="text/css"?>
-<window
-    id="vismon"
-    title="mailcheck"
-    orient="horizontal"
-    xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <html:link rel="icon" href="chrome://messagefaces/content/img/favicon.png"
-	     style="display:none"/>
-  <vbox id="container"></vbox>
-  <script src="chrome://messagefaces/content/mailcheck.js"/>
 
+<window
+	id="vismon"
+	orient="horizontal"
+	title="mailcheck"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+>
+	<html:link
+		href="chrome://messagefaces/content/img/favicon.png"
+		rel="icon"
+		style="display:none"
+	/>
+	<vbox id="container"/>
+	<script src="chrome://messagefaces/content/mailcheck.js"/>
 </window>

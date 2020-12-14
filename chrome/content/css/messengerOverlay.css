@@ -6,8 +6,9 @@
 #threadTree treechildren:-moz-tree-cell-text {
     font-size: 13px !important;
 }
+
 #threadTree treechildren:-moz-tree-image(faceImage) {
-    width: auto !important;
     height: 48px; !important;
     margin-top:-1px !important;
+    width: auto !important;
 }

@@ -1,9 +1,11 @@
 #fromBuddyIconXFace {
-    color: black;
     background-color: white;
+    color: black;
 }
 
-#fromBuddyIcon, #fromBuddyIconXImageURL, #fromBuddyIconContactPhoto {
-    width: auto;
+#fromBuddyIcon,
+#fromBuddyIconXImageURL,
+#fromBuddyIconContactPhoto {
     height: 48px;
+    width: auto;
 }
