@@ -1,14 +1,38 @@
-/* Adjust Thread pane message row height */
+/* adjust row height for the messagepanebox */
+#tabmail-container >
+#tabmail >
+#tabpanelcontainer >
+#mailContent >
+#messengerBox >
+#messagesBox >
+#displayDeck >
+#threadPaneBox >
 #threadTree treechildren:-moz-tree-row {
     height: 50px !important;
 }
 
+#tabmail-container >
+#tabmail >
+#tabpanelcontainer >
+#mailContent >
+#messengerBox >
+#messagesBox >
+#displayDeck >
+#threadPaneBox >
 #threadTree treechildren:-moz-tree-cell-text {
     font-size: 13px !important;
 }
 
+#tabmail-container >
+#tabmail >
+#tabpanelcontainer >
+#mailContent >
+#messengerBox >
+#messagesBox >
+#displayDeck >
+#threadPaneBox >
 #threadTree treechildren:-moz-tree-image(faceImage) {
-    height: 48px; !important;
-    margin-top:-1px !important;
-    width: auto !important;
+    height: 48px;
+    margin-top:-1px;
+    width: auto;
 }

@@ -154,7 +154,7 @@ function news() {
 				}
 
 				vbox.setAttribute("tooltiptext", rootFolder.prettiestName);
-				a.href = rootFolder.URI;
+				// a.href = rootFolder.URI;
 				image.setAttribute("src", src);
 				image.setAttribute("id", rootFolder.prettiestName + "-image");
 
@@ -197,7 +197,7 @@ function news() {
 						prettyName,
 						numUnread
 					);
-					a.href = URI;
+					// a.href = URI;
 					var lbl = numUnread + " " + abbrName;
 					label.setAttribute(
 						"value",

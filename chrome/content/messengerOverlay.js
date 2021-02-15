@@ -479,12 +479,10 @@ function computePicon(sender) {
 }
 
 function addCustomColumnHandler() {
-	if (gDBView != null) {
-		gDBView.addColumnHandler(
-			"colFaceHeader",
-			columnHandler
-		);
-	}
+	gDBView.addColumnHandler(
+		"colFaceHeader",
+		columnHandler
+	);
 }
 
 var CreateDbObserver = {
@@ -493,7 +491,7 @@ var CreateDbObserver = {
 	}
 }
 
-function onLoad() {
+function main() {
 	this._prefService = (
 		Components.classes["@mozilla.org/preferences-service;1"]
 			.getService(Components.interfaces.nsIPrefBranch)
@@ -590,19 +588,25 @@ function onLoad() {
 		Components.classes["@mozilla.org/observer-service;1"]
 			.getService(Components.interfaces.nsIObserverService)
 	);
-	ObserverService.addObserver(
-		CreateDbObserver,
-		"MsgCreateDBView",
-		false
-	);
-	window
-		.document
-		.getElementById("folderTree")
-		.addEventListener(
-			"select",
-			addCustomColumnHandler,
+
+	if (window.hasOwnProperty("gDBView")) {
+		ObserverService.addObserver(
+			CreateDbObserver,
+			"MsgCreateDBView",
 			false
 		);
+
+		// https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Thunderbird_extensions/HowTos/Common_Thunderbird_Extension_Techniques/Detect_Opening_Folder
+		// https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Thunderbird_extensions/customDBHeaders_Preference
+		// window
+		// 	.document
+		// 	.getElementById("folderTree")
+		// 	.addEventListener(
+		// 		"select",
+		// 		addCustomColumnHandler,
+		// 		false
+		// 	);
+	}
 }
 
-onLoad();
+main();

@@ -40,12 +40,6 @@
  *
  ***** END LICENSE BLOCK *****
  */
-var mfFileHandler = (
-	Components.classes["@mozilla.org/network/io-service;1"]
-		.getService(Components.interfaces.nsIIOService)
-		.getProtocolHandler("file")
-		.QueryInterface(Components.interfaces.nsIFileProtocolHandler)
-);
 // picon database folders
 var mfPiconDatabases = new Array("domains", "users", "misc", "usenix", "unknown");
 // file extensions for local FACE lookups
@@ -78,7 +72,6 @@ var mfExtraGravImage = null;
 //var gravHref = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
 var mfExtraPiconImage = null;
 var mfContactPhotoImage = null;
-var mfO_UpdateMessageHeaders = null;
 var mfX_Cache = new Array();
 var mfbase64Grav;
 
@@ -92,7 +85,15 @@ var piconsSearchSuffix = "/users+usenix+misc+domains+unknown/up/single/gif/order
 
 function mfGetHeaders() {
 	// new way to GetFirstSelectedMessage();
-	var messageURI = gFolderDisplay.selectedMessageUris[0];
+	var messageURI = (
+		gFolderDisplay.selectedMessageUris &&
+		gFolderDisplay.selectedMessageUris[0]
+	);
+
+	if (!messageURI) {
+		return undefined
+	}
+
 	mfLog.info("Loading headers for '" + messageURI + "'.");
 	var messageStream = null;
 	if (messageURI.substring(0, 7) == "file://") {
@@ -187,9 +188,9 @@ function mfGetHeaders() {
 	return headers;
 }
 
-function mfDisplayFace() {
+function mfDisplayFace(mfFileHandler) {
 	var headers = mfGetHeaders();
-	if (headers == null) {
+	if (!headers) {
 		return;
 	}
 	// declare local variables that will hold header vals
@@ -243,7 +244,7 @@ function mfDisplayFace() {
 		extraGravFace = mfGravatarURL;
 		extraGravFace = extraGravFace.replace("%ID%", mfCalcMD5);
 		extraGravFace = extraGravFace.replace("%SIZE%", mfMaxSize);
-		mfSetExtraGravImage(extraGravFace, mfCalcMD5);
+		mfSetExtraGravImage(extraGravFace, mfCalcMD5, mfFileHandler);
 	}
 	// array to hold URLs of picons stored on disk
 	var extraPiconFace = [];
@@ -612,7 +613,7 @@ function getMeta(url, callback) {
 		mfbase64Grav = getBase64Image(img);
 		callback(
 			this.width,
-			this.height
+			this.height,
 		);
 	}
 }
@@ -653,7 +654,7 @@ function getBase64Image(img) {
 }
 
 // set Gravatar image
-function mfSetExtraGravImage(url, mfCalcMD5) {
+function mfSetExtraGravImage(url, mfCalcMD5, mfFileHandler) {
 	mfLog.fine("Setting grav: '" + url + "'.");
 
 	var found = false;
@@ -1030,17 +1031,6 @@ function mfGetPrefImpl(name, type, defaultValue, setIt) {
 	return value;
 }
 
-function mfWrapUpdateMessageHeaders() {
-	document.getElementById("messagepanebox").addEventListener(
-		"load",
-		function messagePaneLoader(e) {
-			mfO_UpdateMessageHeaders();
-			mfDisplayFace();
-		},
-		true
-	);
-}
-
 // Work around (or at least detect) locale-related bugs in TB
 function mfCheckLocale() {
 	const chromeRegistry = (
@@ -1113,16 +1103,24 @@ function mfCheckLocale() {
 	}
 }
 
+// chrome://messenger/content/messenger.xul
+// <window id="messengerWindow" />
 addEventListener(
-	"messagepane-loaded",
-	function onLoad() {
-		removeEventListener("messagepane-loaded", onLoad, true);
+	"DOMContentLoaded",
+	function DOMContentLoaded() {
+		// only run the window initialization logic once
+		removeEventListener("DOMContentLoaded", DOMContentLoaded, true);
 
+		var mfFileHandler = (
+			Components.classes["@mozilla.org/network/io-service;1"]
+				.getService(Components.interfaces.nsIIOService)
+				.getProtocolHandler("file")
+				.QueryInterface(Components.interfaces.nsIFileProtocolHandler)
+		);
 		var jsLoader = (
 			Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
 				.getService(Components.interfaces.mozIJSSubScriptLoader)
 		);
-
 		var md5Type = (
 			"nsICryptoHash" in Components.interfaces
 				? "call"
@@ -1140,7 +1138,6 @@ addEventListener(
 			"chrome://messagefaces/content/lib/logging.js",
 			mfLog
 		);
-
 		prefService = (
 			Components.classes["@mozilla.org/preferences-service;1"]
 				.getService(Components.interfaces.nsIPrefService)
@@ -1148,11 +1145,17 @@ addEventListener(
 		mfPref = prefService.getBranch("extensions.messagefaces.");
 		mfLoadPrefs();
 		mfPrefObserver.register();
-
-		mfO_UpdateMessageHeaders = window.UpdateMessageHeaders;
-		window.UpdateMessageHeaders = mfWrapUpdateMessageHeaders;
-
 		mfCheckLocale();
+
+		// chrome://messenger/content/messenger.xul
+		// <XUL:notificationbox id="messagepanebox" />
+		window.document.getElementById("messagepanebox").addEventListener(
+			"DOMContentLoaded",
+			function() {
+				mfDisplayFace(mfFileHandler);
+			},
+			true
+		)
 	},
 	true
 );

@@ -1,10 +1,9 @@
 <!-- 
-  WELCOME, TRANSLATOR!
-  If you translate this extension to your language, please send me your
-  locale files so I can put them in the next release. Thanks!
+	WELCOME, TRANSLATOR!
+	If you translate this extension to your language, please send me your locale files so I can put them in the next release. Thanks!
 
-                                          Jens Bannmann (jens.b@web.de)
-                                          John Duncan <duncjo01@gettysburg.edu>
+	Jens Bannmann (jens.b@web.de)
+    John Duncan <duncjo01@gettysburg.edu>
 -->
 <!-- The name "MessageFaces" should not be translated. -->
 <!ENTITY mf.pref.title "MessageFaces Settings">
@@ -60,6 +59,4 @@
 <!ENTITY mf.pref.mailcheck.enabled "Display a window that shows a picon for each mail message waiting in your account mail spool file.">
 
 <!ENTITY mf.pref.newscheck "newscheck">
-<!ENTITY mf.pref.newscheck.enabled "Display a window that showw a picon (w/ number of unread messages) for each newsgroup in a news server.">
-
-
+<!ENTITY mf.pref.newscheck.enabled "Display a window that shows a picon (with the number of unread messages) for each newsgroup in the news server.">

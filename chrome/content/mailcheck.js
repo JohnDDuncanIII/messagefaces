@@ -177,7 +177,7 @@ function mail() {
 							"tooltiptext",
 							rootFolder.prettiestName
 						);
-						a.href = URI;
+						// a.href = URI;
 						image.setAttribute(
 							"src",
 							src
@@ -248,7 +248,24 @@ function mailCheck(folder) {
 			)
 		) {
 			if (!msgHdr.isRead) {
+				// folder.URI
+				// imap://duncjo01@outlook.office365.com/INBOX
+
+				// TODO: this returns an incorrect value in SeaMonkey 2.53.6
+				// https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsIMsgFolder
+				// https://github.com/mozilla/releases-comm-central/blob/master/mailnews/base/public/nsIMsgFolder.idl
+				// http://forums.mozillazine.org/viewtopic.php?f=3&t=3048850
+				// imap://duncjo01@outlook.office365.com:993/fetch%3EUID%3E/INBOX#66531
+
+				// imap-message://duncjo01@outlook.office365.com/INBOX#66531
 				var msgURI = folder.getUriForMsg(msgHdr);
+				// imap-message://duncjo01@outlook.office365.com/INBOX#66531
+				// var messageURI = folder.generateMessageURI(msgHdr.messageKey);
+				// imap-message://duncjo01@outlook.office365.com/INBOX#66531
+				// var messageURI = Components.classes["@mozilla.org/network/io-service;1"].
+				// 	getService(Components.interfaces.nsIIOService).
+				// 	newURI(msgURI, null, null);
+
 				shouldResize = true;
 				var sender = msgHdr.author;
 
@@ -276,7 +293,7 @@ function mailCheck(folder) {
 					"tooltiptext",
 					sender
 				);
-				a.href = msgURI;
+				// a.href = msgURI;
 				image.setAttribute(
 					"src",
 					picons[0]
@@ -285,7 +302,6 @@ function mailCheck(folder) {
 					"value",
 					user.substring(0, 9)
 				);
-				//label.textContent = lbl.substring(0, 10);
 
 				hbox.appendChild(image);
 				vbox.appendChild(hbox);
