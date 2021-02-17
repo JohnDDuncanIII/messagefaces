@@ -333,3 +333,7 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=453627
 http://groups.csail.mit.edu/up/projects/facemail/ericl-thesis.pdf
 
 https://cups.cs.cmu.edu/soups/2007/proceedings/p122_lieberman.pdf
+
+https://gitlab.com/CardBook/CardBook
+
+https://addons.thunderbird.net/en-US/thunderbird/addon/cardbook/

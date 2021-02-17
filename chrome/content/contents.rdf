@@ -10,7 +10,7 @@
 
 	<RDF:Description
 		about="urn:mozilla:package:messagefaces"
-		chrome:author="Jens Bannmann (jens.b@web.de)"
+		chrome:author="Jens Bannmann (jens.b@web.de), John Duncan (duncanjdiii@gmail.com)"
 		chrome:authorURL="http://cs.gettysburg.edu/~duncjo01/MessageFaces"
 		chrome:description="Adds support for 'face' images embedded in messages."
 		chrome:displayName="MessageFaces 1.3.2"

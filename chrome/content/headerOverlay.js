@@ -812,7 +812,6 @@ function mfLoadPrefs() {
 		"maxsize",
 		"Int"
 	);
-
 	mfLog.init(
 		"MessageFaces",
 		mfGetPref("loglevel", "Int")
